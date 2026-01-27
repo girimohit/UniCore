@@ -1,0 +1,50 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+model Tenant {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  posts     Post[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+
+model Departments {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+}
+
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+}
+
+
+
+model Notices {
+  id        Int      @id @default(autoincrement())
+  authorId  Int
+}
+enum Role {
+  USER
+  ADMIN
+}
