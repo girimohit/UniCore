@@ -1,50 +1,173 @@
-datasource db {
-  provider = "postgresql"
-}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client"
-  output   = "./generated"
+  output   = "../lib/generated/prisma"
 }
+
+datasource db {
+  provider = "postgresql"
+  
+  // only use when running "npx prisma validate"
+  // url      = env("DATABASE_URL")
+}
+
+///////////////////////
+// CORE ENUMS
+///////////////////////
+
+enum UserRole {
+  STUDENT
+  FACULTY
+  HOD
+  ADMIN
+  PRINCIPAL
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+///////////////////////
+// TENANT
+///////////////////////
 
 model Tenant {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
   createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  posts     Post[]
+
+  users           User[]
+  modules          TenantModule[]
+  features         TenantFeature[]
+  exams            Exam[]
+  roleApprovals    RoleApproval[]
 }
+
+///////////////////////
+// USERS
+///////////////////////
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
+  tenantId  String
+  email     String
+  name      String
+  role      UserRole
+  wallet    String?          // blockchain wallet (admin only)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  title     String   @db.VarChar(255)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+
+  tenant    Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
 }
 
+///////////////////////
+// MODULE SYSTEM
+///////////////////////
 
-model Departments {
-  id        Int      @id @default(autoincrement())
-  authorId  Int
+model Module {
+  id    String @id @default(uuid())
+  code  String @unique
+  name  String
+
+  tenants TenantModule[]
 }
 
+model TenantModule {
+  id        String @id @default(uuid())
+  tenantId  String
+  moduleId  String
+  enabled   Boolean @default(true)
 
-model Attendance {
-  id        Int      @id @default(autoincrement())
-  authorId  Int
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+  module Module @relation(fields: [moduleId], references: [id])
+
+  @@unique([tenantId, moduleId])
 }
 
+///////////////////////
+// FEATURE FLAGS
+///////////////////////
 
+model TenantFeature {
+  id        String @id @default(uuid())
+  tenantId  String
+  key       String
+  value     String
 
-model Notices {
-  id        Int      @id @default(autoincrement())
-  authorId  Int
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, key])
 }
-enum Role {
-  USER
-  ADMIN
+
+///////////////////////
+// EXAM MODULE
+///////////////////////
+
+model Exam {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  semester  String
+  isLocked  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  results  ExamResult[]
+  lockInfo ResultLock?
+
+  @@index([tenantId])
+}
+
+model ExamResult {
+  id        String @id @default(uuid())
+  examId    String
+  studentId String
+  marks     Int
+  grade     String?
+
+  exam Exam @relation(fields: [examId], references: [id])
+
+  @@unique([examId, studentId])
+}
+
+///////////////////////
+// RESULT FINALIZATION (BLOCKCHAIN SYNC)
+///////////////////////
+
+model ResultLock {
+  id            String   @id @default(uuid())
+  examId        String   @unique
+  resultHash    String   // hash stored on blockchain
+  blockchainTx  String   // transaction hash
+  approvedBy    String   // userId / wallet reference
+  lockedAt      DateTime @default(now())
+
+  exam Exam @relation(fields: [examId], references: [id])
+}
+
+///////////////////////
+// ROLE & AUTHORITY APPROVAL
+///////////////////////
+
+model RoleApproval {
+  id            String          @id @default(uuid())
+  tenantId      String
+  userId        String
+  requestedRole UserRole
+  status        ApprovalStatus @default(PENDING)
+  blockchainTx  String?
+  approvedAt    DateTime?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
 }

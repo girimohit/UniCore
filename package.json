@@ -10,13 +10,18 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.10",
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.562.0",
     "next": "^16.1.6",
     "next-themes": "^0.4.6",
+    "pg": "^8.17.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.6.0",
@@ -26,9 +31,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "prisma": "^7.3.0",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

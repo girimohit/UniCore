@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Calendar } from "lucide-react"
+import {PrismaClient} from "@/lib/generated/prisma"
 
-export default function AttendanceViewPage() {
+export default function AttendanceViewPage() {  
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
        <div className="p-4 rounded-full bg-violet-100 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400">
