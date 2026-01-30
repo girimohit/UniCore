@@ -1,3 +1,4 @@
+import { getCurrentUser } from "@/lib/current-user";
 import prisma from "@/lib/prisma";
 
 export default async function Home() {
@@ -16,10 +17,12 @@ export default async function Home() {
       </div>
     );
   }
-  
+
+  const currentUser = await getCurrentUser();
+  // console.log(currentUser)
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center -mt-16">
+    <div className="min-h-screen text-black bg-gray-50 flex flex-col items-center justify-center -mt-16">
       <h1 className="text-4xl font-bold mb-4 text-[#333333]">{tenant.name}</h1>
 
       <p className="mb-6 text-gray-600">Users in this tenant:</p>
@@ -31,8 +34,9 @@ export default async function Home() {
             <span className="text-gray-500">({user.role})</span>
             <span className="text-gray-500">({user.email})</span>
           </li>
-        ))}
+        ))} 
       </ol>
+      <h1>user from current user {currentUser.name }</h1>
     </div>
   );
 }

@@ -57,6 +57,7 @@ model Tenant {
 
 model User {
   id        String   @id @default(uuid())
+  clerkId   String?  @unique        // 🔑 Clerk user ID
   tenantId  String
   email     String
   name      String
