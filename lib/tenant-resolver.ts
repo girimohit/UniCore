@@ -19,8 +19,22 @@ export async function resolveTenant(req: Request) {
     return tenant;
 }
 
-// will uselater 
-export async function resolveTenantFromAuth() {
-    const userClerk = await getCurrentUser();
-    return userClerk.tenantId;
+// // will uselater 
+// export async function resolveTenantFromAuth() {
+//     const userClerk = await getCurrentUser();
+//     return userClerk.tenantId;
+// }
+
+
+export async function resolveTenantFromAuth(tenantSlug: string, clerkId: string) {
+  const membership = await prisma.tenantMember.findFirst({
+    where: {
+      tenant: { slug: tenantSlug },
+      user: { clerkId },
+    },
+  });
+
+  if (!membership) throw new Error("User not part of tenant");
+
+  return membership.tenantId;
 }
