@@ -1,0 +1,122 @@
+unicore/
+├── app/                          # Next.js App Router (UI only)
+│   ├── (auth)/                   # Auth pages
+│   │   ├── login/
+│   │   └── register/
+│   │
+│   ├── (tenant)/                 # Tenant-scoped routes
+│   │   ├── dashboard/
+│   │   ├── students/
+│   │   ├── faculty/
+│   │   ├── exams/
+│   │   ├── attendance/
+│   │   └── settings/
+│   │
+│   ├── layout.tsx
+│   └── page.tsx    
+│
+├── app/api/                      # API-FIRST BACKEND
+│   ├── auth/
+│   │   └── route.ts
+│   │
+│   ├── tenants/
+│   │   └── route.ts
+│   │
+│   ├── exams/
+│   │   ├── route.ts              # GET, POST exams
+│   │   ├── finalize/
+│   │   │   └── route.ts          # Result finalization (blockchain)
+│   │   └── verify/
+│   │       └── route.ts
+│   │
+│   ├── roles/
+│   │   ├── approve/
+│   │   │   └── route.ts          # Role approval (blockchain)
+│   │   └── route.ts
+│   │
+│   ├── modules/
+│   │   └── route.ts              # Enable / disable modules
+│   │
+│   ├── features/
+│   │   └── route.ts              # Feature flags
+│   │
+│   └── extensions/
+│       └── route.ts              # Tenant-specific extensions
+│
+├── core/                         # CORE BUSINESS LOGIC (IMPORTANT)
+│   ├── services/                 # All business logic
+│   │   ├── exam.service.ts
+│   │   ├── role.service.ts
+│   │   ├── tenant.service.ts
+│   │   └── extension.service.ts
+│   │
+│   ├── domain/                   # Domain models & rules
+│   │   ├── exam.ts
+│   │   ├── user.ts
+│   │   ├── role.ts
+│   │   └── tenant.ts
+│   │
+│   ├── validators/               # Zod schemas
+│   │   ├── exam.schema.ts
+│   │   ├── role.schema.ts
+│   │   └── tenant.schema.ts
+│   │
+│   └── workflows/                # Optional workflows
+│       └── exam.workflow.ts
+│
+├── modules/                      # CORE MODULES
+│   ├── exam/
+│   │   ├── exam.module.ts
+│   │   ├── exam.hooks.ts          # Extension hooks
+│   │   └── exam.permissions.ts
+│   │
+│   ├── attendance/
+│   ├── fees/
+│   └── academics/
+│
+├── extensions/                   # PLUGGABLE FEATURES
+│   ├── exam-moderation/
+│   │   ├── moderation.service.ts
+│   │   └── moderation.ui.tsx
+│   │
+│   └── biometric-attendance/
+│       └── biometric.service.ts
+│
+├── blockchain/                   # BLOCKCHAIN LAYER
+│   ├── contracts/
+│   │   └── UnicoreGovernance.sol
+│   │
+│   ├── services/
+│   │   ├── resultLock.service.ts
+│   │   └── roleApproval.service.ts
+│   │
+│   └── utils/
+│       └── hash.ts
+│
+├── config/                       # TENANT CONFIG
+│   ├── modules.config.ts
+│   ├── features.config.ts
+│   └── roles.config.ts
+│
+├── lib/                          # SHARED UTILITIES
+│   ├── prisma.ts
+│   ├── auth.ts
+│   ├── tenant-context.ts
+│   └── logger.ts
+│
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+│
+├── middleware.ts                 # Tenant isolation, RBAC
+│
+├── docs/                         # DOCUMENTATION
+│   ├── api-spec.yaml             # OpenAPI
+│   ├── architecture.md
+│   └── blockchain.md
+│
+├── public/
+│
+├── .env
+├── package.json
+└── README.md

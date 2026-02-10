@@ -1,0 +1,5 @@
+pass : firtsUser / mohitGiri
+email : userone+clerk_test@gmail.com
+
+otp : 424242
+    
