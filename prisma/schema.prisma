@@ -1,174 +1,371 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
-}
-
+// PRISMA SETUP
 datasource db {
   provider = "postgresql"
-  
-  // only use when running "npx prisma validate"
   // url      = env("DATABASE_URL")
 }
 
-///////////////////////
-// CORE ENUMS
-///////////////////////
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
 
+/* ---------------------------------- ENUMS --------------------------------- */
 enum UserRole {
-  STUDENT
-  FACULTY
-  HOD
   ADMIN
-  PRINCIPAL
+  FACULTY
+  STUDENT
 }
 
-enum ApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
 }
 
-///////////////////////
-// TENANT
-///////////////////////
-
+/* --------------------------------- TENANT --------------------------------- */
 model Tenant {
   id        String   @id @default(uuid())
   name      String
   code      String   @unique
   createdAt DateTime @default(now())
 
-  users           User[]
-  modules          TenantModule[]
-  features         TenantFeature[]
-  exams            Exam[]
-  roleApprovals    RoleApproval[]
+  users       User[]
+  departments Department[]
+  programs    Program[]
+  subjects    Subject[]
+  notices     Notice[]
 }
 
-///////////////////////
-// USERS
-///////////////////////
+
+/* ---------------------------------- USER ---------------------------------- */
 
 model User {
   id        String   @id @default(uuid())
-  clerkId   String?  @unique        // 🔑 Clerk user ID
-  tenantId  String
+  clerkId   String   @unique
+  name      String
   email     String
-  name      String
   role      UserRole
-  wallet    String?          // blockchain wallet (admin only)
+  tenantId  String
+  programId String?  // only for STUDENT
   createdAt DateTime @default(now())
 
-  tenant    Tenant @relation(fields: [tenantId], references: [id])
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  program     Program?     @relation(fields: [programId], references: [id])
+  enrollments Enrollment[]
+  attendances Attendance[]
 
   @@index([tenantId])
 }
 
-///////////////////////
-// MODULE SYSTEM
-///////////////////////
 
-model Module {
-  id    String @id @default(uuid())
-  code  String @unique
-  name  String
+/* ------------------------------- DEPARTMENT ------------------------------- */
 
-  tenants TenantModule[]
+model Department {
+  id       String @id @default(uuid())
+  name     String
+  tenantId String
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id])
+  programs Program[]
+
+  @@index([tenantId])
 }
 
-model TenantModule {
+
+/* --------------------------------- PROGRAM -------------------------------- */
+
+model Program {
+  id           String @id @default(uuid())
+  name         String
+  departmentId String
+  tenantId     String
+
+  department Department @relation(fields: [departmentId], references: [id])
+  tenant     Tenant     @relation(fields: [tenantId], references: [id])
+  subjects   Subject[]
+  students   User[]
+
+  @@index([tenantId])
+}
+
+
+/* --------------------------------- SUBJECT -------------------------------- */
+
+model Subject {
   id        String @id @default(uuid())
-  tenantId  String
-  moduleId  String
-  enabled   Boolean @default(true)
-
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-  module Module @relation(fields: [moduleId], references: [id])
-
-  @@unique([tenantId, moduleId])
-}
-
-///////////////////////
-// FEATURE FLAGS
-///////////////////////
-
-model TenantFeature {
-  id        String @id @default(uuid())
-  tenantId  String
-  key       String
-  value     String
-
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, key])
-}
-
-///////////////////////
-// EXAM MODULE
-///////////////////////
-
-model Exam {
-  id        String   @id @default(uuid())
-  tenantId  String
   name      String
-  semester  String
-  isLocked  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  programId String
+  tenantId  String
 
-  tenant   Tenant @relation(fields: [tenantId], references: [id])
-  results  ExamResult[]
-  lockInfo ResultLock?
+  program     Program      @relation(fields: [programId], references: [id])
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  enrollments Enrollment[]
+  attendances Attendance[]
 
   @@index([tenantId])
 }
 
-model ExamResult {
-  id        String @id @default(uuid())
-  examId    String
+
+/* ------------------------------- ENROLLMENT ------------------------------- */
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  studentId  String
+  subjectId  String
+  tenantId   String
+  enrolledAt DateTime @default(now())
+
+  student User    @relation(fields: [studentId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+
+  @@unique([studentId, subjectId])
+  @@index([tenantId])
+}
+
+
+/* ------------------------------ //ATTENDANCE ------------------------------ */
+
+model Attendance {
+  id        String           @id @default(uuid())
   studentId String
-  marks     Int
-  grade     String?
+  subjectId String
+  date      DateTime
+  status    AttendanceStatus
+  markedBy  String  // faculty userId
+  tenantId  String
 
-  exam Exam @relation(fields: [examId], references: [id])
+  student User    @relation(fields: [studentId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
 
-  @@unique([examId, studentId])
+  @@unique([studentId, subjectId, date])
+  @@index([tenantId])
 }
 
-///////////////////////
-// RESULT FINALIZATION (BLOCKCHAIN SYNC)
-///////////////////////
 
-model ResultLock {
-  id            String   @id @default(uuid())
-  examId        String   @unique
-  resultHash    String   // hash stored on blockchain
-  blockchainTx  String   // transaction hash
-  approvedBy    String   // userId / wallet reference
-  lockedAt      DateTime @default(now())
+/* ------------------------------ NOTICE BOARD ------------------------------ */
 
-  exam Exam @relation(fields: [examId], references: [id])
-}
-
-///////////////////////
-// ROLE & AUTHORITY APPROVAL
-///////////////////////
-
-model RoleApproval {
-  id            String          @id @default(uuid())
-  tenantId      String
-  userId        String
-  requestedRole UserRole
-  status        ApprovalStatus @default(PENDING)
-  blockchainTx  String?
-  approvedAt    DateTime?
+model Notice {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  tenantId  String
+  createdAt DateTime @default(now())
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
 
   @@index([tenantId])
 }
+
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../lib/generated/prisma"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+
+//   // only use when running "npx prisma validate"
+//   // url      = env("DATABASE_URL")
+// }
+
+// ///////////////////////
+// // CORE ENUMS
+// ///////////////////////
+
+// enum UserRole {
+//   STUDENT
+//   FACULTY
+//   HOD
+//   ADMIN
+//   PRINCIPAL
+// }
+
+// enum ApprovalStatus {
+//   PENDING
+//   APPROVED
+//   REJECTED
+// }
+
+// ///////////////////////
+// // TENANT
+// ///////////////////////
+
+// model Tenant {
+//   id        String   @id @default(uuid())
+//   name      String
+//   code      String   @unique
+//   createdAt DateTime @default(now())
+
+//   users         User[]
+//   modules       TenantModule[]
+//   features      TenantFeature[]
+//   exams         Exam[]
+//   roleApprovals RoleApproval[]
+//   departments   Department[]
+//   programs      Program[]
+//   subjects      Subjects[]
+// }
+
+// ///////////////////////
+// // USERS
+// ///////////////////////
+
+// model User {
+//   id        String   @id @default(uuid())
+//   clerkId   String?  @unique // 🔑 Clerk user ID
+//   tenantId  String
+//   email     String
+//   name      String
+//   role      UserRole
+//   wallet    String? // blockchain wallet (admin only)
+//   createdAt DateTime @default(now())
+
+//   tenant Tenant @relation(fields: [tenantId], references: [id])
+
+//   @@index([tenantId])
+// }
+
+// ///////////////////////
+// // MODULE SYSTEM
+// ///////////////////////
+
+// model Module {
+//   id   String @id @default(uuid())
+//   code String @unique
+//   name String
+
+//   tenants TenantModule[]
+// }
+
+// model TenantModule {
+//   id       String  @id @default(uuid())
+//   tenantId String
+//   moduleId String
+//   enabled  Boolean @default(true)
+
+//   tenant Tenant @relation(fields: [tenantId], references: [id])
+//   module Module @relation(fields: [moduleId], references: [id])
+
+//   @@unique([tenantId, moduleId])
+// }
+
+// ///////////////////////
+// // FEATURE FLAGS
+// ///////////////////////
+
+// model TenantFeature {
+//   id       String @id @default(uuid())
+//   tenantId String
+//   key      String
+//   value    String
+
+//   tenant Tenant @relation(fields: [tenantId], references: [id])
+
+//   @@unique([tenantId, key])
+// }
+
+// ///////////////////////
+// // DEPARTMENT MODULE
+// ///////////////////////
+// model Department {
+//   id       String    @id @default(uuid())
+//   name     String
+//   tenantId String
+//   tenant   Tenant    @relation(fields: [tenantId], references: [id])
+//   programs Program[]
+// }
+
+// ///////////////////////
+// // COURSE MODULE
+// ///////////////////////
+// model Program {
+//   id           String     @id @default(uuid())
+//   name         String
+//   departmentId String
+//   tenantId     String
+//   department   Department @relation(fields: [departmentId], references: [id])
+//   tenant       Tenant     @relation(fields: [tenantId], references: [id])
+//   subjects     Subjects[]
+// }
+
+// ///////////////////////
+// // SUBJECTS MODULE
+// ///////////////////////
+// model Subjects {
+//   id        String  @id @default(uuid())
+//   name      String
+//   programId String
+//   tenantId  String
+//   program   Program @relation(fields: [programId], references: [id])
+//   tenant    Tenant  @relation(fields: [tenantId], references: [id])
+// }
+
+// ///////////////////////
+// // EXAM MODULE
+// ///////////////////////
+
+// model Exam {
+//   id        String   @id @default(uuid())
+//   tenantId  String
+//   name      String
+//   semester  String
+//   isLocked  Boolean  @default(false)
+//   createdAt DateTime @default(now())
+
+//   tenant   Tenant       @relation(fields: [tenantId], references: [id])
+//   results  ExamResult[]
+//   lockInfo ResultLock?
+
+//   @@index([tenantId])
+// }
+
+// model ExamResult {
+//   id        String  @id @default(uuid())
+//   examId    String
+//   studentId String
+//   marks     Int
+//   grade     String?
+
+//   exam Exam @relation(fields: [examId], references: [id])
+
+//   @@unique([examId, studentId])
+// }
+
+// ///////////////////////
+// // RESULT FINALIZATION (BLOCKCHAIN SYNC)
+// ///////////////////////
+
+// model ResultLock {
+//   id           String   @id @default(uuid())
+//   examId       String   @unique
+//   resultHash   String // hash stored on blockchain
+//   blockchainTx String // transaction hash
+//   approvedBy   String // userId / wallet reference
+//   lockedAt     DateTime @default(now())
+
+//   exam Exam @relation(fields: [examId], references: [id])
+// }
+
+// ///////////////////////
+// // ROLE & AUTHORITY APPROVAL
+// ///////////////////////
+
+// model RoleApproval {
+//   id            String         @id @default(uuid())
+//   tenantId      String
+//   userId        String
+//   requestedRole UserRole
+//   status        ApprovalStatus @default(PENDING)
+//   blockchainTx  String?
+//   approvedAt    DateTime?
+
+//   tenant Tenant @relation(fields: [tenantId], references: [id])
+
+//   @@index([tenantId])
+// }

@@ -1,24 +1,32 @@
 import Image from "next/image";
+import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import {
   LayoutDashboard,
   Users,
   GraduationCap,
   CreditCard,
-  BarChart3,  
+  BarChart3,
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
   Menu,
   Sparkles,
   Zap,
-  Globe
+  Globe,
 } from "lucide-react";
+
+const DotIcon = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+      <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512z" />
+    </svg>
+  );
+};
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-violet-200 selection:text-violet-900 overflow-x-hidden">
-
       {/* Navbar */}
       <nav className="fixed top-0 z-50 w-full border-b border-white/20 bg-white/60 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
         <div className="container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
@@ -26,17 +34,28 @@ export default function Home() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/30">
               <LayoutDashboard size={22} />
             </div>
-            <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Unicore</span>
+            <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              Unicore
+            </span>
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
-            <Link href="#features" className="hover:text-violet-600 transition-colors">Features</Link>
-            <Link href="#testimonials" className="hover:text-violet-600 transition-colors">Testimonials</Link>
-            <Link href="#pricing" className="hover:text-violet-600 transition-colors">Pricing</Link>
+            <Link href="#features" className="hover:text-violet-600 transition-colors">
+              Features
+            </Link>
+            <Link href="#testimonials" className="hover:text-violet-600 transition-colors">
+              Testimonials
+            </Link>
+            <Link href="#pricing" className="hover:text-violet-600 transition-colors">
+              Pricing
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-violet-600 transition-colors">
+            {/* <Link
+              href="/login"
+              className="text-sm font-semibold text-slate-600 hover:text-violet-600 transition-colors"
+            >
               Log in
             </Link>
             <Link
@@ -44,7 +63,31 @@ export default function Home() {
               className="inline-flex h-10 items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition-all hover:bg-slate-800 hover:shadow-xl hover:-translate-y-0.5"
             >
               Get Started
-            </Link>
+            </Link> */}
+            <SignedOut>
+              <SignInButton forceRedirectUrl="/dashboard">
+                <button className="text-sm font-semibold text-slate-600 hover:text-violet-600 transition-colors">
+                  Login
+                </button>
+              </SignInButton>
+
+              <SignUpButton forceRedirectUrl="/dashboard">
+                <button className="inline-flex h-10 items-center justify-center rounded-full bg-slate-900 px-6 py-2 text-sm font-bold text-white shadow-lg shadow-slate-900/20 transition-all hover:bg-slate-800 hover:shadow-xl hover:-translate-y-0.5">
+                  Get Started
+                </button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <UserButton showName />
+              {/* <UserButton showName>
+                <UserButton.MenuItems>
+                  <UserButton.Action label="signOut" />
+                  <UserButton.Link label="Dashboard" labelIcon={<DotIcon />} href="/student/dashboard" />
+                  <UserButton.Action label="manageAccount" />
+                </UserButton.MenuItems>
+              </UserButton> */}
+            </SignedIn>
           </div>
 
           <button className="md:hidden p-2 text-slate-600">
@@ -71,12 +114,17 @@ export default function Home() {
               </div>
 
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
-                The <span className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 bg-clip-text text-transparent">Colorful</span> Future of <br className="hidden md:inline" />
+                The{" "}
+                <span className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-orange-500 bg-clip-text text-transparent">
+                  Colorful
+                </span>{" "}
+                Future of <br className="hidden md:inline" />
                 Institute ERP
               </h1>
 
               <p className="text-xl md:text-2xl text-slate-600 max-w-[800px] mx-auto leading-relaxed">
-                Unicore brings vibrancy to your daily operations. Streamline everything from admissions to analytics with an interface that's as beautiful as it is powerful.
+                Unicore brings vibrancy to your daily operations. Streamline everything from admissions to
+                analytics with an interface that's as beautiful as it is powerful.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
@@ -142,9 +190,12 @@ export default function Home() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-20">
               <span className="text-violet-600 font-bold tracking-wider uppercase text-sm">Features</span>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mt-2 mb-6 text-slate-900">Everything you need, <br /> beautifully organized.</h2>
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tight mt-2 mb-6 text-slate-900">
+                Everything you need, <br /> beautifully organized.
+              </h2>
               <p className="text-xl text-slate-600 max-w-[700px] mx-auto">
-                Unicore isn't just a tool; it's a delightful experience designed to make your institute run like clockwork.
+                Unicore isn't just a tool; it's a delightful experience designed to make your institute run
+                like clockwork.
               </p>
             </div>
 
@@ -207,7 +258,8 @@ export default function Home() {
                 <div className="glass-card p-8 rounded-3xl shadow-xl relative">
                   <div className="absolute -top-4 -left-4 text-6xl text-violet-300 font-serif">"</div>
                   <p className="text-xl text-slate-700 mb-8 relative z-10 leading-relaxed">
-                    Unicore has completely transformed how we manage our administrative tasks. The interface is so intuitive and colorful, my staff actually enjoys using it!
+                    Unicore has completely transformed how we manage our administrative tasks. The interface
+                    is so intuitive and colorful, my staff actually enjoys using it!
                   </p>
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 flex items-center justify-center font-bold text-white text-xl">
@@ -223,7 +275,10 @@ export default function Home() {
 
               <div className="grid grid-cols-2 gap-6">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="glass-card h-40 rounded-2xl flex items-center justify-center hover:scale-105 transition-transform duration-300 cursor-pointer">
+                  <div
+                    key={i}
+                    className="glass-card h-40 rounded-2xl flex items-center justify-center hover:scale-105 transition-transform duration-300 cursor-pointer"
+                  >
                     <span className="font-bold text-xl text-slate-400">Partner {i}</span>
                   </div>
                 ))}
@@ -242,7 +297,8 @@ export default function Home() {
               Ready to color your world?
             </h2>
             <p className="text-violet-100 text-xl max-w-[600px] mx-auto mb-10">
-              Join thousands of educators who trust Unicore. Start your 14-day free trial today. No credit card required.
+              Join thousands of educators who trust Unicore. Start your 14-day free trial today. No credit
+              card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -267,38 +323,78 @@ export default function Home() {
                 </div>
                 <span>Unicore</span>
               </div>
-              <p className="leading-relaxed">Making education management simple, efficient, and accessible for everyone.</p>
+              <p className="leading-relaxed">
+                Making education management simple, efficient, and accessible for everyone.
+              </p>
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-6 text-base">Product</h3>
               <ul className="space-y-4">
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Features</Link></li>
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Pricing</Link></li>
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Security</Link></li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Security
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-6 text-base">Company</h3>
               <ul className="space-y-4">
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">About Us</Link></li>
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Careers</Link></li>
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Contact</Link></li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Contact
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h3 className="font-bold text-slate-900 mb-6 text-base">Legal</h3>
               <ul className="space-y-4">
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-violet-600 transition-colors">Terms of Service</Link></li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-violet-600 transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p>© 2024 Unicore Inc. All rights reserved.</p>
             <div className="flex gap-6">
-              <Link href="#" className="hover:text-violet-600 transition-colors">Twitter</Link>
-              <Link href="#" className="hover:text-violet-600 transition-colors">LinkedIn</Link>
-              <Link href="#" className="hover:text-violet-600 transition-colors">Instagram</Link>
+              <Link href="#" className="hover:text-violet-600 transition-colors">
+                Twitter
+              </Link>
+              <Link href="#" className="hover:text-violet-600 transition-colors">
+                LinkedIn
+              </Link>
+              <Link href="#" className="hover:text-violet-600 transition-colors">
+                Instagram
+              </Link>
             </div>
           </div>
         </div>
@@ -307,10 +403,22 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ icon, color, title, description }: { icon: React.ReactNode, color: string, title: string, description: string }) {
+function FeatureCard({
+  icon,
+  color,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  color: string;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="group p-8 rounded-3xl bg-white border border-slate-100 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-violet-200/50 transition-all duration-300 hover:-translate-y-1">
-      <div className={`mb-6 p-4 rounded-2xl ${color} w-fit shadow-md group-hover:scale-110 transition-transform duration-300`}>
+      <div
+        className={`mb-6 p-4 rounded-2xl ${color} w-fit shadow-md group-hover:scale-110 transition-transform duration-300`}
+      >
         {icon}
       </div>
       <h3 className="text-xl font-bold mb-3 text-slate-900">{title}</h3>

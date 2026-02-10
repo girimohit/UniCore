@@ -9,7 +9,9 @@ export default function StudentLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // const user = getCurrentUserOrNull(); // ✅ SAFE
+
 
   return (
     <div className="flex h-screen bg-white">

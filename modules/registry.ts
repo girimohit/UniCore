@@ -33,7 +33,31 @@ export const MODULES: Record<string, ModuleMeta> = {
 
     ATTENDANCE: {
         key: "ATTENDANCE",
-        rolesAllowed: ["Teacher"],
-        permissions: ["read", "create"],
+        rolesAllowed: ["Teacher", "Admin"],
+        permissions: ["read", "create", "update"],
+    },
+
+    EXAM: {
+        key: "EXAM",
+        rolesAllowed: ["Admin", "Faculty", "Principal", "Student"],
+        permissions: ["read", "create", "update"],
+    },
+
+    FEES: {
+        key: "FEES",
+        rolesAllowed: ["Admin", "Student"],
+        permissions: ["read", "create", "update"],
+    },
+
+    NOTICES: {
+        key: "NOTICES",
+        rolesAllowed: ["Admin", "Faculty", "Student"],
+        permissions: ["read", "create", "update"],
+    },
+
+    TIMETABLE: {
+        key: "TIMETABLE",
+        rolesAllowed: ["Admin", "Faculty", "Student"],
+        permissions: ["read", "create", "update"],
     },
 }

@@ -26,12 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        theme: "simple",
+      }}
+    >
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
-            <header className="flex justify-end items-center p-4 gap-4 h-16">
+            {/* <header className="flex justify-end items-center p-4 gap-4 h-16">
               <SignedOut>
                 <SignInButton />
                 <SignUpButton>
@@ -43,7 +47,7 @@ export default function RootLayout({
               <SignedIn>
                 <UserButton />
               </SignedIn>
-            </header>
+            </header> */}
           </ThemeProvider>
         </body>
       </html>
