@@ -1,0 +1,278 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+
+datasource db {
+  provider = "mysql"
+  // url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  FACULTY
+  STUDENT
+}
+
+model Institution {
+  id         String   @id @default(uuid())
+  name       String
+  slug       String   @unique
+  status     String   @default("ACTIVE")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users              User[]
+  departments        Department[]
+  courses            Course[]
+  subjects           Subject[]
+  attendances        Attendance[]
+  exams              Exam[]
+  grades             Grade[]
+  institutionModules InstitutionModule[]
+  invitationTokens   InvitationToken[]
+
+  @@index([slug])
+}
+
+model User {
+  id            String      @id @default(uuid())
+  tenant_id     String
+  institution   Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  identifier    String
+  password_hash String
+  role          Role
+  email         String?
+  status        String      @default("ACTIVE")
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+
+  studentProfile StudentProfile?
+  facultyProfile FacultyProfile?
+
+  @@unique([tenant_id, identifier])
+  @@index([tenant_id])
+  @@index([identifier])
+}
+
+model StudentProfile {
+  id          String  @id @default(uuid())
+  user_id     String  @unique
+  user        User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  roll_number String
+  course_id   String?
+  course      Course? @relation(fields: [course_id], references: [id])
+  semester    Int?
+  phone       String?
+
+  // Relations for ERP
+  attendances     Attendance[]
+  grades          Grade[]
+  enrolledCourses EnrolledCourse[]
+
+  @@unique([user_id, roll_number])
+}
+
+model FacultyProfile {
+  id              String      @id @default(uuid())
+  user_id         String      @unique
+  user            User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  employee_number String
+  department_id   String?
+  department      Department? @relation(fields: [department_id], references: [id])
+  designation     String?
+
+  subjects TaughtSubject[]
+}
+
+model InvitationToken {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  email       String
+  role        Role
+  token       String      @unique
+  expires_at  DateTime
+  used        Boolean     @default(false)
+  created_at  DateTime    @default(now())
+
+  @@index([tenant_id])
+  @@index([tenant_id, email])
+  @@index([token])
+}
+
+// ------------------------------------------------------
+// RETAINED MODULE MODELS FOR ERP FUNCTIONALITY
+// ------------------------------------------------------
+
+model Department {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  name        String
+  code        String
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  faculties FacultyProfile[]
+  courses   Course[]
+
+  @@unique([tenant_id, code])
+  @@index([tenant_id])
+}
+
+model Course {
+  id           String      @id @default(uuid())
+  tenant_id    String
+  institution  Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  name         String
+  code         String
+  departmentId String
+  department   Department  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+
+  subjects        Subject[]
+  enrolledCourses EnrolledCourse[]
+  studentProfiles StudentProfile[]
+  exams           Exam[]
+
+  @@unique([tenant_id, code])
+  @@index([tenant_id])
+  @@index([tenant_id, departmentId])
+}
+
+model Subject {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  name        String
+  code        String
+  courseId    String
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  taughtBy    TaughtSubject[]
+  attendances Attendance[]
+  exams       Exam[]
+
+  @@unique([tenant_id, code])
+  @@index([tenant_id])
+  @@index([tenant_id, courseId])
+}
+
+model EnrolledCourse {
+  id        String         @id @default(uuid())
+  studentId String
+  student   StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([courseId])
+  @@index([studentId])
+}
+
+model TaughtSubject {
+  id        String         @id @default(uuid())
+  subjectId String
+  subject   Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  facultyId String
+  faculty   FacultyProfile @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+
+  @@unique([subjectId, facultyId])
+  @@index([subjectId])
+  @@index([facultyId])
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+model Attendance {
+  id          String           @id @default(uuid())
+  tenant_id   String
+  institution Institution      @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  studentId   String
+  student     StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  date        DateTime
+  status      AttendanceStatus
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
+
+  @@unique([studentId, subjectId, date])
+  @@index([tenant_id])
+  @@index([tenant_id, studentId])
+  @@index([tenant_id, subjectId])
+}
+
+model Exam {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  name        String
+  date        DateTime
+  courseId    String
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  grades Grade[]
+
+  @@index([tenant_id])
+  @@index([tenant_id, courseId])
+  @@index([tenant_id, subjectId])
+}
+
+model Grade {
+  id          String         @id @default(uuid())
+  tenant_id   String
+  institution Institution    @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  examId      String
+  exam        Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  score       Float
+  remarks     String?
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+
+  @@unique([examId, studentId])
+  @@index([tenant_id])
+  @@index([tenant_id, studentId])
+  @@index([tenant_id, examId])
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  institutions InstitutionModule[]
+}
+
+model InstitutionModule {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  moduleId    String
+  module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  isEnabled   Boolean     @default(true)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  @@unique([tenant_id, moduleId])
+  @@index([tenant_id])
+}
