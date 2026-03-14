@@ -1,5 +1,6 @@
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Institution } from '@prisma/client';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 export default function Topbar({ institution }: { institution: Institution }) {
   return (
@@ -26,8 +27,13 @@ export default function Topbar({ institution }: { institution: Institution }) {
         <div className="h-8 w-px bg-border/60 mx-2 hidden sm:block"></div>
 
         <ThemeToggle />
-        <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-all duration-300 border border-primary-foreground/20">
-          U
+        
+        <div className="flex items-center gap-4 bg-background/50 backdrop-blur-md border border-border/40 px-3 py-1.5 rounded-full shadow-sm">
+          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform duration-300">
+            U
+          </div>
+          <div className="h-4 w-px bg-border/60"></div>
+          <LogoutButton variant="icon" />
         </div>
       </div>
     </header>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getActiveInstitutionModules } from '@/lib/modules/loader';
 import * as Icons from 'lucide-react';
+import { LogoutButton } from '@/components/auth/LogoutButton';
 
 interface SidebarProps {
   tenantId: string;
@@ -65,13 +66,8 @@ export default async function Sidebar({ tenantId, role }: SidebarProps) {
       </nav>
 
       <div className="p-6 border-t border-border/50 bg-background/30 mt-auto">
-         <Link
-            href={`/api/auth/logout`}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-all duration-300 group"
-          >
-            <Icons.LogOut className="h-5 w-5 group-hover:-translate-x-1 transition-transform" strokeWidth={2.5} />
-            Sign Out
-          </Link>
+         <LogoutButton />
+
       </div>
     </aside>
   );
