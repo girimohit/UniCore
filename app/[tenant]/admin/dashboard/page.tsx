@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import { Users, GraduationCap, Building2, BookOpen } from 'lucide-react';
+import InviteUser from '@/components/admin/InviteUser';
 
 export default async function AdminDashboard({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -65,11 +66,8 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 mt-8">
-        <div className="glass rounded-3xl p-8 border border-border/50 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-tl from-primary/5 to-transparent"></div>
-          <h3 className="text-xl font-bold text-foreground mb-3 relative z-10 transition-transform group-hover:scale-105">Recent Activity Feed</h3>
-          <p className="text-muted-foreground relative z-10 bg-accent/50 px-4 py-2 rounded-full font-medium">Coming Soon</p>
-        </div>
+        <InviteUser tenantId={tenant} />
+
         <div className="glass rounded-3xl p-8 border border-border/50 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-transparent"></div>
           <h3 className="text-xl font-bold text-foreground mb-3 relative z-10 transition-transform group-hover:scale-105">Module Configurations</h3>

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
-      where: { email, tenant_id: institution.tenant_id }
+      where: { email, tenant_id: institution.id }
     });
 
     if (existingUser) {
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         email,
         role: role as any,
         token,
-        tenant_id: institution.tenant_id,
+        tenant_id: institution.id,
         expires_at
       }
     });
