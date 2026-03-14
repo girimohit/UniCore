@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getTenantContext } from '@/lib/tenant';
+import { getTenantUrl } from '@/lib/config';
 import crypto from 'crypto';
 
 export async function POST(req: Request) {
@@ -47,11 +48,11 @@ export async function POST(req: Request) {
     });
 
     // In a real system, you would TRIGGER EMAIL SENDING HERE
-    // Ex: await sendEmail(email, `Join ${institution.name} ERP!`, `Link: ${subdomain}.unicore.app/accept-invite?token=${token}`);
+    // Ex: await sendEmail(email, `Join ${institution.name} ERP!`, `Link: ${getTenantUrl(subdomain, 'accept-invite')}?token=${token}`);
 
     return NextResponse.json({ 
       message: 'Invitation generated successfully',
-      debug_link: `http://${subdomain}.localhost:3000/accept-invite?token=${token}` // For local testing only
+      debug_link: `${getTenantUrl(subdomain, 'accept-invite')}?token=${token}` // For local testing only
     }, { status: 201 });
 
   } catch (error) {

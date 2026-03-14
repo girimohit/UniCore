@@ -15,43 +15,23 @@ export interface TenantContext {
  * Primarily useful inside Next.js Route Handlers (API).
  */
 export function getTenantFromRequest(req: NextRequest): string | null {
-  // Step 3: Prefer headers set by Middleware
+  // Step 1: Prefer headers set by Middleware
   const headerSlug = req.headers.get('x-tenant-slug') || req.headers.get('x-tenant-id');
   if (headerSlug) return headerSlug;
 
-  // Fallback extraction
-  const hostname = req.headers.get('host') || '';
+  // Step 2: Fallback extraction from URL path (for cases where middleware hasn't run)
   const url = new URL(req.url);
+  const pathSegments = url.pathname.split('/').filter(Boolean);
   
-  const baseDomains = ['unicore.app', 'unicore.com', 'localhost:3000', '127.0.0.1:3000'];
-  const isBaseDomain = baseDomains.includes(hostname);
-
-  let tenantSlug = null;
-
-  if (!isBaseDomain) {
-    for (const base of baseDomains) {
-      if (hostname.endsWith(`.${base}`)) {
-        tenantSlug = hostname.replace(`.${base}`, '');
-        break;
-      }
-    }
-    if (!tenantSlug && !hostname.includes('.')) {
-      tenantSlug = hostname;
+  if (pathSegments.length > 0) {
+    const firstSegment = pathSegments[0];
+    const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'api', '_next'];
+    if (!reservedPaths.includes(firstSegment)) {
+      return firstSegment;
     }
   }
 
-  if (!tenantSlug && isBaseDomain) {
-    const pathSegments = url.pathname.split('/').filter(Boolean);
-    if (pathSegments.length > 0) {
-      const firstSegment = pathSegments[0];
-      const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'api', '_next'];
-      if (!reservedPaths.includes(firstSegment)) {
-        tenantSlug = firstSegment;
-      }
-    }
-  }
-
-  return tenantSlug;
+  return null;
 }
 
 /**

@@ -23,46 +23,25 @@ export default function middleware(req: NextRequest) {
   const isBaseDomain = baseDomains.includes(hostname);
   
   let tenantSlug = null;
-  let isPathBased = false;
 
-  // STEP 1: Extract Subdomain if present
-  if (!isBaseDomain) {
-    for (const base of baseDomains) {
-      if (hostname.endsWith(`.${base}`)) {
-        tenantSlug = hostname.replace(`.${base}`, '');
-        break;
-      }
-    }
-    // Fallback for custom local hostnames without clear boundaries
-    if (!tenantSlug && !hostname.includes('.')) {
-      tenantSlug = hostname;
+  // STEP 1: Extract tenant from path segment (Prioritized)
+  const pathSegments = url.pathname.split('/').filter(Boolean);
+  if (pathSegments.length > 0) {
+    const firstSegment = pathSegments[0];
+    // Do not treat global pages as a tenant
+    const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'features'];
+    if (!reservedPaths.includes(firstSegment)) {
+      tenantSlug = firstSegment;
     }
   }
 
-  // STEP 1: Otherwise extract first path segment
-  if (!tenantSlug && isBaseDomain) {
-    const pathSegments = url.pathname.split('/').filter(Boolean);
-    if (pathSegments.length > 0) {
-      const firstSegment = pathSegments[0];
-      // Do not treat global pages as a tenant
-      const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'features'];
-      if (!reservedPaths.includes(firstSegment)) {
-        tenantSlug = firstSegment;
-        isPathBased = true;
-      }
-    }
-  }
+  // STEP 2: Fallback to Subdomain (if requested, but user said "dont follow the subdomain thing")
+  // For now, we only support path-based as requested.
+  // If we ever need subdomain support again, we can add it here.
 
   if (tenantSlug) {
-    if (!isPathBased) {
-      // Rewrite path to trigger App Router's dynamic `[tenant]` segment route if using a subdomain
-      url.pathname = `/${tenantSlug}${url.pathname}`;
-    }
-    
-    // If it's already path-based, Next.js natively routes it to `[tenant]`, we just let it pass
-    const response = isPathBased ? NextResponse.next() : NextResponse.rewrite(url);
-    
-    // STEP 3: Attach tenant info to request headers
+    // Attach tenant info to request headers for downstream consumption
+    const response = NextResponse.next();
     response.headers.set('x-tenant-id', tenantSlug);
     response.headers.set('x-tenant-slug', tenantSlug);
     

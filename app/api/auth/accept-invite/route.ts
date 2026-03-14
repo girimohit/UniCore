@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       where: { token }
     });
 
-    if (!invitation || invitation.isUsed) {
+    if (!invitation || invitation.used) {
       return NextResponse.json({ error: 'Invalid or already used invitation token' }, { status: 400 });
     }
 

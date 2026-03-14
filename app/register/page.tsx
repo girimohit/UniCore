@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Sparkles, ArrowRight, Loader2, Building, Mail, Lock, Globe, User } from "lucide-react";
+import { getTenantUrl, APP_CONFIG } from "@/lib/config";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -66,10 +67,10 @@ export default function RegisterPage() {
             <p className="text-sm uppercase tracking-wider mb-1 opacity-70">Your Admin ID</p>
             <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.identifier}</p>
             <p className="text-sm opacity-80">
-              Please save this Admin ID securely. You will use it to log in to your workspace at <strong className="text-white">{successData.tenantSlug}.unicore.app</strong>
+              Please save this Admin ID securely. You will use it to log in to your workspace at <strong className="text-white">{APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/{successData.tenantSlug}</strong>
             </p>
           </div>
-          <a href={`http://${successData.tenantSlug}.localhost:3000/login`} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">
+          <a href={getTenantUrl(successData.tenantSlug, 'login')} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">
             Proceed to Login <ArrowRight className="w-4 h-4" />
           </a>
         </div>
