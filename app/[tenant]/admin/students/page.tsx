@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
-import FacultyManager from "./FacultyManager";
+import StudentManager from "./StudentManager";
+import { Users } from "lucide-react";
 
-export default async function AdminFacultyPage({ params }: { params: Promise<{ tenant: string }> }) {
+export default async function AdminStudentsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
 
   // Resolve institution
@@ -13,8 +14,8 @@ export default async function AdminFacultyPage({ params }: { params: Promise<{ t
 
   if (!institution) return notFound();
 
-  // Fetch departments for the dropdown
-  const departments = await prisma.department.findMany({
+  // Fetch courses for the dropdown
+  const courses = await prisma.course.findMany({
     where: { tenant_id: institution.id },
     select: { id: true, name: true },
     orderBy: { name: 'asc' }
@@ -24,14 +25,14 @@ export default async function AdminFacultyPage({ params }: { params: Promise<{ t
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-          Faculty Management
+          Student Management
         </h1>
         <p className="text-lg text-muted-foreground mt-2 font-medium">
-          Add faculty manually or import via CSV. Manage staff accounts for <span className="text-primary">{institution.name}</span>
+          Manage student enrollment, bulk import, and status for <span className="text-primary">{institution.name}</span>
         </p>
       </div>
 
-      <FacultyManager departments={departments} tenantId={institution.id} />
+      <StudentManager courses={courses} tenantId={institution.id} />
     </div>
   );
 }

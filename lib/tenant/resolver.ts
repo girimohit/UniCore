@@ -5,7 +5,7 @@ export async function resolveTenant(subdomain: string) {
 
   try {
     const institution = await prisma.institution.findUnique({
-      where: { subdomain },
+      where: { slug: subdomain }, // subdomain variable name is kept but maps to slug field
       include: {
         institutionModules: {
           include: {

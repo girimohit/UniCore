@@ -1,85 +1,105 @@
 import { resolveTenant } from '@/lib/tenant/resolver';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { PieChart, BookOpen } from 'lucide-react';
+import { getCurrentUser } from '@/lib/auth-server';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { AttendanceChart } from "@/components/student/attendance-chart"
 
-export default async function StudentAttendancePage({ params }: { params: { tenant: string } }) {
-  const institution = await resolveTenant(params.tenant);
+export default async function StudentAttendancePage({ params }: { params: Promise<{ tenant: string }> }) {
+  const { tenant } = await params;
+  const session = await getCurrentUser();
 
-  if (!institution) {
-    notFound();
+  if (!session || session.role !== 'STUDENT') {
+    redirect(`/${tenant}/login`);
   }
 
-  const subjects = await prisma.subject.findMany({
-    where: { tenant_id: institution.tenant_id },
-    orderBy: { name: 'asc' }
+  const institution = await resolveTenant(tenant);
+  if (!institution) notFound();
+
+  const student = await prisma.studentProfile.findUnique({
+    where: { user_id: session.user_id },
+    include: {
+      attendances: {
+        include: {
+          subject: true
+        }
+      }
+    }
   });
 
+  if (!student) notFound();
+
+  // Aggregate attendance by subject
+  const subjectsMap: Record<string, any> = {};
+  
+  // Initialize with all subjects from the tenant's courses if possible, 
+  // or just subjects the student has attendance for.
+  // For better UX, let's get all subjects for the student's course.
+  const courseSubjects = student.course_id ? await prisma.subject.findMany({
+    where: { courseId: student.course_id }
+  }) : [];
+
+  courseSubjects.forEach(s => {
+    subjectsMap[s.id] = {
+      id: s.id,
+      name: s.name,
+      code: s.code,
+      attended: 0,
+      total: 0,
+      color: "#10b981", // default
+      bg: "bg-emerald-500",
+      light: "bg-emerald-50",
+      text: "text-emerald-700",
+      border: "border-emerald-100"
+    };
+  });
+
+  // Color palette for variety
+  const colors = [
+    { color: "#10b981", bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-100" },
+    { color: "#3b82f6", bg: "bg-blue-500", light: "bg-blue-50", text: "text-blue-700", border: "border-blue-100" },
+    { color: "#f59e0b", bg: "bg-amber-500", light: "bg-amber-50", text: "text-amber-700", border: "border-amber-100" },
+    { color: "#8b5cf6", bg: "bg-violet-500", light: "bg-violet-50", text: "text-violet-700", border: "border-violet-100" },
+    { color: "#ef4444", bg: "bg-red-500", light: "bg-red-50", text: "text-red-700", border: "border-red-100" },
+  ];
+
+  courseSubjects.forEach((s, i) => {
+    const palette = colors[i % colors.length];
+    subjectsMap[s.id] = { ...subjectsMap[s.id], ...palette };
+  });
+
+  student.attendances.forEach(a => {
+    if (subjectsMap[a.subjectId]) {
+      subjectsMap[a.subjectId].total++;
+      if (a.status === 'PRESENT') {
+        subjectsMap[a.subjectId].attended++;
+      }
+    }
+  });
+
+  const processedSubjects = Object.values(subjectsMap);
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
-      <div className="absolute top-10 left-10 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
-      
-      <div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-          <div className="p-3 bg-gradient-to-tr from-primary to-accent rounded-2xl shadow-lg shadow-primary/20">
-             <PieChart className="h-8 w-8 text-primary-foreground" strokeWidth={2.5} />
-          </div>
-          Attendance Report
-        </h1>
-        <p className="text-lg text-muted-foreground mt-3 font-medium">
-           View your total attendance breakdown per enrolled subject.
-        </p>
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-black">My Attendance 👋</h1>
+            <p className="text-slate-500">Track your class attendance for this semester at {institution.name}.</p>
+        </div>
+        <div className="w-48 text-black">
+             <Select defaultValue="sem4">
+                <SelectTrigger className="bg-white border-slate-200">
+                    <SelectValue placeholder="Select Semester" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="sem4">Semester 4</SelectItem>
+                    <SelectItem value="sem3">Semester 3</SelectItem>
+                </SelectContent>
+             </Select>
+        </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-         {subjects.length === 0 ? (
-           <div className="col-span-full p-12 text-center text-muted-foreground glass rounded-3xl border border-border/50 shadow-sm">
-              <p className="text-lg font-semibold">No subjects currently enrolled.</p>
-           </div>
-         ) : subjects.map((subj, i) => {
-            const mockPercentage = Math.floor(Math.random() * 40) + 60;
-            const isDanger = mockPercentage < 75;
-
-            return (
-               <div 
-                 key={subj.id} 
-                 className="relative group glass rounded-3xl p-6 border border-border/50 flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 overflow-hidden"
-                 style={{ animationDelay: `${i * 100}ms` }}
-               >
-                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                 <div className="flex justify-between items-start mb-6 relative z-10">
-                    <div>
-                       <h3 className="text-xl font-bold text-foreground line-clamp-1 group-hover:text-primary transition-colors">{subj.name}</h3>
-                       <p className="text-sm text-primary/80 font-bold uppercase tracking-wider mt-1">{subj.code}</p>
-                    </div>
-                    <div className="p-3 bg-background/50 backdrop-blur-sm border border-border/20 rounded-2xl">
-                       <BookOpen className="h-6 w-6 text-muted-foreground group-hover:text-primary transition-colors" strokeWidth={2.5} />
-                    </div>
-                 </div>
-
-                 <div className="mt-8 space-y-4 relative z-10">
-                    <div className="flex justify-between items-end">
-                       <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Semester Avg</span>
-                       <span className={`text-4xl font-black ${isDanger ? 'text-destructive drop-shadow-[0_0_10px_rgba(225,29,72,0.3)]' : 'text-emerald-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]'}`}>
-                          {mockPercentage}%
-                       </span>
-                    </div>
-
-                    <div className="w-full bg-accent/30 rounded-full h-3 overflow-hidden shadow-inner">
-                       <div 
-                         className={`h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden ${isDanger ? 'bg-gradient-to-r from-rose-500 to-red-500' : 'bg-gradient-to-r from-emerald-400 to-teal-500'}`} 
-                         style={{ width: `${mockPercentage}%` }} 
-                       >
-                         {/* Shimmer effect inside progress bar */}
-                         <div className="absolute top-0 right-0 bottom-0 left-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-                       </div>
-                    </div>
-                 </div>
-               </div>
-            );
-         })}
-      </div>
+      <AttendanceChart subjects={processedSubjects} />
     </div>
   );
 }

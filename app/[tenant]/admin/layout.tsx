@@ -18,14 +18,13 @@ export default async function AdminLayout({
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, slug: true, status: true },
   });
 
   if (!institution) return notFound();
 
   return (
     <div className="h-screen bg-background flex overflow-hidden transition-colors duration-300">
-      <Sidebar tenantId={institution.id} role="admin" />
+      <Sidebar tenantId={institution.id} urlSlug={institution.slug} role="admin" />
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Topbar institution={institution} />
         <main className="flex-1 overflow-y-auto p-6 md:p-8">
