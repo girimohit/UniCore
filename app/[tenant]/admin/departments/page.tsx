@@ -1,77 +1,36 @@
-import { resolveTenant } from '@/lib/tenant/resolver';
-import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { Building2, Plus, Pencil, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import DepartmentManager from './DepartmentManager';
 
-export default async function DepartmentsPage({ params }: { params: { tenant: string } }) {
-  const institution = await resolveTenant(params.tenant);
+export default async function DepartmentsPage({ params }: { params: Promise<{ tenant: string }> }) {
+  const { tenant } = await params;
 
-  if (!institution) {
-    notFound();
-  }
+  // Resolve institution
+  const institution = await prisma.institution.findUnique({
+    where: { slug: tenant },
+    select: { id: true, name: true },
+  });
 
-  // Render directly server-side for speed
+  if (!institution) return notFound();
+
+  // Fetch departments for the list
   const departments = await prisma.department.findMany({
-    where: { tenant_id: institution.tenant_id },
+    where: { tenant_id: institution.id },
     orderBy: { created_at: 'desc' }
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <Building2 className="h-8 w-8 text-primary" />
-            Departments
-          </h1>
-          <p className="text-muted-foreground mt-2">Manage academic groupings across {institution.name}.</p>
-        </div>
-        <button className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors">
-          <Plus className="h-4 w-4" />
-          Add Department
-        </button>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
+      <div>
+        <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+          Departments
+        </h1>
+        <p className="text-lg text-muted-foreground mt-2 font-medium">
+          Manage academic divisions for <span className="text-primary">{institution.name}</span>
+        </p>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-        {departments.length === 0 ? (
-           <div className="p-8 text-center text-muted-foreground">
-             No departments found. Create one to get started.
-           </div>
-        ) : (
-          <table className="w-full text-left text-sm text-muted-foreground">
-            <thead className="bg-muted text-foreground text-xs uppercase bg-accent/50">
-              <tr>
-                <th scope="col" className="px-6 py-4 font-medium">Code</th>
-                <th scope="col" className="px-6 py-4 font-medium">Name</th>
-                <th scope="col" className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {departments.map((dept) => (
-                <tr key={dept.id} className="hover:bg-accent/30 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-foreground">
-                    {dept.code}
-                  </td>
-                   <td className="px-6 py-4 whitespace-nowrap text-foreground">
-                    {dept.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                     <div className="flex justify-end gap-3">
-                        <button className="text-primary hover:text-primary/80 transition-colors">
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button className="text-destructive hover:text-destructive/80 transition-colors">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <DepartmentManager initialDepartments={departments} tenantId={institution.id} />
     </div>
   );
 }

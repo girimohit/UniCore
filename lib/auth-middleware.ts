@@ -4,8 +4,8 @@ import { getTenantFromRequest } from '@/lib/tenant';
 import type { NextRequest } from 'next/server';
 
 type AuthenticatedHandler = (
-  req: NextRequest, 
-  context: any, 
+  req: NextRequest,
+  context: any,
   user: JwtPayload
 ) => Promise<NextResponse> | NextResponse;
 
@@ -40,22 +40,26 @@ export function withAuth(
 
       // 3. Tenant Validation - Ensure token tenant matches the request subdomain
       const requestTenant = getTenantFromRequest(req);
-      
+
       // If the request has a subdomain context, enforce tenant isolation
       if (requestTenant && decodedUser.tenant_id !== requestTenant) {
         return NextResponse.json({ error: 'Forbidden: Cross-tenant access denied' }, { status: 403 });
       }
 
       // 4. Role Validation
+      console.log('DEBUG: Decoded User:', decodedUser);
+      console.log('DEBUG: Allowed Roles:', allowedRoles);
+      
       if (allowedRoles.length > 0 && !allowedRoles.includes(decodedUser.role)) {
-        return NextResponse.json({ 
-          error: `Forbidden: Insufficient permissions. Required one of: ${allowedRoles.join(', ')}` 
+        console.log('DEBUG: Role mismatch. User role:', decodedUser.role);
+        return NextResponse.json({
+          error: `Forbidden: Insufficient permissions. Required one of: ${allowedRoles.join(', ')}`
         }, { status: 403 });
       }
 
       // Execute original handler with the injected user payload
       return await handler(req, context, decodedUser);
-      
+
     } catch (error) {
       console.error('Auth Middleware Error:', error);
       return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

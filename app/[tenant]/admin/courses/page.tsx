@@ -1,87 +1,44 @@
-import { resolveTenant } from '@/lib/tenant/resolver';
-import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
-import { BookOpen, Plus, Pencil, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import CourseManager from './CourseManager';
 
-export default async function CoursesPage({ params }: { params: { tenant: string } }) {
-  const institution = await resolveTenant(params.tenant);
+export default async function CoursesPage({ params }: { params: Promise<{ tenant: string }> }) {
+  const { tenant } = await params;
 
-  if (!institution) {
-    notFound();
-  }
+  // Resolve institution
+  const institution = await prisma.institution.findUnique({
+    where: { slug: tenant },
+    select: { id: true, name: true },
+  });
 
-  // Render directly server-side including nested department names
+  if (!institution) return notFound();
+
+  // Fetch departments for the dropdown
+  const departments = await prisma.department.findMany({
+    where: { tenant_id: institution.id },
+    select: { id: true, name: true, code: true },
+    orderBy: { name: 'asc' }
+  });
+
+  // Fetch courses for the list
   const courses = await prisma.course.findMany({
-    where: { tenant_id: institution.tenant_id },
+    where: { tenant_id: institution.id },
     include: { department: true },
     orderBy: { created_at: 'desc' }
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <BookOpen className="h-8 w-8 text-primary" />
-            Courses
-          </h1>
-          <p className="text-muted-foreground mt-2">Manage academic programs acting as the parent for subjects.</p>
-        </div>
-        <button className="flex justify-center items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90 transition-colors">
-          <Plus className="h-4 w-4" />
-          Add Course
-        </button>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
+      <div>
+        <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+          Courses
+        </h1>
+        <p className="text-lg text-muted-foreground mt-2 font-medium">
+          Manage academic programs for <span className="text-primary">{institution.name}</span>
+        </p>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-        {courses.length === 0 ? (
-           <div className="p-8 text-center text-muted-foreground">
-             No courses found. Ensure you have created a Department first.
-           </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-muted-foreground">
-              <thead className="bg-muted text-foreground text-xs uppercase bg-accent/50">
-                <tr>
-                  <th scope="col" className="px-6 py-4 font-medium">Code</th>
-                  <th scope="col" className="px-6 py-4 font-medium">Name</th>
-                  <th scope="col" className="px-6 py-4 font-medium">Department</th>
-                  <th scope="col" className="px-6 py-4 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {courses.map((course) => (
-                  <tr key={course.id} className="hover:bg-accent/30 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-foreground">
-                      {course.code}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-foreground">
-                      {course.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-muted-foreground">
-                      {course.department.name}
-                      <span className="ml-2 px-2 py-0.5 text-[10px] uppercase font-semibold bg-secondary text-secondary-foreground rounded-full">
-                        {course.department.code}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-3">
-                          <button className="text-primary hover:text-primary/80 transition-colors">
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button className="text-destructive hover:text-destructive/80 transition-colors">
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      <CourseManager initialCourses={courses} departments={departments} tenantId={institution.id} />
     </div>
   );
 }
