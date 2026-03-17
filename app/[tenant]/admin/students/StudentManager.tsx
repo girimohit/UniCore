@@ -7,13 +7,16 @@ import {
   Filter, Download, ChevronRight, GraduationCap
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
+import { getAcademicLabel, AcademicSystem } from "@/lib/utils/academic";
 
 interface StudentManagerProps {
   courses: { id: string; name: string }[];
   tenantId: string;
+  academicSystem: AcademicSystem;
 }
 
-export default function StudentManager({ courses }: StudentManagerProps) {
+export default function StudentManager({ courses, academicSystem }: StudentManagerProps) {
+  const academic = getAcademicLabel(academicSystem);
   const [activeTab, setActiveTab] = useState<"list" | "add" | "csv">("list");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
@@ -160,12 +163,12 @@ export default function StudentManager({ courses }: StudentManagerProps) {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-muted-foreground ml-1">Semester</label>
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">{academic.label}</label>
                   <input
                     type="number"
                     value={form.semester}
                     onChange={e => setForm(f => ({ ...f, semester: e.target.value }))}
-                    placeholder="e.g. 1"
+                    placeholder={`e.g. 1`}
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
                   />
                 </div>
@@ -184,7 +187,7 @@ export default function StudentManager({ courses }: StudentManagerProps) {
         {activeTab === "csv" && (
           <div className="glass rounded-3xl p-8 border border-border/50 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <CSVUpload 
-              title="Bulk Student Import"
+              title={`Bulk Student Import`}
               templateFileName="student_import_template.csv"
               onUpload={handleCSVImport}
               schema={[
@@ -192,7 +195,7 @@ export default function StudentManager({ courses }: StudentManagerProps) {
                 { key: "roll_number", label: "Roll Number", required: true },
                 { key: "email", label: "Email", required: true },
                 { key: "course", label: "Course", required: true },
-                { key: "semester", label: "Semester" },
+                { key: "semester", label: academic.label },
               ]}
             />
           </div>

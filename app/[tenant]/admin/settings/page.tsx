@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
-import StudentManager from "./StudentManager";
-import { Users } from "lucide-react";
+import InstitutionSettingsManager from "./InstitutionSettingsManager";
+import { Settings } from "lucide-react";
 
-export default async function AdminStudentsPage({ params }: { params: Promise<{ tenant: string }> }) {
+export default async function AdminSettingsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
 
   // Resolve institution
@@ -14,25 +14,19 @@ export default async function AdminStudentsPage({ params }: { params: Promise<{ 
 
   if (!institution) return notFound();
 
-  // Fetch courses for the dropdown
-  const courses = await prisma.course.findMany({
-    where: { tenant_id: institution.id },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' }
-  });
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-          Student Management
+          <Settings className="w-8 h-8 text-primary" />
+          Institution Settings
         </h1>
         <p className="text-lg text-muted-foreground mt-2 font-medium">
-          Manage student enrollment, bulk import, and status for <span className="text-primary">{institution.name}</span>
+          Configure global preferences for <span className="text-primary">{institution.name}</span>
         </p>
       </div>
 
-      <StudentManager courses={courses} tenantId={institution.id} academicSystem={institution.academic_system} />
+      <InstitutionSettingsManager initialSettings={{ academic_system: institution.academic_system }} />
     </div>
   );
 }

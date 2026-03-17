@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth-server';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AttendanceChart } from "@/components/student/attendance-chart"
+import { getAcademicLabel } from "@/lib/utils/academic";
 
 export default async function StudentAttendancePage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -15,6 +16,8 @@ export default async function StudentAttendancePage({ params }: { params: Promis
 
   const institution = await resolveTenant(tenant);
   if (!institution) notFound();
+
+  const academic = getAcademicLabel(institution.academic_system);
 
   const student = await prisma.studentProfile.findUnique({
     where: { user_id: session.user_id },
@@ -84,16 +87,16 @@ export default async function StudentAttendancePage({ params }: { params: Promis
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-black">My Attendance 👋</h1>
-            <p className="text-slate-500">Track your class attendance for this semester at {institution.name}.</p>
+            <p className="text-slate-500">Track your class attendance for this {academic.label.toLowerCase()} at {institution.name}.</p>
         </div>
         <div className="w-48 text-black">
-             <Select defaultValue="sem4">
+             <Select defaultValue="curr">
                 <SelectTrigger className="bg-white border-slate-200">
-                    <SelectValue placeholder="Select Semester" />
+                    <SelectValue placeholder={`Select ${academic.label}`} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="sem4">Semester 4</SelectItem>
-                    <SelectItem value="sem3">Semester 3</SelectItem>
+                    <SelectItem value="curr">{academic.label} 4</SelectItem>
+                    <SelectItem value="prev">{academic.label} 3</SelectItem>
                 </SelectContent>
              </Select>
         </div>

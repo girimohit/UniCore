@@ -125,6 +125,7 @@ exports.Prisma.InstitutionScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   status: 'status',
+  academic_system: 'academic_system',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -378,6 +379,11 @@ exports.Prisma.InstitutionModuleOrderByRelevanceFieldEnum = {
   tenant_id: 'tenant_id',
   moduleId: 'moduleId'
 };
+exports.AcademicSystem = exports.$Enums.AcademicSystem = {
+  SEMESTER: 'SEMESTER',
+  ANNUAL: 'ANNUAL'
+};
+
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',

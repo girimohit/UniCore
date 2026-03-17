@@ -47,11 +47,7 @@ export function withAuth(
       }
 
       // 4. Role Validation
-      console.log('DEBUG: Decoded User:', decodedUser);
-      console.log('DEBUG: Allowed Roles:', allowedRoles);
-      
       if (allowedRoles.length > 0 && !allowedRoles.includes(decodedUser.role)) {
-        console.log('DEBUG: Role mismatch. User role:', decodedUser.role);
         return NextResponse.json({
           error: `Forbidden: Insufficient permissions. Required one of: ${allowedRoles.join(', ')}`
         }, { status: 403 });

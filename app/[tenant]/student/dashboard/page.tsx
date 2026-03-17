@@ -13,6 +13,7 @@ import {
   TrendingUp, 
   Bell 
 } from "lucide-react";
+import { getAcademicLabel } from '@/lib/utils/academic';
 
 export default async function StudentDashboard({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -25,7 +26,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true }
+    select: { id: true, name: true, academic_system: true }
   });
 
   if (!institution) notFound();
@@ -74,6 +75,8 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
   const avgGpa = student.grades.length > 0
     ? (student.grades.reduce((acc, curr) => acc + curr.score, 0) / student.grades.length / 25).toFixed(1)
     : '0.0';
+
+  const academic = getAcademicLabel(institution.academic_system);
 
   return (
     <div className="space-y-8">
@@ -229,7 +232,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
 
              <div className="space-y-3">
                 {[
-                    { title: "End semester examination schedule released", date: "2 days ago", tag: "Exam", important: true },
+                    { title: `End ${academic.label.toLowerCase()} examination schedule released`, date: "2 days ago", tag: "Exam", important: true },
                     { title: "Holiday declared for tomorrow due to rain", date: "1 day ago", tag: "General", important: true },
                     { title: "Library books due date extended", date: "3 days ago", tag: "Library", important: false },
                 ].map((notice, i) => (

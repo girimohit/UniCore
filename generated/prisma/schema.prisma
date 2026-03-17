@@ -15,13 +15,19 @@ enum Role {
   STUDENT
 }
 
+enum AcademicSystem {
+  SEMESTER
+  ANNUAL
+}
+
 model Institution {
-  id         String   @id @default(uuid())
-  name       String
-  slug       String   @unique
-  status     String   @default("ACTIVE")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id              String         @id @default(uuid())
+  name            String
+  slug            String         @unique
+  status          String         @default("ACTIVE")
+  academic_system AcademicSystem @default(SEMESTER)
+  created_at      DateTime       @default(now())
+  updated_at      DateTime       @updatedAt
 
   users              User[]
   departments        Department[]

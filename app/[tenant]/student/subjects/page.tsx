@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth-server';
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, User, GraduationCap, ChevronRight } from "lucide-react"
+import { getAcademicLabel } from "@/lib/utils/academic";
 
 export default async function StudentSubjectsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -15,7 +16,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true }
+    select: { id: true, name: true, academic_system: true }
   });
 
   if (!institution) notFound();
@@ -28,6 +29,8 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
   });
 
   if (!student) notFound();
+
+  const academic = getAcademicLabel(institution.academic_system);
 
   // Get subjects for the student's course
   const subjects = student.course_id ? await prisma.subject.findMany({
@@ -49,7 +52,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-black">My Subjects 👋</h1>
-        <p className="text-slate-500">Enrolled courses for current semester at {institution.name}.</p>
+        <p className="text-slate-500">Enrolled courses for current {academic.label.toLowerCase()} at {institution.name}.</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

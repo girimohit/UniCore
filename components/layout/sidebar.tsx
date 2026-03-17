@@ -17,6 +17,7 @@ import {
   GraduationCap,
   Users,
   Building2,
+  Settings
 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -116,6 +117,13 @@ const adminLinks = [
     icon: Box,
     activeColor: "bg-rose-100 text-rose-700",
     hoverColor: "hover:bg-rose-50 hover:text-rose-700",
+  },
+  {
+    name: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
+    activeColor: "bg-slate-200 text-slate-900",
+    hoverColor: "hover:bg-slate-100 hover:text-slate-900",
   },
 ];
 

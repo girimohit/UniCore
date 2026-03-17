@@ -20,7 +20,7 @@ export default function Topbar({ institution }: { institution: Institution }) {
             {institution.name}
           </span>
           <span className="text-[10px] font-semibold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full mt-0.5">
-            Active Tenant
+            Active Tenantj
           </span>
         </div>
         

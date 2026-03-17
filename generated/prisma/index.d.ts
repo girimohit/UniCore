@@ -103,6 +103,14 @@ export namespace $Enums {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const AcademicSystem: {
+  SEMESTER: 'SEMESTER',
+  ANNUAL: 'ANNUAL'
+};
+
+export type AcademicSystem = (typeof AcademicSystem)[keyof typeof AcademicSystem]
+
+
 export const AttendanceStatus: {
   PRESENT: 'PRESENT',
   ABSENT: 'ABSENT',
@@ -117,6 +125,10 @@ export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof Attendance
 export type Role = $Enums.Role
 
 export const Role: typeof $Enums.Role
+
+export type AcademicSystem = $Enums.AcademicSystem
+
+export const AcademicSystem: typeof $Enums.AcademicSystem
 
 export type AttendanceStatus = $Enums.AttendanceStatus
 
@@ -2459,6 +2471,7 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     status: string | null
+    academic_system: $Enums.AcademicSystem | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2468,6 +2481,7 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     status: string | null
+    academic_system: $Enums.AcademicSystem | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2477,6 +2491,7 @@ export namespace Prisma {
     name: number
     slug: number
     status: number
+    academic_system: number
     created_at: number
     updated_at: number
     _all: number
@@ -2488,6 +2503,7 @@ export namespace Prisma {
     name?: true
     slug?: true
     status?: true
+    academic_system?: true
     created_at?: true
     updated_at?: true
   }
@@ -2497,6 +2513,7 @@ export namespace Prisma {
     name?: true
     slug?: true
     status?: true
+    academic_system?: true
     created_at?: true
     updated_at?: true
   }
@@ -2506,6 +2523,7 @@ export namespace Prisma {
     name?: true
     slug?: true
     status?: true
+    academic_system?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -2588,6 +2606,7 @@ export namespace Prisma {
     name: string
     slug: string
     status: string
+    academic_system: $Enums.AcademicSystem
     created_at: Date
     updated_at: Date
     _count: InstitutionCountAggregateOutputType | null
@@ -2614,6 +2633,7 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     status?: boolean
+    academic_system?: boolean
     created_at?: boolean
     updated_at?: boolean
     users?: boolean | Institution$usersArgs<ExtArgs>
@@ -2635,11 +2655,12 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     status?: boolean
+    academic_system?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type InstitutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "status" | "created_at" | "updated_at", ExtArgs["result"]["institution"]>
+  export type InstitutionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "status" | "academic_system" | "created_at" | "updated_at", ExtArgs["result"]["institution"]>
   export type InstitutionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Institution$usersArgs<ExtArgs>
     departments?: boolean | Institution$departmentsArgs<ExtArgs>
@@ -2671,6 +2692,7 @@ export namespace Prisma {
       name: string
       slug: string
       status: string
+      academic_system: $Enums.AcademicSystem
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["institution"]>
@@ -3055,6 +3077,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Institution", 'String'>
     readonly slug: FieldRef<"Institution", 'String'>
     readonly status: FieldRef<"Institution", 'String'>
+    readonly academic_system: FieldRef<"Institution", 'AcademicSystem'>
     readonly created_at: FieldRef<"Institution", 'DateTime'>
     readonly updated_at: FieldRef<"Institution", 'DateTime'>
   }
@@ -17577,6 +17600,7 @@ export namespace Prisma {
     name: 'name',
     slug: 'slug',
     status: 'status',
+    academic_system: 'academic_system',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -17940,6 +17964,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AcademicSystem'
+   */
+  export type EnumAcademicSystemFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AcademicSystem'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -17992,6 +18023,7 @@ export namespace Prisma {
     name?: StringFilter<"Institution"> | string
     slug?: StringFilter<"Institution"> | string
     status?: StringFilter<"Institution"> | string
+    academic_system?: EnumAcademicSystemFilter<"Institution"> | $Enums.AcademicSystem
     created_at?: DateTimeFilter<"Institution"> | Date | string
     updated_at?: DateTimeFilter<"Institution"> | Date | string
     users?: UserListRelationFilter
@@ -18010,6 +18042,7 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     status?: SortOrder
+    academic_system?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     users?: UserOrderByRelationAggregateInput
@@ -18032,6 +18065,7 @@ export namespace Prisma {
     NOT?: InstitutionWhereInput | InstitutionWhereInput[]
     name?: StringFilter<"Institution"> | string
     status?: StringFilter<"Institution"> | string
+    academic_system?: EnumAcademicSystemFilter<"Institution"> | $Enums.AcademicSystem
     created_at?: DateTimeFilter<"Institution"> | Date | string
     updated_at?: DateTimeFilter<"Institution"> | Date | string
     users?: UserListRelationFilter
@@ -18050,6 +18084,7 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     status?: SortOrder
+    academic_system?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: InstitutionCountOrderByAggregateInput
@@ -18065,6 +18100,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Institution"> | string
     slug?: StringWithAggregatesFilter<"Institution"> | string
     status?: StringWithAggregatesFilter<"Institution"> | string
+    academic_system?: EnumAcademicSystemWithAggregatesFilter<"Institution"> | $Enums.AcademicSystem
     created_at?: DateTimeWithAggregatesFilter<"Institution"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Institution"> | Date | string
   }
@@ -19054,6 +19090,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -19072,6 +19109,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -19090,6 +19128,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -19108,6 +19147,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -19126,6 +19166,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -19135,6 +19176,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19144,6 +19186,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20122,6 +20165,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type EnumAcademicSystemFilter<$PrismaModel = never> = {
+    equals?: $Enums.AcademicSystem | EnumAcademicSystemFieldRefInput<$PrismaModel>
+    in?: $Enums.AcademicSystem[]
+    notIn?: $Enums.AcademicSystem[]
+    not?: NestedEnumAcademicSystemFilter<$PrismaModel> | $Enums.AcademicSystem
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -20234,6 +20284,7 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     status?: SortOrder
+    academic_system?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20243,6 +20294,7 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     status?: SortOrder
+    academic_system?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20252,6 +20304,7 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     status?: SortOrder
+    academic_system?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -20272,6 +20325,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type EnumAcademicSystemWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AcademicSystem | EnumAcademicSystemFieldRefInput<$PrismaModel>
+    in?: $Enums.AcademicSystem[]
+    notIn?: $Enums.AcademicSystem[]
+    not?: NestedEnumAcademicSystemWithAggregatesFilter<$PrismaModel> | $Enums.AcademicSystem
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAcademicSystemFilter<$PrismaModel>
+    _max?: NestedEnumAcademicSystemFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -21204,6 +21267,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type EnumAcademicSystemFieldUpdateOperationsInput = {
+    set?: $Enums.AcademicSystem
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -22571,6 +22638,13 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedEnumAcademicSystemFilter<$PrismaModel = never> = {
+    equals?: $Enums.AcademicSystem | EnumAcademicSystemFieldRefInput<$PrismaModel>
+    in?: $Enums.AcademicSystem[]
+    notIn?: $Enums.AcademicSystem[]
+    not?: NestedEnumAcademicSystemFilter<$PrismaModel> | $Enums.AcademicSystem
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -22609,6 +22683,16 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumAcademicSystemWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AcademicSystem | EnumAcademicSystemFieldRefInput<$PrismaModel>
+    in?: $Enums.AcademicSystem[]
+    notIn?: $Enums.AcademicSystem[]
+    not?: NestedEnumAcademicSystemWithAggregatesFilter<$PrismaModel> | $Enums.AcademicSystem
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAcademicSystemFilter<$PrismaModel>
+    _max?: NestedEnumAcademicSystemFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -23324,6 +23408,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     departments?: DepartmentCreateNestedManyWithoutInstitutionInput
@@ -23341,6 +23426,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     departments?: DepartmentUncheckedCreateNestedManyWithoutInstitutionInput
@@ -23422,6 +23508,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     departments?: DepartmentUpdateManyWithoutInstitutionNestedInput
@@ -23439,6 +23526,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     departments?: DepartmentUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -23958,6 +24046,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -23975,6 +24064,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -24008,6 +24098,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -24025,6 +24116,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -24042,6 +24134,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -24059,6 +24152,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -24154,6 +24248,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -24171,6 +24266,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -24231,6 +24327,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -24248,6 +24345,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -24424,6 +24522,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -24441,6 +24540,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -24565,6 +24665,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -24582,6 +24683,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -24728,6 +24830,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -24745,6 +24848,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -25087,6 +25191,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -25104,6 +25209,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25193,6 +25299,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -25210,6 +25317,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -25295,6 +25403,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -25312,6 +25421,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25435,6 +25545,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -25452,6 +25563,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -25557,6 +25669,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -25574,6 +25687,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25661,6 +25775,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -25678,6 +25793,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
@@ -25803,6 +25919,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserCreateNestedManyWithoutInstitutionInput
@@ -25820,6 +25937,7 @@ export namespace Prisma {
     name: string
     slug: string
     status?: string
+    academic_system?: $Enums.AcademicSystem
     created_at?: Date | string
     updated_at?: Date | string
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25874,6 +25992,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUpdateManyWithoutInstitutionNestedInput
@@ -25891,6 +26010,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    academic_system?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput

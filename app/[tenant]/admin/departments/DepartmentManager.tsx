@@ -37,8 +37,6 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
         body: JSON.stringify(form),
       });
       const data = await res.json();
-      console.log("dtaaaaaaaaaaaaaaaaaa")
-      console.log(data)
       if (data.errors && data.errors.length > 0) {
         setErrors(data.errors);
       }

@@ -29,12 +29,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async
 export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
     const body = await req.json();
-    console.log("boddyyyyyyy")
-    console.log(body)
-    
     const items = Array.isArray(body) ? body : [body];
-    console.log("items")
-    console.log(items)
     
     // Auth middleware already verified the user.tenant_id
     const institution = await prisma.institution.findUnique({
