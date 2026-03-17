@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { withAuth } from '@/lib/auth-middleware';
+import { SubjectService } from '@/lib/services/subject-service';
 
 export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACULTY', 'STUDENT'], async (req, context, user) => {
   try {
@@ -48,10 +49,8 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
 
         const cycleNumber = item.cycleNumber ? parseInt(item.cycleNumber) : (item.semester ? parseInt(item.semester) : 1);
         
-        if (cycleNumber < 1) {
-          errors.push({ ...item, error: 'Cycle number must be at least 1' });
-          continue;
-        }
+        // Tenant-based validation
+        await SubjectService.validateCycleNumber(user.tenant_id, cycleNumber);
 
         const subject = await prisma.subject.create({
           data: {
