@@ -1,12 +1,26 @@
+'use client';
+
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Institution } from '@prisma/client';
 import { LogoutButton } from '@/components/auth/LogoutButton';
+import { Menu } from 'lucide-react';
+import { useSidebar } from './sidebar-context';
 
 export default function Topbar({ institution }: { institution: Institution }) {
+  const { toggle } = useSidebar();
+
   return (
-    <header className="glass h-20 px-8 flex items-center justify-between sticky top-0 z-20 border-b border-border/40 shadow-sm transition-colors duration-300">
-      <div className="flex items-center">
-        <h1 className="text-xl font-bold text-foreground md:hidden tracking-tight">
+    <header className="glass h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 border-b border-border/40 shadow-sm transition-colors duration-300">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={toggle}
+          className="lg:hidden p-2 rounded-xl bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground transition-all active:scale-95"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        <h1 className="text-xl font-display font-black text-foreground md:hidden tracking-tight grad-purple">
           {institution.name}
         </h1>
         <div className="hidden md:block">
@@ -14,23 +28,23 @@ export default function Topbar({ institution }: { institution: Institution }) {
         </div>
       </div>
 
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-3 md:space-x-6">
         <div className="hidden sm:flex flex-col items-end">
           <span className="text-sm font-bold text-foreground tracking-tight">
             {institution.name}
           </span>
-          <span className="text-[10px] font-semibold text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full mt-0.5">
-            Active Tenantj
+          <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full mt-0.5">
+            Active Workspace
           </span>
         </div>
         
-        <div className="h-8 w-px bg-border/60 mx-2 hidden sm:block"></div>
+        <div className="h-8 w-px bg-border/60 mx-1 hidden sm:block"></div>
 
         <ThemeToggle />
         
-        <div className="flex items-center gap-4 bg-background/50 backdrop-blur-md border border-border/40 px-3 py-1.5 rounded-full shadow-sm">
+        <div className="flex items-center gap-2 md:gap-4 bg-background/50 backdrop-blur-md border border-border/40 px-2 py-1.5 md:px-3 rounded-full shadow-sm">
           <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform duration-300">
-            U
+            {institution.name[0]}
           </div>
           <div className="h-4 w-px bg-border/60"></div>
           <LogoutButton variant="icon" />

@@ -22,6 +22,7 @@ import {
 import * as Icons from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { ModuleMetadata } from "@/lib/modules/registry";
+import { useSidebar } from "./sidebar-context";
 
 const studentLinks = [
   {
@@ -143,15 +144,29 @@ interface SidebarProps {
 
 export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }: SidebarProps) {
   const pathname = usePathname();
+  const { isOpen, setIsOpen } = useSidebar();
 
   return (
     <>
-      {/* Sidebar */}
+      <div 
+        className={cn(
+          "fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300",
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsOpen(false)}
+      />
       <aside
-        className="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-border/40 bg-card/80 backdrop-blur-xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl dark:shadow-none"
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border/40 bg-card/80 backdrop-blur-xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl dark:shadow-none",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
       >
         <div className="flex h-12 items-center justify-between px-6 mb-8">
-          <Link href={`/${urlSlug}/student/dashboard`} className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform">
+          <Link 
+            href={`/${urlSlug}/${role}/dashboard`} 
+            className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform"
+            onClick={() => setIsOpen(false)}
+          >
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/30">
               <GraduationCap className="w-5 h-5" />
             </div>
@@ -159,6 +174,13 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
               Unicore
             </span>
           </Link>
+
+          <button 
+            className="lg:hidden p-1.5 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 scrollbar-thin scrollbar-thumb-border">
