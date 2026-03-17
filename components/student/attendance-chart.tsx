@@ -29,30 +29,30 @@ export function AttendanceChart({ subjects }: { subjects: SubjectAttendance[] })
         const isLow = percentage < 75
 
         return (
-          <Card key={sub.id || idx} className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden text-black bg-white">
-            <div className={`h-1.5 w-full ${sub.bg}`}></div>
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-6">
+          <Card key={sub.id || idx} className="group border-border/40 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden rounded-[2rem]">
+            <div className={`h-1.5 w-full ${sub.bg} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+            <CardContent className="p-8">
+              <div className="flex justify-between items-start mb-6 gap-4">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{sub.name}</h3>
+                  <h3 className="text-xl font-display font-black text-foreground group-hover:grad-purple transition-all duration-500">{sub.name}</h3>
                   <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${sub.light} ${sub.text} ${sub.border}`}>
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${sub.light} ${sub.text} ${sub.border}`}>
                       Theory
                     </span>
                   </div>
                 </div>
                 {isLow ? (
-                  <div className="p-2 bg-red-50 rounded-full text-red-500" title="Low Attendance">
+                  <div className="p-2.5 bg-rose-500/10 rounded-2xl text-rose-500 shadow-inner" title="Low Attendance">
                     <AlertCircle className="h-5 w-5" />
                   </div>
                 ) : (
-                  <div className="p-2 bg-emerald-50 rounded-full text-emerald-500" title="Good Standing">
+                  <div className="p-2.5 bg-emerald-500/10 rounded-2xl text-emerald-500 shadow-inner" title="Good Standing">
                     <CheckCircle2 className="h-5 w-5" />
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-8">
                 <div className="h-24 w-24 relative flex-shrink-0">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -60,36 +60,37 @@ export function AttendanceChart({ subjects }: { subjects: SubjectAttendance[] })
                         data={data}
                         cx="50%"
                         cy="50%"
-                        innerRadius={30}
-                        outerRadius={40}
-                        paddingAngle={5}
+                        innerRadius={32}
+                        outerRadius={44}
+                        paddingAngle={4}
                         dataKey="value"
                         startAngle={90}
                         endAngle={-270}
-                        cornerRadius={4}
+                        cornerRadius={6}
                         stroke="none"
                       >
-                        <Cell fill={sub.color} />
-                        <Cell fill="#f1f5f9" />
+                        <Cell fill={sub.color} className="drop-shadow-sm" />
+                        <Cell fill="currentColor" className="text-muted/30" />
                       </Pie>
                     </PieChart>
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-sm font-bold text-slate-900">{percentage}%</span>
+                    <span className="text-sm font-black text-foreground">{percentage}%</span>
                   </div>
                 </div>
 
-                <div className="flex-1 space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium whitespace-nowrap">Attended</span>
-                    <span className="font-bold text-slate-900">{sub.attended}</span>
+                <div className="flex-1 space-y-4">
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground opacity-70">
+                    <span>Attended</span>
+                    <span className="text-foreground">{sub.attended}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium whitespace-nowrap">Total Classes</span>
-                    <span className="font-bold text-slate-900">{sub.total}</span>
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-muted-foreground opacity-70">
+                    <span>Total</span>
+                    <span className="text-foreground">{sub.total}</span>
                   </div>
-                  <div className={`text-xs font-bold ${isLow ? 'text-red-600' : 'text-emerald-600'} flex items-center gap-1`}>
-                    {isLow ? '⚠️ Short attendance' : '✅ On track'}
+                  <div className={`text-[10px] font-black uppercase tracking-[0.2em] pt-2 ${isLow ? 'text-rose-500' : 'text-emerald-500'} flex items-center gap-2`}>
+                    <div className={`h-1.5 w-1.5 rounded-full ${isLow ? 'bg-rose-500' : 'bg-emerald-500'} pulse-dot`} />
+                    {isLow ? 'Short attendance' : 'On track'}
                   </div>
                 </div>
               </div>

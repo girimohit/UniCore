@@ -29,46 +29,58 @@ export default async function StudentNoticesPage({ params }: { params: Promise<{
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Notices Board 📢</h1>
-        <p className="text-slate-500 font-medium">Stay updated with the latest announcements at {institution.name}.</p>
+    <div className="space-y-10 pb-10">
+      <div className="px-2 text-foreground">
+        <h1 className="text-3xl font-display font-black tracking-tight">Notices Board 📢</h1>
+        <p className="text-muted-foreground font-medium mt-1">Stay updated with the latest announcements at {institution.name}.</p>
       </div>
 
       <div className="grid gap-6">
-        {mockNotices.map((notice, i) => (
-             <Card key={i} className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden text-black bg-white">
-                <div className={`h-1.5 w-full ${notice.color}`}></div>
-                <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                        <div className="space-y-1">
-                            <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+        {mockNotices.length === 0 ? (
+          <Card className="border-border/40 bg-card/50 backdrop-blur-md p-16 flex flex-col items-center justify-center text-center gap-4 rounded-[2rem]">
+            <div className="p-4 rounded-full bg-amber-500/10 text-amber-500 shadow-inner">
+               <Info className="h-10 w-10" />
+            </div>
+            <div>
+              <h3 className="text-xl font-display font-black text-foreground">No notices yet</h3>
+              <p className="text-muted-foreground text-sm mt-1 max-w-sm">
+                When your institution posts notices they will appear here. Check back soon.
+              </p>
+            </div>
+          </Card>
+        ) : mockNotices.map((notice, i) => (
+             <Card key={i} className="group border-border/40 bg-card/40 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden rounded-[2rem]">
+                <div className={`h-1.5 w-full ${notice.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+                <CardContent className="p-8">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-display font-black text-foreground group-hover:grad-purple transition-all duration-500">
                                 {notice.title}
                             </h3>
-                            <div className="flex items-center gap-3 text-xs">
-                                <span className={`flex items-center gap-1 font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${notice.light} ${notice.text} ${notice.border}`}>
+                            <div className="flex flex-wrap items-center gap-4">
+                                <span className={`flex items-center gap-1.5 text-[10px] font-black px-3 py-1 rounded-full border uppercase tracking-widest ${notice.light} ${notice.text} ${notice.border}`}>
                                     {notice.category}
                                 </span>
-                                <span className="text-slate-400 font-medium flex items-center gap-1">
-                                    <Calendar className="h-3 w-3" /> {notice.date}
+                                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 opacity-60">
+                                    <Calendar className="h-3.5 w-3.5" /> {notice.date}
                                 </span>
                             </div>
                         </div>
                         
-                        <div className="flex items-center gap-2">
+                        <div>
                              {notice.priority === 'high' && (
-                                <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-100 border-0 font-bold">
+                                <Badge className="bg-rose-500/10 text-rose-500 hover:bg-rose-500/10 border border-rose-500/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
                                     High Priority
                                 </Badge>
                              )}
                         </div>
                     </div>
 
-                    <div className="flex gap-4">
-                        <div className="hidden md:block p-3 bg-slate-50 rounded-lg h-fit text-slate-400">
-                             <StickyNote className="h-5 w-5" />
+                    <div className="flex gap-6">
+                        <div className="hidden md:flex p-4 bg-muted rounded-2xl h-fit text-muted-foreground/40 shrink-0 group-hover:text-primary/40 group-hover:bg-primary/5 transition-colors">
+                             <StickyNote className="h-6 w-6" />
                         </div>
-                        <p className="text-slate-600 text-sm leading-relaxed">
+                        <p className="text-muted-foreground text-sm leading-relaxed font-medium">
                             {notice.desc}
                         </p>
                     </div>

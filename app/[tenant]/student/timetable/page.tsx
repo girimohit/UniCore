@@ -57,42 +57,49 @@ export default async function StudentTimetablePage({ params }: { params: Promise
   if (!institution) notFound();
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Weekly Timetable 🗓️</h1>
-        <p className="text-slate-500">Your class schedule for the current semester at {institution.name}.</p>
+    <div className="space-y-10 pb-10 text-foreground">
+      <div className="px-2">
+        <h1 className="text-3xl font-display font-black tracking-tight">Weekly Timetable 🗓️</h1>
+        <p className="text-muted-foreground font-medium mt-1">Your class schedule for the current semester at {institution.name}.</p>
       </div>
 
-      <Card className="border border-slate-200 shadow-sm overflow-hidden text-black bg-white">
+      <Card className="border-border/40 bg-card/40 backdrop-blur-md shadow-xl overflow-hidden rounded-[2.5rem]">
         <CardContent className="p-0">
-            <div className="overflow-x-auto">
-                <div className="min-w-[800px]">
+            <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-border">
+                <div className="min-w-[900px]">
                      {/* Header */}
-                    <div className="grid grid-cols-6 border-b border-slate-200 bg-slate-50/50">
-                        <div className="p-4 font-bold text-slate-400 text-center uppercase text-xs tracking-wider">Day</div>
+                    <div className="grid grid-cols-[100px_repeat(5,1fr)] border-b border-border/40 bg-muted/30">
+                        <div className="p-6 font-black text-muted-foreground text-center uppercase text-[10px] tracking-[0.2em] opacity-60">Day</div>
                         {["09:00", "10:00", "11:00", "12:00", "01:00"].map(t => (
-                            <div key={t} className="p-4 font-bold text-slate-500 text-center text-sm">{t}</div>
+                            <div key={t} className="p-6 font-black text-foreground text-center text-sm tracking-tight">{t}</div>
                         ))}
                     </div>
 
                     {/* Grid */}
                     {staticSchedule.map((day, idx) => (
-                        <div key={idx} className="grid grid-cols-6 border-b border-slate-100 last:border-0 hover:bg-slate-50/30 transition-colors">
-                            <div className="p-4 font-bold text-slate-900 flex items-center justify-center border-r border-slate-100 bg-white sticky left-0 z-10 w-24 md:w-auto shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)]">
-                                <span className="text-sm">{day.day}</span>
+                        <div key={idx} className="grid grid-cols-[100px_repeat(5,1fr)] border-b border-border/20 last:border-0 group/row hover:bg-muted/10 transition-colors">
+                            <div className="p-6 font-black text-foreground flex items-center justify-center border-r border-border/20 bg-card/20 sticky left-0 z-10 w-24 md:w-auto shadow-xl group-hover/row:bg-primary/5 transition-colors">
+                                <span className="text-sm font-display">{day.day}</span>
                             </div>
-                            <div className="col-span-5 grid grid-cols-5 p-2 gap-2">
+                            <div className="col-span-5 grid grid-cols-5 p-4 gap-4">
                                 {day.slots.map((slot, sIdx) => {
-                                    if(!slot) return <div key={sIdx} className="bg-slate-50/50 rounded-lg border border-slate-100/50 flex items-center justify-center text-slate-300 text-xs font-bold tracking-wider">BREAK</div>
+                                    if(!slot) return (
+                                        <div key={sIdx} className="bg-muted/20 rounded-2xl border border-dashed border-border/40 flex items-center justify-center text-muted-foreground/30 text-[10px] font-black tracking-[0.2em]">
+                                            BREAK
+                                        </div>
+                                    )
                                     return (
-                                        <div key={sIdx} className={`group rounded-lg p-3 border ${slot.color} ${slot.time.includes('02-04') || slot.time.includes('09-11') ? 'col-span-2' : ''} shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-0.5 flex flex-col justify-between min-h-[100px]`}>
-                                            <span className="text-[10px] font-bold opacity-70 mb-2 flex items-center gap-1">
+                                        <div key={sIdx} className={`group relative rounded-3xl p-5 border ${slot.color.replace('bg-', 'bg-opacity-10 bg-').replace('text-', 'text-opacity-90 text-')} ${slot.time.includes('02-04') || slot.time.includes('09-11') ? 'col-span-2' : ''} shadow-sm hover:shadow-xl transition-all cursor-pointer hover:-translate-y-1 flex flex-col justify-between min-h-[120px] overflow-hidden`}>
+                                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-20 transition-opacity">
+                                                 <Clock className="w-10 h-10" />
+                                            </div>
+                                            <span className="text-[10px] font-black uppercase tracking-widest mb-3 flex items-center gap-2 opacity-70">
                                                 <Clock className="w-3 h-3" /> {slot.time}
                                             </span>
-                                            <div>
-                                                <p className="font-bold text-sm leading-tight mb-1">{slot.sub}</p>
-                                                <p className="text-[10px] opacity-80 font-bold flex items-center gap-1">
-                                                    <MapPin className="w-2.5 h-2.5" /> {slot.hall}
+                                            <div className="relative z-10">
+                                                <p className="font-black text-base font-display leading-tight mb-2">{slot.sub}</p>
+                                                <p className="text-[10px] uppercase tracking-widest font-black flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                    <MapPin className="w-3 h-3 text-primary" /> {slot.hall}
                                                 </p>
                                             </div>
                                         </div>

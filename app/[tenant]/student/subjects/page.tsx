@@ -57,12 +57,12 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
   ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-black">My Subjects 📚</h1>
-        <p className="text-slate-500">
+    <div className="space-y-10 pb-10">
+      <div className="px-2">
+        <h1 className="text-3xl font-display font-black text-foreground tracking-tight">My Subjects 📚</h1>
+        <p className="text-muted-foreground font-medium mt-1">
           {student.course ? (
-            <><span className="font-semibold text-slate-700">{student.course.name}</span>{student.semester ? ` · ${academic.label} ${student.semester}` : ''} · </>
+            <><span className="text-foreground tracking-tight">{student.course.name}</span>{student.semester ? ` · ${academic.label} ${student.semester}` : ''} · </>
           ) : null}
           {institution.name}
         </p>
@@ -70,52 +70,56 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {subjects.length === 0 ? (
-          <Card className="col-span-full p-12 text-center text-slate-500 border-slate-200 bg-white">
-            <BookOpen className="w-10 h-10 mx-auto opacity-30 mb-3" />
-            <p className="text-lg font-semibold">No subjects for your course yet.</p>
-            <p className="text-sm text-slate-400 mt-1">Contact your administrator to assign subjects.</p>
+          <Card className="col-span-full border-dashed border-border p-20 text-center bg-card/10 backdrop-blur-md rounded-[2.5rem]">
+            <BookOpen className="w-16 h-16 mx-auto text-muted-foreground opacity-20 mb-6" />
+            <h3 className="text-xl font-display font-black text-foreground">No subjects found</h3>
+            <p className="text-muted-foreground font-medium mt-2 max-w-sm mx-auto">
+              Your course subjects haven't been assigned for this academic period yet.
+            </p>
           </Card>
         ) : subjects.map((sub, i) => {
           const style = subjectStyles[i % subjectStyles.length];
           const facultyName = sub.taughtBy[0]?.faculty?.user?.identifier ?? null;
           return (
-            <Card key={sub.id} className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden cursor-pointer text-black bg-white">
-              <div className={`h-1.5 w-full ${style.color}`}></div>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <span className={`text-[10px] font-bold px-2 py-1 rounded border ${style.light} ${style.text} ${style.border}`}>
+            <Card key={sub.id} className="group border-border/40 bg-card/40 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden cursor-pointer rounded-[2rem]">
+              <div className={`h-1.5 w-full ${style.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+              <CardContent className="p-8">
+                <div className="flex justify-between items-start mb-8">
+                  <span className={`text-[10px] font-black px-3 py-1 rounded-full border uppercase tracking-widest ${style.light} ${style.text} ${style.border}`}>
                     {sub.code}
                   </span>
-                  <div className={`p-2 rounded-full ${style.light} ${style.text}`}>
+                  <div className={`p-2.5 rounded-2xl ${style.light} ${style.text} shadow-inner`}>
                     <BookOpen className="h-4 w-4" />
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                <h3 className="text-xl font-display font-black text-foreground mb-3 group-hover:grad-purple transition-all duration-500">
                   {sub.name}
                 </h3>
 
-                <div className="space-y-4 mt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
-                      <User className="h-4 w-4" />
+                <div className="space-y-6 mt-8">
+                  <div className="flex items-center gap-4 p-3 rounded-2xl bg-muted/30 group-hover:bg-muted/50 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground shrink-0 shadow-sm">
+                      <User className="h-5 w-5" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Faculty</p>
-                      <p className="text-sm font-bold text-slate-700 truncate">
-                        {facultyName ?? <span className="text-slate-400 italic font-normal">Not assigned</span>}
+                      <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-60">Faculty</p>
+                      <p className="text-sm font-bold text-foreground truncate">
+                        {facultyName ?? <span className="text-muted-foreground italic font-normal">Not assigned</span>}
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-                    <div className="flex items-center gap-1.5">
-                      <GraduationCap className="h-4 w-4 text-slate-400" />
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                  <div className="pt-6 border-t border-border/40 flex justify-between items-center px-1">
+                    <div className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4 text-primary opacity-60" />
+                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                         {academic.label} {student.semester ?? '—'}
                       </span>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-indigo-600 transition-colors" />
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary scale-0 group-hover:scale-100 transition-transform duration-300">
+                      <ChevronRight className="h-4 w-4" />
+                    </div>
                   </div>
                 </div>
               </CardContent>

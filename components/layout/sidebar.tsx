@@ -148,22 +148,22 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
     <>
       {/* Sidebar */}
       <aside
-        className="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-slate-100 bg-white transition-transform duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col"
+        className="fixed inset-y-0 left-0 z-30 w-64 transform border-r border-border/40 bg-card/80 backdrop-blur-xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl dark:shadow-none"
       >
         <div className="flex h-12 items-center justify-between px-6 mb-8">
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white shadow-md shadow-violet-200">
-              <span className="text-lg">S</span>
+          <Link href={`/${urlSlug}/student/dashboard`} className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-white shadow-lg shadow-violet-500/30">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent font-display font-black tracking-tight">
               Unicore
             </span>
-          </div>
+          </Link>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4">
+        <div className="flex-1 overflow-y-auto px-4 scrollbar-thin scrollbar-thumb-border">
           <div className="space-y-1">
-            <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Menu</p>
+            <p className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 opacity-70">Main Menu</p>
             {(role === "admin" ? adminLinks : studentLinks).map((item) => {
               const fullPathLabels = `/${urlSlug}${item.href}`;
               const isActive = pathname.startsWith(fullPathLabels);
@@ -222,14 +222,14 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
         </div>
 
         <div className="px-4 mt-auto">
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
+          <div className="bg-muted/50 backdrop-blur-md rounded-2xl p-4 border border-border/40 mb-4 transition-colors">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-400 to-cyan-400 flex items-center justify-center text-white font-bold shadow-md shadow-blue-200/50">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-md shadow-primary/20">
                 {role === "admin" ? "A" : "U"}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-bold text-slate-900 truncate">{role === "admin" ? "Admin User" : "Student User"}</p>
-                <p className="text-xs text-slate-500 truncate uppercase tracking-widest font-bold font-sans">{role}</p>
+                <p className="text-sm font-bold text-foreground truncate">{role === "admin" ? "Admin User" : "Student User"}</p>
+                <p className="text-[10px] text-muted-foreground truncate uppercase tracking-widest font-black">{role}</p>
               </div>
             </div>
           </div>

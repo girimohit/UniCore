@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth-server';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AttendanceChart } from "@/components/student/attendance-chart"
+import { CardContent } from "@/components/ui/card"
+import { CalendarCheck } from "lucide-react"
 import { getAcademicLabel } from "@/lib/utils/academic";
 
 export default async function StudentAttendancePage({ params }: { params: Promise<{ tenant: string }> }) {
@@ -74,19 +76,19 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   const processedSubjects = Object.values(subjectsMap);
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight text-black">My Attendance 👋</h1>
-            <p className="text-slate-500">Track your class attendance for this {academic.label.toLowerCase()} at {institution.name}.</p>
+    <div className="space-y-10 pb-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
+        <div className="text-foreground">
+            <h1 className="text-3xl font-display font-black tracking-tight">My Attendance 👋</h1>
+            <p className="text-muted-foreground font-medium mt-1">Track your class attendance for this {academic.label.toLowerCase()} at {institution.name}.</p>
         </div>
-        <div className="w-48 text-black">
+        <div className="w-56">
              <Select defaultValue="curr">
-                <SelectTrigger className="bg-white border-slate-200">
+                <SelectTrigger className="bg-card/50 backdrop-blur-md border-border/40 text-foreground font-bold rounded-2xl h-12">
                     <SelectValue placeholder={`Select ${academic.label}`} />
                 </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="curr">
+                <SelectContent className="bg-card/90 backdrop-blur-xl border-border/40 rounded-2xl">
+                    <SelectItem value="curr" className="font-bold">
                       {academic.label} {student.semester ?? 'Current'}
                     </SelectItem>
                 </SelectContent>
@@ -95,9 +97,14 @@ export default async function StudentAttendancePage({ params }: { params: Promis
       </div>
 
       {processedSubjects.length === 0 ? (
-        <CardContent className="p-16 flex flex-col items-center justify-center text-center gap-4 border border-slate-200 rounded-xl bg-white">
-          <CalendarCheck className="h-10 w-10 text-emerald-500 opacity-30" />
-          <p className="text-sm font-medium text-slate-500 max-w-xs">No attendance records found. Make sure you are enrolled in a course and subjects are assigned.</p>
+        <CardContent className="p-20 flex flex-col items-center justify-center text-center gap-6 border border-border/40 border-dashed rounded-[2.5rem] bg-card/10 backdrop-blur-md">
+          <div className="p-4 rounded-full bg-emerald-500/10 text-emerald-500 shadow-inner">
+             <CalendarCheck className="h-12 w-12 opacity-40" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-display font-black text-foreground">No records found</h3>
+            <p className="text-sm font-medium text-muted-foreground max-w-xs mx-auto">No attendance records found. Make sure you are enrolled in a course and subjects are assigned.</p>
+          </div>
         </CardContent>
       ) : (
         <AttendanceChart subjects={processedSubjects} />
@@ -105,6 +112,3 @@ export default async function StudentAttendancePage({ params }: { params: Promis
     </div>
   );
 }
-
-// Re-importing missing Icon for empty state
-import { CalendarCheck } from "lucide-react";

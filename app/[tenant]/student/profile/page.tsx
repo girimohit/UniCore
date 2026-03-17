@@ -34,31 +34,34 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   const initials = student.user.identifier.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || student.roll_number.slice(0, 2).toUpperCase();
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="text-black">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">My Profile 👤</h1>
-        <p className="text-slate-500 font-medium">Your academic identity at {institution.name}.</p>
+    <div className="max-w-5xl mx-auto space-y-10 pb-10">
+      <div className="px-2 text-foreground">
+        <h1 className="text-3xl font-display font-black tracking-tight">My Profile 👤</h1>
+        <p className="text-muted-foreground font-medium mt-1">Your academic identity at {institution.name}.</p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-3">
         {/* Avatar + Meta Card */}
-        <div className="md:col-span-1 space-y-6">
-          <Card className="border border-slate-200 shadow-sm overflow-hidden text-center text-black bg-white">
-            <div className="h-32 bg-gradient-to-br from-indigo-800 to-slate-900 relative overflow-hidden"></div>
-            <div className="px-6 pb-6 relative">
-              <div className="w-24 h-24 rounded-full bg-white p-1 mx-auto -mt-12 relative shadow-md">
-                <div className="w-full h-full rounded-full bg-slate-100 overflow-hidden flex items-center justify-center text-indigo-600 font-black text-3xl">
+        <div className="md:col-span-1 space-y-8">
+          <Card className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm overflow-hidden text-center rounded-[2.5rem]">
+            <div className="h-32 bg-gradient-to-br from-violet-600 via-fuchsia-600 to-cyan-500 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            </div>
+            <div className="px-8 pb-8 relative">
+              <div className="w-28 h-28 rounded-3xl bg-card p-1.5 mx-auto -mt-14 relative shadow-2xl border border-border/40 rotate-1 group-hover:rotate-0 transition-transform">
+                <div className="w-full h-full rounded-2xl bg-muted overflow-hidden flex items-center justify-center text-primary font-black text-3xl shadow-inner">
                   {initials}
                 </div>
               </div>
-              <div className="mt-4 space-y-1">
-                <h3 className="text-xl font-bold text-slate-900">{student.user.identifier}</h3>
-                <p className="text-slate-500 text-sm font-medium">
+              <div className="mt-6 space-y-2">
+                <h3 className="text-2xl font-display font-black text-foreground tracking-tight">{student.user.identifier}</h3>
+                <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest opacity-70">
                   {student.course?.name ?? 'No course assigned'}
                   {student.semester ? ` · ${academic.label} ${student.semester}` : ''}
                 </p>
-                <div className="pt-2">
-                  <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-100 py-1 px-3 rounded-full inline-block uppercase tracking-widest">
+                <div className="pt-4">
+                  <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 py-1.5 px-4 rounded-full inline-block uppercase tracking-[0.2em] shadow-sm">
                     {student.roll_number}
                   </span>
                 </div>
@@ -67,15 +70,16 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
           </Card>
 
           {/* Status badge */}
-          <Card className="border border-slate-200 shadow-sm text-black bg-white">
-            <CardContent className="p-4">
+          <Card className="border-border/40 bg-card/60 backdrop-blur-md shadow-sm rounded-3xl overflow-hidden">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-slate-500">Account Status</span>
-                <span className={`text-xs font-bold px-2 py-1 rounded-full border ${
+                <span className="text-xs font-black text-muted-foreground uppercase tracking-widest opacity-60">Status</span>
+                <span className={`text-[10px] font-black px-3 py-1 rounded-full border tracking-widest uppercase flex items-center gap-1.5 ${
                   student.user.status === 'ACTIVE'
-                    ? 'text-emerald-700 bg-emerald-50 border-emerald-100'
-                    : 'text-amber-700 bg-amber-50 border-amber-100'
+                    ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
+                    : 'text-amber-500 bg-amber-500/10 border-amber-500/20'
                 }`}>
+                  <div className={`h-1.5 w-1.5 rounded-full ${student.user.status === 'ACTIVE' ? 'bg-emerald-500 pulse-dot' : 'bg-amber-500'}`} />
                   {student.user.status}
                 </span>
               </div>
@@ -85,31 +89,31 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
         {/* Information Card */}
         <div className="md:col-span-2">
-          <Card className="border border-slate-200 shadow-sm text-black bg-white">
-            <CardHeader className="border-b border-slate-100 bg-slate-50/50 pb-4">
-              <CardTitle className="text-lg font-bold text-slate-900">Academic Information</CardTitle>
+          <Card className="border-border/40 bg-card/40 backdrop-blur-md shadow-sm rounded-[2.5rem] overflow-hidden">
+            <CardHeader className="border-b border-border/40 px-8 py-6">
+              <CardTitle className="text-xl font-display font-black text-foreground tracking-tight">Academic Profile</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-0 pt-0 divide-y divide-slate-100">
+            <CardContent className="p-0 divide-y divide-border/40">
               {[
                 {
                   icon: User,
-                  label: 'Identifier / Name',
+                  label: 'Full Identity',
                   value: student.user.identifier,
                 },
                 {
                   icon: Mail,
-                  label: 'Email Address',
+                  label: 'Nexus Email',
                   value: student.user.email ?? '—',
                 },
                 {
                   icon: Shield,
-                  label: 'Roll Number',
+                  label: 'Universal Roll No.',
                   value: student.roll_number,
                   mono: true,
                 },
                 {
                   icon: BookOpen,
-                  label: 'Course',
+                  label: 'Enrolled Program',
                   value: student.course ? `${student.course.name} (${student.course.code})` : 'Not assigned',
                 },
                 {
@@ -119,17 +123,17 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 },
                 {
                   icon: GraduationCap,
-                  label: 'Institution',
+                  label: 'Parent Institution',
                   value: institution.name,
                 },
               ].map(({ icon: Icon, label, value, mono }) => (
-                <div key={label} className="flex items-center gap-4 py-4 px-2">
-                  <div className="w-9 h-9 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0">
-                    <Icon className="h-4 w-4 text-slate-400" />
+                <div key={label} className="flex items-center gap-6 py-6 px-8 group transition-colors hover:bg-muted/30">
+                  <div className="w-12 h-12 rounded-2xl bg-muted/50 border border-border/40 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform group-hover:bg-primary/5 group-hover:text-primary">
+                    <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{label}</p>
-                    <p className={`text-sm font-bold text-slate-800 truncate ${mono ? 'font-mono text-indigo-600' : ''}`}>{value}</p>
+                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-60 mb-1">{label}</p>
+                    <p className={`text-base font-bold text-foreground truncate ${mono ? 'font-mono text-primary' : ''}`}>{value}</p>
                   </div>
                 </div>
               ))}
