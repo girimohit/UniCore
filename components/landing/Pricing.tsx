@@ -4,11 +4,11 @@ import { ChevronRight } from "lucide-react";
 const PLANS = [
   {
     name: "Starter",
-    price: "$0",
+    price: "0",
     period: "forever free",
     desc: "Perfect for small institutions just getting started.",
     features: [
-      "Up to 500 students",
+      "Up to 200 students",
       "3 core modules",
       "Community support",
       "Basic analytics",
@@ -20,7 +20,7 @@ const PLANS = [
   },
   {
     name: "Growth",
-    price: "$299",
+    price: "₹15000",
     period: "/ month, billed annually",
     desc: "For growing institutions that need the full feature set.",
     features: [
@@ -30,7 +30,7 @@ const PLANS = [
       "Advanced analytics",
       "Custom domain & branding",
       "Full API access",
-      "Multi-campus support",
+      // "Multi-campus support",
     ],
     cta: "Start Free Trial",
     href: "/register?plan=growth",

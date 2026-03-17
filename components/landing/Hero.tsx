@@ -56,7 +56,7 @@ export default function Hero() {
 
       {/* Trust strip */}
       <div className="fade-up delay-4 flex flex-wrap justify-center gap-x-8 gap-y-2 mb-16">
-        {["No credit card required", "Free up to 500 students", "Deploy in minutes"].map((t) => (
+        {["No credit card required", "Free up to 200 students", "Deploy in minutes"].map((t) => (
           <span key={t} className="flex items-center gap-1.5 text-sm"
             style={{ color: "var(--text-muted)" }}>
             <span className="text-[#2a9e75]">✓</span> {t}

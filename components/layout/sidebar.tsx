@@ -209,7 +209,7 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
               );
             })}
 
-            {initialModules.length > 0 && (
+            {/* {initialModules.length > 0 && (
               <>
                 <div className="pt-6 pb-2">
                   <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Additional Modules</p>
@@ -237,9 +237,9 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
                       {moduleItem.name}
                     </Link>
                   );
-                })}
+                })}                   
               </>
-            )}
+            )} */}
           </div>
         </div>
 

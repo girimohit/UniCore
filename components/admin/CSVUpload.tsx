@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, X, Check, AlertCircle, FileText, Loader2 } from "lucide-react";
+import { Upload, X, Check, AlertCircle, FileText, Loader2, Download } from "lucide-react";
 
 interface CSVUploadProps {
   onUpload: (data: any[]) => void;
@@ -89,13 +89,19 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-bold text-lg">{title}</h3>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h3 className="font-display font-black text-xl text-foreground">{title}</h3>
+          <p className="text-xs text-muted-foreground font-medium">Upload a CSV file to add multiple entries at once.</p>
+        </div>
         <button 
           onClick={downloadTemplate}
-          className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+          className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-95 shadow-sm shadow-primary/5 whitespace-nowrap"
         >
-          <FileText className="w-3 h-3" /> Download Template
+          <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            <Download className="w-4 h-4" />
+          </div>
+          <span className="text-sm font-bold tracking-tight">Download Template</span>
         </button>
       </div>
 
