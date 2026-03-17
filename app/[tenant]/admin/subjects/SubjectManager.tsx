@@ -29,7 +29,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
     name: "",
     code: "",
     course: "", // Uses name or code for the API
-    semester: "",
+    cycleNumber: "",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -51,7 +51,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
       }
       if (data.created && data.created.length > 0) {
         setResults(data.created);
-        setForm({ name: "", code: "", course: "", semester: "" });
+        setForm({ name: "", code: "", course: "", cycleNumber: "" });
         setActiveTab("list");
       }
     } catch (err) {
@@ -159,8 +159,8 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                     type="number"
                     min="1"
                     max={academic.totalCycles}
-                    value={form.semester}
-                    onChange={e => setForm(f => ({ ...f, semester: e.target.value }))}
+                    value={form.cycleNumber}
+                    onChange={e => setForm(f => ({ ...f, cycleNumber: e.target.value }))}
                     placeholder={`e.g. 1 to ${academic.totalCycles}`}
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
                   />
@@ -190,7 +190,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                 { key: "name", label: "Name", required: true },
                 { key: "code", label: "Code", required: true },
                 { key: "course", label: "Course", required: true },
-                { key: "semester", label: academic.label, required: false },
+                { key: "cycleNumber", label: academic.label, required: true },
               ]}
             />
           </div>
@@ -250,9 +250,9 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                               </span>
                             </td>
                             <td className="px-6 py-4">
-                              {s.semester ? (
+                              {s.cycleNumber ? (
                                 <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-secondary/20 text-foreground/70 uppercase">
-                                  {academic.label} {s.semester}
+                                  {academic.label} {s.cycleNumber}
                                 </span>
                               ) : (
                                 <span className="text-[10px] text-muted-foreground italic">Not Mapped</span>

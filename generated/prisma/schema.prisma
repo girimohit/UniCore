@@ -160,7 +160,7 @@ model Subject {
   code        String
   courseId    String
   course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  semester    Int?
+  cycleNumber Int         @default(1)
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 

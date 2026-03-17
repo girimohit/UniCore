@@ -196,7 +196,7 @@ exports.Prisma.SubjectScalarFieldEnum = {
   name: 'name',
   code: 'code',
   courseId: 'courseId',
-  semester: 'semester',
+  cycleNumber: 'cycleNumber',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

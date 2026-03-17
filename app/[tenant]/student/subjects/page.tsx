@@ -114,7 +114,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
                     <div className="flex items-center gap-2">
                       <GraduationCap className="h-4 w-4 text-primary opacity-60" />
                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                        {academic.label} {student.semester ?? '—'}
+                        {academic.label} {sub.cycleNumber ?? '—'}
                       </span>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary scale-0 group-hover:scale-100 transition-transform duration-300">

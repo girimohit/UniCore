@@ -46,13 +46,20 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
           continue;
         }
 
+        const cycleNumber = item.cycleNumber ? parseInt(item.cycleNumber) : (item.semester ? parseInt(item.semester) : 1);
+        
+        if (cycleNumber < 1) {
+          errors.push({ ...item, error: 'Cycle number must be at least 1' });
+          continue;
+        }
+
         const subject = await prisma.subject.create({
           data: {
             name: item.name,
             code: item.code.toUpperCase(),
             tenant_id: user.tenant_id,
             courseId: course.id,
-            semester: item.semester ? parseInt(item.semester) : null,
+            cycleNumber: cycleNumber,
           }
         });
         created.push(subject);
