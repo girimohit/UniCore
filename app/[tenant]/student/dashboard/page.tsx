@@ -8,18 +8,17 @@ import {
   BookOpen, 
   AlertCircle, 
   ArrowRight, 
-  Clock, 
-  MapPin, 
   TrendingUp, 
-  Bell 
+  Bell,
+  GraduationCap
 } from "lucide-react";
 import { getAcademicLabel } from '@/lib/utils/academic';
+import Link from 'next/link';
 
 export default async function StudentDashboard({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
   const session = await getCurrentUser();
 
-  // 1. Basic Auth & Tenant Validation
   if (!session || session.role !== 'STUDENT') {
     redirect(`/${tenant}/login`);
   }
@@ -31,11 +30,11 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
 
   if (!institution) notFound();
 
-  // 2. Fetch Student Profile with aggregated data
   const student = await prisma.studentProfile.findUnique({
     where: { user_id: session.user_id },
     include: {
-      user: { select: { identifier: true } },
+      user: { select: { identifier: true, email: true } },
+      course: { select: { name: true } },
       _count: {
         select: {
           attendances: true,
@@ -65,194 +64,224 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
     );
   }
 
-  // 3. Calculate Stats
+  // Stats
   const attendanceCount = student._count.attendances;
   const presentCount = student.attendances.length;
-  const attendanceRate = attendanceCount > 0 
-    ? Math.round((presentCount / attendanceCount) * 100) 
+  const attendanceRate = attendanceCount > 0
+    ? Math.round((presentCount / attendanceCount) * 100)
     : 0;
+  const attendanceStatus = attendanceRate >= 75 ? 'Good' : attendanceRate >= 50 ? 'Average' : 'Low';
+  const attendanceColor = attendanceRate >= 75 ? 'text-emerald-700 bg-emerald-50 border-emerald-100' : attendanceRate >= 50 ? 'text-amber-700 bg-amber-50 border-amber-100' : 'text-rose-700 bg-rose-50 border-rose-100';
 
   const avgGpa = student.grades.length > 0
     ? (student.grades.reduce((acc, curr) => acc + curr.score, 0) / student.grades.length / 25).toFixed(1)
-    : '0.0';
+    : null;
 
   const academic = getAcademicLabel(institution.academic_system);
 
+  // Recent subjects for the student's course
+  const recentSubjects = student.course_id ? await prisma.subject.findMany({
+    where: { courseId: student.course_id },
+    take: 4,
+    orderBy: { name: 'asc' }
+  }) : [];
+
   return (
     <div className="space-y-8">
-      
-      {/* Header Section */}
+
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Welcome back, {student.user.identifier}! 👋</h1>
-            <p className="text-slate-500">Here's what's happening in your academic life today at {institution.name}.</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Welcome back, {student.user.identifier}! 👋
+          </h1>
+          <p className="text-slate-500">
+            {student.course ? (
+              <><span className="font-semibold text-slate-700">{student.course.name}</span>{student.semester ? ` · ${academic.label} ${student.semester}` : ''} · </>
+            ) : null}
+            {institution.name}
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-             <Button variant="outline" className="bg-white">
-                View Timetable
-            </Button>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">
-                <Clock className="w-4 h-4 mr-2" /> Class in 45m
-            </Button>
-        </div>
+        <Link href={`/${tenant}/student/subjects`}>
+          <Button variant="outline" className="bg-white">
+            View My Subjects
+          </Button>
+        </Link>
       </div>
 
+      {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {/* Attendance Card */}
+        {/* Attendance */}
         <Card className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-             <div className="h-1.5 w-full bg-emerald-500"></div>
-             <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                      <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
-                        <CalendarCheck className="h-5 w-5" />
-                    </div>
-                      <span className="text-xs font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                        Good
-                      </span>
-                </div>
-                <div className="space-y-1">
-                    <h3 className="text-2xl font-bold text-slate-900">{attendanceRate}%</h3>
-                    <p className="text-sm font-medium text-slate-500">Overall Attendance</p>
-                </div>
-                <div className="mt-4 flex items-center text-xs font-medium text-emerald-600">
-                    <TrendingUp className="h-3 w-3 mr-1" /> {presentCount}/{attendanceCount} classes present
-                </div>
-             </CardContent>
+          <div className="h-1.5 w-full bg-emerald-500"></div>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                <CalendarCheck className="h-5 w-5" />
+              </div>
+              <span className={`text-xs font-bold px-2 py-1 rounded-full border ${attendanceColor}`}>
+                {attendanceStatus}
+              </span>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold text-slate-900">{attendanceRate}%</h3>
+              <p className="text-sm font-medium text-slate-500">Overall Attendance</p>
+            </div>
+            <div className="mt-4 flex items-center text-xs font-medium text-emerald-600">
+              <TrendingUp className="h-3 w-3 mr-1" /> {presentCount}/{attendanceCount} classes present
+            </div>
+          </CardContent>
         </Card>
 
-        {/* Classes Card */}
+        {/* Subjects */}
         <Card className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-             <div className="h-1.5 w-full bg-blue-500"></div>
-             <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                      <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
-                        <BookOpen className="h-5 w-5" />
-                    </div>
-                      <span className="text-xs font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
-                        Today
-                      </span>
-                </div>
-                <div className="space-y-1">
-                    <h3 className="text-2xl font-bold text-slate-900">{student._count.enrolledCourses >= 10 ? student._count.enrolledCourses : `0${student._count.enrolledCourses}`}</h3>
-                    <p className="text-sm font-medium text-slate-500">Enrolled Courses</p>
-                </div>
-                 <div className="mt-4 flex items-center text-xs font-medium text-blue-600">
-                    <Clock className="h-3 w-3 mr-1" /> Next: Algorithms (11:00 AM)
-                </div>
-             </CardContent>
+          <div className="h-1.5 w-full bg-blue-500"></div>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                {academic.label} {student.semester ?? '—'}
+              </span>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold text-slate-900">{recentSubjects.length}</h3>
+              <p className="text-sm font-medium text-slate-500">Active Subjects</p>
+            </div>
+            <Link href={`/${tenant}/student/subjects`} className="mt-4 flex items-center text-xs font-medium text-blue-600 hover:underline">
+              View all subjects <ArrowRight className="h-3 w-3 ml-1" />
+            </Link>
+          </CardContent>
         </Card>
 
-        {/* Fees Card */}
+        {/* Grades */}
         <Card className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-             <div className="h-1.5 w-full bg-rose-500"></div>
-             <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                      <div className="p-2 bg-rose-50 rounded-lg text-rose-600">
-                        <AlertCircle className="h-5 w-5" />
-                    </div>
-                      <span className="text-xs font-bold px-2 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-100">
-                        Due
-                      </span>
-                </div>
-                <div className="space-y-1">
-                    <h3 className="text-2xl font-bold text-slate-900">$450</h3>
-                    <p className="text-sm font-medium text-slate-500">Pending Fees</p>
-                </div>
-                <Button variant="link" className="px-0 h-auto mt-4 text-rose-600 hover:text-rose-700 text-xs font-bold flex items-center">
-                    Pay Now <ArrowRight className="ml-1 h-3 w-3" />
-                </Button>
-             </CardContent>
+          <div className="h-1.5 w-full bg-violet-500"></div>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-2 bg-violet-50 rounded-lg text-violet-600">
+                <GraduationCap className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-bold px-2 py-1 rounded-full bg-violet-50 text-violet-700 border border-violet-100">
+                GPA
+              </span>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold text-slate-900">{avgGpa ?? '—'}</h3>
+              <p className="text-sm font-medium text-slate-500">
+                {student.grades.length > 0 ? `Avg across ${student.grades.length} grade(s)` : 'No grades yet'}
+              </p>
+            </div>
+          </CardContent>
         </Card>
 
-        {/* Notices Card */}
+        {/* Notices placeholder */}
         <Card className="group border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-             <div className="h-1.5 w-full bg-amber-500"></div>
-             <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                      <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
-                        <Bell className="h-5 w-5" />
-                    </div>
-                      <span className="text-xs font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
-                        New
-                      </span>
-                </div>
-                <div className="space-y-1">
-                    <h3 className="text-2xl font-bold text-slate-900">03</h3>
-                    <p className="text-sm font-medium text-slate-500">Unread Notices</p>
-                </div>
-                 <div className="mt-4 flex items-center text-xs font-medium text-amber-600 truncate">
-                    Exams postponed due to rain...
-                </div>
-             </CardContent>
+          <div className="h-1.5 w-full bg-amber-500"></div>
+          <CardContent className="p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-2 bg-amber-50 rounded-lg text-amber-600">
+                <Bell className="h-5 w-5" />
+              </div>
+              <span className="text-xs font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100">
+                Notices
+              </span>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold text-slate-900">—</h3>
+              <p className="text-sm font-medium text-slate-500">No new notices</p>
+            </div>
+            <Link href={`/${tenant}/student/notices`} className="mt-4 flex items-center text-xs font-medium text-amber-600 hover:underline">
+              View all <ArrowRight className="h-3 w-3 ml-1" />
+            </Link>
+          </CardContent>
         </Card>
       </div>
 
+      {/* Bottom section: Subjects list + Attendance overview */}
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Today's Schedule List */}
-        <div className="md:col-span-2 space-y-6">
-             <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-slate-900">Today's Schedule</h3>
-                <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900">View Full Timetable</Button>
-             </div>
-             
+        {/* Recent Subjects */}
+        <div className="md:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-slate-900">My Subjects</h3>
+            <Link href={`/${tenant}/student/subjects`}>
+              <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900">View All</Button>
+            </Link>
+          </div>
+
+          {recentSubjects.length === 0 ? (
+            <Card className="border border-slate-200 bg-white p-8 text-center text-slate-400">
+              <BookOpen className="w-8 h-8 mx-auto opacity-30 mb-2" />
+              <p className="text-sm font-medium">No subjects for your course yet.</p>
+            </Card>
+          ) : (
             <div className="space-y-3">
-                 {[
-                    { time: "09:00 AM", subject: "Data Structures", room: "LH-101", status: "Completed", color: "text-slate-400 bg-slate-50 border-slate-200" },
-                    { time: "10:00 AM", subject: "Digital Electronics", room: "LH-203", status: "Ongoing", color: "text-blue-700 bg-blue-50 border-blue-200" },
-                    { time: "11:00 AM", subject: "Algorithms", room: "LH-105", status: "Upcoming", color: "text-slate-600 bg-white border-slate-200" },
-                    { time: "02:00 PM", subject: "Physics Lab", room: "Lab-3", status: "Upcoming", color: "text-slate-600 bg-white border-slate-200" },
-                 ].map((cls, i) => (
-                    <div key={i} className={`group flex items-center p-4 rounded-xl border transition-all hover:bg-slate-50 ${cls.color} ${cls.status === 'Ongoing' ? 'ring-2 ring-blue-100' : ''}`}>
-                        <div className="w-24 text-sm font-bold text-slate-500">{cls.time}</div>
-                        <div className="flex-1">
-                            <h4 className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{cls.subject}</h4>
-                            <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                                <MapPin className="h-3 w-3" /> {cls.room}
-                            </div>
-                        </div>
-                        <div>
-                             <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full ${
-                                 cls.status === 'Ongoing' ? 'bg-blue-600 text-white' : 
-                                 cls.status === 'Completed' ? 'bg-slate-200 text-slate-500' : 'bg-slate-100 text-slate-600'
-                             }`}>
-                                {cls.status}
-                             </span>
-                        </div>
+              {recentSubjects.map((sub, i) => {
+                const colors = ['border-l-emerald-500', 'border-l-blue-500', 'border-l-violet-500', 'border-l-amber-500'];
+                return (
+                  <div key={sub.id} className={`bg-white border border-slate-200 border-l-4 ${colors[i % colors.length]} rounded-xl p-4 flex items-center justify-between hover:shadow-sm transition-shadow`}>
+                    <div>
+                      <p className="font-bold text-slate-900">{sub.name}</p>
+                      <p className="text-xs text-slate-400 font-mono mt-0.5">{sub.code}</p>
                     </div>
-                 ))}
+                    <Link href={`/${tenant}/student/attendance`}>
+                      <Button variant="ghost" size="sm" className="text-xs text-slate-400 hover:text-indigo-600">
+                        View Attendance
+                      </Button>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
+          )}
         </div>
 
-        {/* Recent Notices List */}
-        <div className="space-y-6">
-             <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-slate-900">Recent Notices</h3>
-                <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-900">View All</Button>
-             </div>
+        {/* Attendance breakdown card */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-slate-900">Quick Stats</h3>
+          <Card className="border border-slate-200 shadow-sm bg-white text-black">
+            <CardContent className="p-6 space-y-5">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-slate-500">Course</span>
+                <span className="text-sm font-bold text-slate-900 text-right max-w-[60%] truncate">
+                  {student.course?.name ?? <span className="text-slate-400 italic">Not assigned</span>}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-slate-500">{academic.label}</span>
+                <span className="text-sm font-bold text-slate-900">
+                  {student.semester ?? <span className="text-slate-400 italic">—</span>}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-slate-500">Roll Number</span>
+                <span className="text-sm font-mono font-bold text-indigo-600">{student.roll_number}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-slate-500">Attendance</span>
+                <span className={`text-sm font-bold ${attendanceRate >= 75 ? 'text-emerald-600' : attendanceRate >= 50 ? 'text-amber-600' : 'text-rose-600'}`}>
+                  {attendanceRate}%
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-slate-500">Grades recorded</span>
+                <span className="text-sm font-bold text-slate-900">{student.grades.length}</span>
+              </div>
 
-             <div className="space-y-3">
-                {[
-                    { title: `End ${academic.label.toLowerCase()} examination schedule released`, date: "2 days ago", tag: "Exam", important: true },
-                    { title: "Holiday declared for tomorrow due to rain", date: "1 day ago", tag: "General", important: true },
-                    { title: "Library books due date extended", date: "3 days ago", tag: "Library", important: false },
-                ].map((notice, i) => (
-                    <Card key={i} className="group border border-slate-200 shadow-sm hover:shadow-md transition-all cursor-pointer">
-                        <CardContent className="p-4">
-                            <div className="flex justify-between items-start mb-2">
-                                <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${
-                                    notice.important ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-50 text-slate-600 border-slate-100'
-                                }`}>
-                                    {notice.tag}
-                                </span>
-                                <span className="text-xs text-slate-400">{notice.date}</span>
-                            </div>
-                            <p className="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors line-clamp-2">
-                                {notice.title}
-                            </p>
-                        </CardContent>
-                    </Card>
-                ))}
-             </div>
+              <div className="pt-2 border-t border-slate-100">
+                <div className="w-full bg-slate-100 rounded-full h-2 mt-2">
+                  <div
+                    className={`h-2 rounded-full transition-all ${attendanceRate >= 75 ? 'bg-emerald-500' : attendanceRate >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                    style={{ width: `${attendanceRate}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1 font-medium">
+                  {attendanceRate < 75 ? `⚠ Need ${75 - attendanceRate}% more to meet 75% requirement` : '✓ Attendance requirement met'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
