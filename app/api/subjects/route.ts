@@ -76,3 +76,76 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
+
+export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+  try {
+    const body = await req.json();
+    const { id, name, code, courseId, cycleNumber } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Subject ID is required' }, { status: 400 });
+    }
+
+    // Validate tenant ownership
+    const existing = await prisma.subject.findFirst({
+      where: { id, tenant_id: user.tenant_id }
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: 'Subject not found' }, { status: 404 });
+    }
+
+    // Validate cycleNumber if provided
+    if (cycleNumber !== undefined) {
+      try {
+        await SubjectService.validateCycleNumber(user.tenant_id, parseInt(String(cycleNumber)));
+      } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 400 });
+      }
+    }
+
+    const updated = await prisma.subject.update({
+      where: { id },
+      data: {
+        ...(name && { name }),
+        ...(code && { code: code.toUpperCase() }),
+        ...(courseId && { courseId }),
+        ...(cycleNumber !== undefined && { cycleNumber: parseInt(String(cycleNumber)) }),
+      },
+      include: { course: true }
+    });
+
+    return NextResponse.json({ subject: updated });
+  } catch (error) {
+    console.error('Subject update error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+});
+
+export const DELETE = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Subject ID is required' }, { status: 400 });
+    }
+
+    // Validate tenant ownership
+    const existing = await prisma.subject.findFirst({
+      where: { id, tenant_id: user.tenant_id }
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: 'Subject not found' }, { status: 404 });
+    }
+
+    await prisma.subject.delete({
+      where: { id }
+    });
+
+    return NextResponse.json({ message: 'Subject deleted successfully' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+});

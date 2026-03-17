@@ -21,6 +21,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
   
   const academic = getAcademicLabel(academicSystem);
 
@@ -29,7 +30,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
     name: "",
     code: "",
     course: "", // Uses name or code for the API
-    cycleNumber: "",
+    cycleNumber: "1",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -39,23 +40,71 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
     setErrors([]);
 
     try {
-      const res = await fetch("/api/subjects", {
-        method: "POST",
+      const url = "/api/subjects";
+      const method = editingId ? "PATCH" : "POST";
+      const body = editingId ? { ...form, id: editingId } : form;
+
+      // Map course code to courseId for PATCH if needed, 
+      // but the API currently handles 'course' string for POST.
+      // Let's ensure the API or our body handles this correctly.
+      // For PATCH, we added 'courseId' support.
+      if (editingId) {
+        const courseObj = courses.find(c => c.code === form.course || c.id === form.course);
+        (body as any).courseId = courseObj?.id;
+      }
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       
-      if (data.errors && data.errors.length > 0) {
-        setErrors(data.errors);
-      }
-      if (data.created && data.created.length > 0) {
-        setResults(data.created);
-        setForm({ name: "", code: "", course: "", cycleNumber: "" });
+      if (data.error || (data.errors && data.errors.length > 0)) {
+        setErrors(data.errors || [{ error: data.error }]);
+      } else {
+        // Success
+        if (editingId) {
+          setResults([data.subject]);
+          setEditingId(null);
+        } else {
+          setResults(data.created || []);
+        }
+        setForm({ name: "", code: "", course: "", cycleNumber: "1" });
         setActiveTab("list");
       }
     } catch (err) {
       setErrors([{ code: form.code, error: "Network error" }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (subject: any) => {
+    setEditingId(subject.id);
+    setForm({
+      name: subject.name,
+      code: subject.code,
+      course: subject.course?.code || subject.courseId,
+      cycleNumber: String(subject.cycleNumber || 1),
+    });
+    setActiveTab("add");
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this subject?")) return;
+    
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/subjects?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        // Simple way: just clear results or re-fetch. 
+        // For now, let's just clear the results to show it's gone if it was just added.
+        setResults(prev => prev.filter(s => s.id !== id));
+        // Note: initialSubjects won't be updated without a refresh or parent state update.
+      }
+    } catch (err) {
+      alert("Delete failed");
     } finally {
       setLoading(false);
     }
@@ -113,9 +162,9 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
           <div className="glass rounded-3xl p-8 border border-border/50 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                <Bookmark className="w-5 h-5" />
+                {editingId ? <Pencil className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
               </div>
-              Create Subject
+              {editingId ? "Edit Subject" : "Create Subject"}
             </h3>
             <form onSubmit={handleManualSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -155,27 +204,45 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                   <label className="text-sm font-semibold text-muted-foreground ml-1">
                     {academic.label} (Cycle)
                   </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max={academic.totalCycles}
+                  <select
+                    required
                     value={form.cycleNumber}
                     onChange={e => setForm(f => ({ ...f, cycleNumber: e.target.value }))}
-                    placeholder={`e.g. 1 to ${academic.totalCycles}`}
-                    className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
-                  />
+                    className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
+                  >
+                    {Array.from({ length: academic.totalCycles }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>
+                        {academic.label} {num}
+                      </option>
+                    ))}
+                  </select>
                   <p className="text-[10px] text-muted-foreground ml-1 italic">
                     Mapping this subject to a specific {academic.label.toLowerCase()}.
                   </p>
                 </div>
               </div>
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4" /> Create Subject</>}
-              </button>
+              <div className="flex gap-4">
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4" /> {editingId ? "Save Changes" : "Create Subject"}</>}
+                </button>
+                {editingId && (
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setEditingId(null);
+                      setForm({ name: "", code: "", course: "", cycleNumber: "1" });
+                      setActiveTab("list");
+                    }}
+                    className="px-8 bg-secondary/20 text-foreground font-bold text-sm py-3 rounded-xl hover:bg-secondary/30 transition-all"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </form>
           </div>
         )}
@@ -258,12 +325,22 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                                 <span className="text-[10px] text-muted-foreground italic">Not Mapped</span>
                               )}
                             </td>
-                            <td className="px-6 py-4 text-right">
-                              <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
-                                <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
-                                <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>
-                              </div>
-                           </td>
+                             <td className="px-6 py-4 text-right">
+                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
+                                 <button 
+                                   onClick={() => handleEdit(s)}
+                                   className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
+                                 >
+                                   <Pencil className="w-4 h-4" />
+                                 </button>
+                                 <button 
+                                   onClick={() => handleDelete(s.id)}
+                                   className="p-2 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
+                                 >
+                                   <Trash2 className="w-4 h-4" />
+                                 </button>
+                               </div>
+                            </td>
                          </tr>
                        ))}
                      </tbody>
