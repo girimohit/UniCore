@@ -218,6 +218,7 @@ exports.Prisma.AttendanceScalarFieldEnum = {
   subjectId: 'subjectId',
   date: 'date',
   status: 'status',
+  periodId: 'periodId',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -360,7 +361,8 @@ exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
   studentId: 'studentId',
-  subjectId: 'subjectId'
+  subjectId: 'subjectId',
+  periodId: 'periodId'
 };
 
 exports.Prisma.ExamOrderByRelevanceFieldEnum = {

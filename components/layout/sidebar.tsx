@@ -119,6 +119,13 @@ const adminLinks = [
     hoverColor: "hover:bg-rose-50 hover:text-rose-700",
   },
   {
+    name: "Exams",
+    href: "/admin/exams",
+    icon: Icons.ClipboardCheck,
+    activeColor: "bg-indigo-100 text-indigo-700",
+    hoverColor: "hover:bg-indigo-50 hover:text-indigo-700",
+  },
+  {
     name: "Settings",
     href: "/admin/settings",
     icon: Settings,

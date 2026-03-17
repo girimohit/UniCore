@@ -212,6 +212,8 @@ model Attendance {
   subject     Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   date        DateTime
   status      AttendanceStatus
+  periodId    String?
+  period      AcademicPeriod? @relation(fields: [periodId], references: [id], onDelete: SetNull)
   created_at  DateTime         @default(now())
   updated_at  DateTime         @updatedAt
 
@@ -298,6 +300,7 @@ model AcademicPeriod {
   created_at  DateTime    @default(now())
 
   exams       Exam[]
+  attendances Attendance[]
 
   @@index([tenant_id])
 }

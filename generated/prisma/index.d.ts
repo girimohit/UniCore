@@ -2550,10 +2550,12 @@ export namespace Prisma {
 
   export type AcademicPeriodCountOutputType = {
     exams: number
+    attendances: number
   }
 
   export type AcademicPeriodCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     exams?: boolean | AcademicPeriodCountOutputTypeCountExamsArgs
+    attendances?: boolean | AcademicPeriodCountOutputTypeCountAttendancesArgs
   }
 
   // Custom InputTypes
@@ -2572,6 +2574,13 @@ export namespace Prisma {
    */
   export type AcademicPeriodCountOutputTypeCountExamsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ExamWhereInput
+  }
+
+  /**
+   * AcademicPeriodCountOutputType without action
+   */
+  export type AcademicPeriodCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
   }
 
 
@@ -12851,6 +12860,7 @@ export namespace Prisma {
     subjectId: string | null
     date: Date | null
     status: $Enums.AttendanceStatus | null
+    periodId: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -12862,6 +12872,7 @@ export namespace Prisma {
     subjectId: string | null
     date: Date | null
     status: $Enums.AttendanceStatus | null
+    periodId: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -12873,6 +12884,7 @@ export namespace Prisma {
     subjectId: number
     date: number
     status: number
+    periodId: number
     created_at: number
     updated_at: number
     _all: number
@@ -12886,6 +12898,7 @@ export namespace Prisma {
     subjectId?: true
     date?: true
     status?: true
+    periodId?: true
     created_at?: true
     updated_at?: true
   }
@@ -12897,6 +12910,7 @@ export namespace Prisma {
     subjectId?: true
     date?: true
     status?: true
+    periodId?: true
     created_at?: true
     updated_at?: true
   }
@@ -12908,6 +12922,7 @@ export namespace Prisma {
     subjectId?: true
     date?: true
     status?: true
+    periodId?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -12992,6 +13007,7 @@ export namespace Prisma {
     subjectId: string
     date: Date
     status: $Enums.AttendanceStatus
+    periodId: string | null
     created_at: Date
     updated_at: Date
     _count: AttendanceCountAggregateOutputType | null
@@ -13020,11 +13036,13 @@ export namespace Prisma {
     subjectId?: boolean
     date?: boolean
     status?: boolean
+    periodId?: boolean
     created_at?: boolean
     updated_at?: boolean
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
     student?: boolean | StudentProfileDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    period?: boolean | Attendance$periodArgs<ExtArgs>
   }, ExtArgs["result"]["attendance"]>
 
 
@@ -13036,15 +13054,17 @@ export namespace Prisma {
     subjectId?: boolean
     date?: boolean
     status?: boolean
+    periodId?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type AttendanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenant_id" | "studentId" | "subjectId" | "date" | "status" | "created_at" | "updated_at", ExtArgs["result"]["attendance"]>
+  export type AttendanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenant_id" | "studentId" | "subjectId" | "date" | "status" | "periodId" | "created_at" | "updated_at", ExtArgs["result"]["attendance"]>
   export type AttendanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
     student?: boolean | StudentProfileDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    period?: boolean | Attendance$periodArgs<ExtArgs>
   }
 
   export type $AttendancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13053,6 +13073,7 @@ export namespace Prisma {
       institution: Prisma.$InstitutionPayload<ExtArgs>
       student: Prisma.$StudentProfilePayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs>
+      period: Prisma.$AcademicPeriodPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -13061,6 +13082,7 @@ export namespace Prisma {
       subjectId: string
       date: Date
       status: $Enums.AttendanceStatus
+      periodId: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["attendance"]>
@@ -13406,6 +13428,7 @@ export namespace Prisma {
     institution<T extends InstitutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InstitutionDefaultArgs<ExtArgs>>): Prisma__InstitutionClient<$Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     student<T extends StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentProfileDefaultArgs<ExtArgs>>): Prisma__StudentProfileClient<$Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    period<T extends Attendance$periodArgs<ExtArgs> = {}>(args?: Subset<T, Attendance$periodArgs<ExtArgs>>): Prisma__AcademicPeriodClient<$Result.GetResult<Prisma.$AcademicPeriodPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13441,6 +13464,7 @@ export namespace Prisma {
     readonly subjectId: FieldRef<"Attendance", 'String'>
     readonly date: FieldRef<"Attendance", 'DateTime'>
     readonly status: FieldRef<"Attendance", 'AttendanceStatus'>
+    readonly periodId: FieldRef<"Attendance", 'String'>
     readonly created_at: FieldRef<"Attendance", 'DateTime'>
     readonly updated_at: FieldRef<"Attendance", 'DateTime'>
   }
@@ -13788,6 +13812,25 @@ export namespace Prisma {
      * Limit how many Attendances to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Attendance.period
+   */
+  export type Attendance$periodArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AcademicPeriod
+     */
+    select?: AcademicPeriodSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AcademicPeriod
+     */
+    omit?: AcademicPeriodOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AcademicPeriodInclude<ExtArgs> | null
+    where?: AcademicPeriodWhereInput
   }
 
   /**
@@ -17929,6 +17972,7 @@ export namespace Prisma {
     created_at?: boolean
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
     exams?: boolean | AcademicPeriod$examsArgs<ExtArgs>
+    attendances?: boolean | AcademicPeriod$attendancesArgs<ExtArgs>
     _count?: boolean | AcademicPeriodCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["academicPeriod"]>
 
@@ -17948,6 +17992,7 @@ export namespace Prisma {
   export type AcademicPeriodInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
     exams?: boolean | AcademicPeriod$examsArgs<ExtArgs>
+    attendances?: boolean | AcademicPeriod$attendancesArgs<ExtArgs>
     _count?: boolean | AcademicPeriodCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -17956,6 +18001,7 @@ export namespace Prisma {
     objects: {
       institution: Prisma.$InstitutionPayload<ExtArgs>
       exams: Prisma.$ExamPayload<ExtArgs>[]
+      attendances: Prisma.$AttendancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18307,6 +18353,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     institution<T extends InstitutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InstitutionDefaultArgs<ExtArgs>>): Prisma__InstitutionClient<$Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     exams<T extends AcademicPeriod$examsArgs<ExtArgs> = {}>(args?: Subset<T, AcademicPeriod$examsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attendances<T extends AcademicPeriod$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, AcademicPeriod$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18715,6 +18762,30 @@ export namespace Prisma {
   }
 
   /**
+   * AcademicPeriod.attendances
+   */
+  export type AcademicPeriod$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    cursor?: AttendanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
    * AcademicPeriod without action
    */
   export type AcademicPeriodDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18875,6 +18946,7 @@ export namespace Prisma {
     subjectId: 'subjectId',
     date: 'date',
     status: 'status',
+    periodId: 'periodId',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -19071,7 +19143,8 @@ export namespace Prisma {
     id: 'id',
     tenant_id: 'tenant_id',
     studentId: 'studentId',
-    subjectId: 'subjectId'
+    subjectId: 'subjectId',
+    periodId: 'periodId'
   };
 
   export type AttendanceOrderByRelevanceFieldEnum = (typeof AttendanceOrderByRelevanceFieldEnum)[keyof typeof AttendanceOrderByRelevanceFieldEnum]
@@ -19916,11 +19989,13 @@ export namespace Prisma {
     subjectId?: StringFilter<"Attendance"> | string
     date?: DateTimeFilter<"Attendance"> | Date | string
     status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    periodId?: StringNullableFilter<"Attendance"> | string | null
     created_at?: DateTimeFilter<"Attendance"> | Date | string
     updated_at?: DateTimeFilter<"Attendance"> | Date | string
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
     student?: XOR<StudentProfileScalarRelationFilter, StudentProfileWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    period?: XOR<AcademicPeriodNullableScalarRelationFilter, AcademicPeriodWhereInput> | null
   }
 
   export type AttendanceOrderByWithRelationInput = {
@@ -19930,11 +20005,13 @@ export namespace Prisma {
     subjectId?: SortOrder
     date?: SortOrder
     status?: SortOrder
+    periodId?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     institution?: InstitutionOrderByWithRelationInput
     student?: StudentProfileOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
+    period?: AcademicPeriodOrderByWithRelationInput
     _relevance?: AttendanceOrderByRelevanceInput
   }
 
@@ -19949,11 +20026,13 @@ export namespace Prisma {
     subjectId?: StringFilter<"Attendance"> | string
     date?: DateTimeFilter<"Attendance"> | Date | string
     status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    periodId?: StringNullableFilter<"Attendance"> | string | null
     created_at?: DateTimeFilter<"Attendance"> | Date | string
     updated_at?: DateTimeFilter<"Attendance"> | Date | string
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
     student?: XOR<StudentProfileScalarRelationFilter, StudentProfileWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    period?: XOR<AcademicPeriodNullableScalarRelationFilter, AcademicPeriodWhereInput> | null
   }, "id" | "studentId_subjectId_date">
 
   export type AttendanceOrderByWithAggregationInput = {
@@ -19963,6 +20042,7 @@ export namespace Prisma {
     subjectId?: SortOrder
     date?: SortOrder
     status?: SortOrder
+    periodId?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: AttendanceCountOrderByAggregateInput
@@ -19980,6 +20060,7 @@ export namespace Prisma {
     subjectId?: StringWithAggregatesFilter<"Attendance"> | string
     date?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
     status?: EnumAttendanceStatusWithAggregatesFilter<"Attendance"> | $Enums.AttendanceStatus
+    periodId?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
   }
@@ -20286,6 +20367,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"AcademicPeriod"> | Date | string
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
     exams?: ExamListRelationFilter
+    attendances?: AttendanceListRelationFilter
   }
 
   export type AcademicPeriodOrderByWithRelationInput = {
@@ -20298,6 +20380,7 @@ export namespace Prisma {
     created_at?: SortOrder
     institution?: InstitutionOrderByWithRelationInput
     exams?: ExamOrderByRelationAggregateInput
+    attendances?: AttendanceOrderByRelationAggregateInput
     _relevance?: AcademicPeriodOrderByRelevanceInput
   }
 
@@ -20314,6 +20397,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"AcademicPeriod"> | Date | string
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
     exams?: ExamListRelationFilter
+    attendances?: AttendanceListRelationFilter
   }, "id">
 
   export type AcademicPeriodOrderByWithAggregationInput = {
@@ -21073,6 +21157,7 @@ export namespace Prisma {
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
     student: StudentProfileCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    period?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateInput = {
@@ -21082,6 +21167,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -21095,6 +21181,7 @@ export namespace Prisma {
     institution?: InstitutionUpdateOneRequiredWithoutAttendancesNestedInput
     student?: StudentProfileUpdateOneRequiredWithoutAttendancesNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    period?: AcademicPeriodUpdateOneWithoutAttendancesNestedInput
   }
 
   export type AttendanceUncheckedUpdateInput = {
@@ -21104,6 +21191,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21115,6 +21203,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -21134,6 +21223,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21426,6 +21516,7 @@ export namespace Prisma {
     created_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutAcademicPeriodsInput
     exams?: ExamCreateNestedManyWithoutPeriodInput
+    attendances?: AttendanceCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodUncheckedCreateInput = {
@@ -21437,6 +21528,7 @@ export namespace Prisma {
     end_date: Date | string
     created_at?: Date | string
     exams?: ExamUncheckedCreateNestedManyWithoutPeriodInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodUpdateInput = {
@@ -21448,6 +21540,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     institution?: InstitutionUpdateOneRequiredWithoutAcademicPeriodsNestedInput
     exams?: ExamUpdateManyWithoutPeriodNestedInput
+    attendances?: AttendanceUpdateManyWithoutPeriodNestedInput
   }
 
   export type AcademicPeriodUncheckedUpdateInput = {
@@ -21459,6 +21552,7 @@ export namespace Prisma {
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     exams?: ExamUncheckedUpdateManyWithoutPeriodNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutPeriodNestedInput
   }
 
   export type AcademicPeriodCreateManyInput = {
@@ -22238,6 +22332,11 @@ export namespace Prisma {
     not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
   }
 
+  export type AcademicPeriodNullableScalarRelationFilter = {
+    is?: AcademicPeriodWhereInput | null
+    isNot?: AcademicPeriodWhereInput | null
+  }
+
   export type AttendanceOrderByRelevanceInput = {
     fields: AttendanceOrderByRelevanceFieldEnum | AttendanceOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -22257,6 +22356,7 @@ export namespace Prisma {
     subjectId?: SortOrder
     date?: SortOrder
     status?: SortOrder
+    periodId?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -22268,6 +22368,7 @@ export namespace Prisma {
     subjectId?: SortOrder
     date?: SortOrder
     status?: SortOrder
+    periodId?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -22279,6 +22380,7 @@ export namespace Prisma {
     subjectId?: SortOrder
     date?: SortOrder
     status?: SortOrder
+    periodId?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -23827,6 +23929,12 @@ export namespace Prisma {
     connect?: SubjectWhereUniqueInput
   }
 
+  export type AcademicPeriodCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<AcademicPeriodCreateWithoutAttendancesInput, AcademicPeriodUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: AcademicPeriodCreateOrConnectWithoutAttendancesInput
+    connect?: AcademicPeriodWhereUniqueInput
+  }
+
   export type EnumAttendanceStatusFieldUpdateOperationsInput = {
     set?: $Enums.AttendanceStatus
   }
@@ -23853,6 +23961,16 @@ export namespace Prisma {
     upsert?: SubjectUpsertWithoutAttendancesInput
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutAttendancesInput, SubjectUpdateWithoutAttendancesInput>, SubjectUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type AcademicPeriodUpdateOneWithoutAttendancesNestedInput = {
+    create?: XOR<AcademicPeriodCreateWithoutAttendancesInput, AcademicPeriodUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: AcademicPeriodCreateOrConnectWithoutAttendancesInput
+    upsert?: AcademicPeriodUpsertWithoutAttendancesInput
+    disconnect?: AcademicPeriodWhereInput | boolean
+    delete?: AcademicPeriodWhereInput | boolean
+    connect?: AcademicPeriodWhereUniqueInput
+    update?: XOR<XOR<AcademicPeriodUpdateToOneWithWhereWithoutAttendancesInput, AcademicPeriodUpdateWithoutAttendancesInput>, AcademicPeriodUncheckedUpdateWithoutAttendancesInput>
   }
 
   export type InstitutionCreateNestedOneWithoutExamsInput = {
@@ -24086,11 +24204,25 @@ export namespace Prisma {
     connect?: ExamWhereUniqueInput | ExamWhereUniqueInput[]
   }
 
+  export type AttendanceCreateNestedManyWithoutPeriodInput = {
+    create?: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput> | AttendanceCreateWithoutPeriodInput[] | AttendanceUncheckedCreateWithoutPeriodInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutPeriodInput | AttendanceCreateOrConnectWithoutPeriodInput[]
+    createMany?: AttendanceCreateManyPeriodInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
   export type ExamUncheckedCreateNestedManyWithoutPeriodInput = {
     create?: XOR<ExamCreateWithoutPeriodInput, ExamUncheckedCreateWithoutPeriodInput> | ExamCreateWithoutPeriodInput[] | ExamUncheckedCreateWithoutPeriodInput[]
     connectOrCreate?: ExamCreateOrConnectWithoutPeriodInput | ExamCreateOrConnectWithoutPeriodInput[]
     createMany?: ExamCreateManyPeriodInputEnvelope
     connect?: ExamWhereUniqueInput | ExamWhereUniqueInput[]
+  }
+
+  export type AttendanceUncheckedCreateNestedManyWithoutPeriodInput = {
+    create?: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput> | AttendanceCreateWithoutPeriodInput[] | AttendanceUncheckedCreateWithoutPeriodInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutPeriodInput | AttendanceCreateOrConnectWithoutPeriodInput[]
+    createMany?: AttendanceCreateManyPeriodInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
   }
 
   export type InstitutionUpdateOneRequiredWithoutAcademicPeriodsNestedInput = {
@@ -24115,6 +24247,20 @@ export namespace Prisma {
     deleteMany?: ExamScalarWhereInput | ExamScalarWhereInput[]
   }
 
+  export type AttendanceUpdateManyWithoutPeriodNestedInput = {
+    create?: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput> | AttendanceCreateWithoutPeriodInput[] | AttendanceUncheckedCreateWithoutPeriodInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutPeriodInput | AttendanceCreateOrConnectWithoutPeriodInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutPeriodInput | AttendanceUpsertWithWhereUniqueWithoutPeriodInput[]
+    createMany?: AttendanceCreateManyPeriodInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutPeriodInput | AttendanceUpdateWithWhereUniqueWithoutPeriodInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutPeriodInput | AttendanceUpdateManyWithWhereWithoutPeriodInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
   export type ExamUncheckedUpdateManyWithoutPeriodNestedInput = {
     create?: XOR<ExamCreateWithoutPeriodInput, ExamUncheckedCreateWithoutPeriodInput> | ExamCreateWithoutPeriodInput[] | ExamUncheckedCreateWithoutPeriodInput[]
     connectOrCreate?: ExamCreateOrConnectWithoutPeriodInput | ExamCreateOrConnectWithoutPeriodInput[]
@@ -24127,6 +24273,20 @@ export namespace Prisma {
     update?: ExamUpdateWithWhereUniqueWithoutPeriodInput | ExamUpdateWithWhereUniqueWithoutPeriodInput[]
     updateMany?: ExamUpdateManyWithWhereWithoutPeriodInput | ExamUpdateManyWithWhereWithoutPeriodInput[]
     deleteMany?: ExamScalarWhereInput | ExamScalarWhereInput[]
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutPeriodNestedInput = {
+    create?: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput> | AttendanceCreateWithoutPeriodInput[] | AttendanceUncheckedCreateWithoutPeriodInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutPeriodInput | AttendanceCreateOrConnectWithoutPeriodInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutPeriodInput | AttendanceUpsertWithWhereUniqueWithoutPeriodInput[]
+    createMany?: AttendanceCreateManyPeriodInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutPeriodInput | AttendanceUpdateWithWhereUniqueWithoutPeriodInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutPeriodInput | AttendanceUpdateManyWithWhereWithoutPeriodInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -24504,6 +24664,7 @@ export namespace Prisma {
     updated_at?: Date | string
     student: StudentProfileCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    period?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutInstitutionInput = {
@@ -24512,6 +24673,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -24654,6 +24816,7 @@ export namespace Prisma {
     end_date: Date | string
     created_at?: Date | string
     exams?: ExamCreateNestedManyWithoutPeriodInput
+    attendances?: AttendanceCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodUncheckedCreateWithoutInstitutionInput = {
@@ -24664,6 +24827,7 @@ export namespace Prisma {
     end_date: Date | string
     created_at?: Date | string
     exams?: ExamUncheckedCreateNestedManyWithoutPeriodInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodCreateOrConnectWithoutInstitutionInput = {
@@ -24819,6 +24983,7 @@ export namespace Prisma {
     subjectId?: StringFilter<"Attendance"> | string
     date?: DateTimeFilter<"Attendance"> | Date | string
     status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    periodId?: StringNullableFilter<"Attendance"> | string | null
     created_at?: DateTimeFilter<"Attendance"> | Date | string
     updated_at?: DateTimeFilter<"Attendance"> | Date | string
   }
@@ -25241,6 +25406,7 @@ export namespace Prisma {
     updated_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    period?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutStudentInput = {
@@ -25249,6 +25415,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -26348,6 +26515,7 @@ export namespace Prisma {
     updated_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
     student: StudentProfileCreateNestedOneWithoutAttendancesInput
+    period?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutSubjectInput = {
@@ -26356,6 +26524,7 @@ export namespace Prisma {
     studentId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -26877,6 +27046,33 @@ export namespace Prisma {
     create: XOR<SubjectCreateWithoutAttendancesInput, SubjectUncheckedCreateWithoutAttendancesInput>
   }
 
+  export type AcademicPeriodCreateWithoutAttendancesInput = {
+    id?: string
+    name: string
+    type: string
+    start_date: Date | string
+    end_date: Date | string
+    created_at?: Date | string
+    institution: InstitutionCreateNestedOneWithoutAcademicPeriodsInput
+    exams?: ExamCreateNestedManyWithoutPeriodInput
+  }
+
+  export type AcademicPeriodUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    tenant_id: string
+    name: string
+    type: string
+    start_date: Date | string
+    end_date: Date | string
+    created_at?: Date | string
+    exams?: ExamUncheckedCreateNestedManyWithoutPeriodInput
+  }
+
+  export type AcademicPeriodCreateOrConnectWithoutAttendancesInput = {
+    where: AcademicPeriodWhereUniqueInput
+    create: XOR<AcademicPeriodCreateWithoutAttendancesInput, AcademicPeriodUncheckedCreateWithoutAttendancesInput>
+  }
+
   export type InstitutionUpsertWithoutAttendancesInput = {
     update: XOR<InstitutionUpdateWithoutAttendancesInput, InstitutionUncheckedUpdateWithoutAttendancesInput>
     create: XOR<InstitutionCreateWithoutAttendancesInput, InstitutionUncheckedCreateWithoutAttendancesInput>
@@ -26994,6 +27190,39 @@ export namespace Prisma {
     exams?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
+  export type AcademicPeriodUpsertWithoutAttendancesInput = {
+    update: XOR<AcademicPeriodUpdateWithoutAttendancesInput, AcademicPeriodUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<AcademicPeriodCreateWithoutAttendancesInput, AcademicPeriodUncheckedCreateWithoutAttendancesInput>
+    where?: AcademicPeriodWhereInput
+  }
+
+  export type AcademicPeriodUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: AcademicPeriodWhereInput
+    data: XOR<AcademicPeriodUpdateWithoutAttendancesInput, AcademicPeriodUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type AcademicPeriodUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    institution?: InstitutionUpdateOneRequiredWithoutAcademicPeriodsNestedInput
+    exams?: ExamUpdateManyWithoutPeriodNestedInput
+  }
+
+  export type AcademicPeriodUncheckedUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    start_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    end_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    exams?: ExamUncheckedUpdateManyWithoutPeriodNestedInput
+  }
+
   export type InstitutionCreateWithoutExamsInput = {
     id?: string
     name: string
@@ -27105,6 +27334,7 @@ export namespace Prisma {
     end_date: Date | string
     created_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutAcademicPeriodsInput
+    attendances?: AttendanceCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodUncheckedCreateWithoutExamsInput = {
@@ -27115,6 +27345,7 @@ export namespace Prisma {
     start_date: Date | string
     end_date: Date | string
     created_at?: Date | string
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutPeriodInput
   }
 
   export type AcademicPeriodCreateOrConnectWithoutExamsInput = {
@@ -27292,6 +27523,7 @@ export namespace Prisma {
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     institution?: InstitutionUpdateOneRequiredWithoutAcademicPeriodsNestedInput
+    attendances?: AttendanceUpdateManyWithoutPeriodNestedInput
   }
 
   export type AcademicPeriodUncheckedUpdateWithoutExamsInput = {
@@ -27302,6 +27534,7 @@ export namespace Prisma {
     start_date?: DateTimeFieldUpdateOperationsInput | Date | string
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceUncheckedUpdateManyWithoutPeriodNestedInput
   }
 
   export type GradeUpsertWithWhereUniqueWithoutExamInput = {
@@ -27795,6 +28028,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttendanceCreateWithoutPeriodInput = {
+    id?: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+    institution: InstitutionCreateNestedOneWithoutAttendancesInput
+    student: StudentProfileCreateNestedOneWithoutAttendancesInput
+    subject: SubjectCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateWithoutPeriodInput = {
+    id?: string
+    tenant_id: string
+    studentId: string
+    subjectId: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type AttendanceCreateOrConnectWithoutPeriodInput = {
+    where: AttendanceWhereUniqueInput
+    create: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput>
+  }
+
+  export type AttendanceCreateManyPeriodInputEnvelope = {
+    data: AttendanceCreateManyPeriodInput | AttendanceCreateManyPeriodInput[]
+    skipDuplicates?: boolean
+  }
+
   export type InstitutionUpsertWithoutAcademicPeriodsInput = {
     update: XOR<InstitutionUpdateWithoutAcademicPeriodsInput, InstitutionUncheckedUpdateWithoutAcademicPeriodsInput>
     create: XOR<InstitutionCreateWithoutAcademicPeriodsInput, InstitutionUncheckedCreateWithoutAcademicPeriodsInput>
@@ -27860,6 +28125,22 @@ export namespace Prisma {
     data: XOR<ExamUpdateManyMutationInput, ExamUncheckedUpdateManyWithoutPeriodInput>
   }
 
+  export type AttendanceUpsertWithWhereUniqueWithoutPeriodInput = {
+    where: AttendanceWhereUniqueInput
+    update: XOR<AttendanceUpdateWithoutPeriodInput, AttendanceUncheckedUpdateWithoutPeriodInput>
+    create: XOR<AttendanceCreateWithoutPeriodInput, AttendanceUncheckedCreateWithoutPeriodInput>
+  }
+
+  export type AttendanceUpdateWithWhereUniqueWithoutPeriodInput = {
+    where: AttendanceWhereUniqueInput
+    data: XOR<AttendanceUpdateWithoutPeriodInput, AttendanceUncheckedUpdateWithoutPeriodInput>
+  }
+
+  export type AttendanceUpdateManyWithWhereWithoutPeriodInput = {
+    where: AttendanceScalarWhereInput
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutPeriodInput>
+  }
+
   export type UserCreateManyInstitutionInput = {
     id?: string
     identifier: string
@@ -27903,6 +28184,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -28096,6 +28378,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentProfileUpdateOneRequiredWithoutAttendancesNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    period?: AcademicPeriodUpdateOneWithoutAttendancesNestedInput
   }
 
   export type AttendanceUncheckedUpdateWithoutInstitutionInput = {
@@ -28104,6 +28387,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28114,6 +28398,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28245,6 +28530,7 @@ export namespace Prisma {
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     exams?: ExamUpdateManyWithoutPeriodNestedInput
+    attendances?: AttendanceUpdateManyWithoutPeriodNestedInput
   }
 
   export type AcademicPeriodUncheckedUpdateWithoutInstitutionInput = {
@@ -28255,6 +28541,7 @@ export namespace Prisma {
     end_date?: DateTimeFieldUpdateOperationsInput | Date | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     exams?: ExamUncheckedUpdateManyWithoutPeriodNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutPeriodNestedInput
   }
 
   export type AcademicPeriodUncheckedUpdateManyWithoutInstitutionInput = {
@@ -28272,6 +28559,7 @@ export namespace Prisma {
     subjectId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -28299,6 +28587,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     institution?: InstitutionUpdateOneRequiredWithoutAttendancesNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    period?: AcademicPeriodUpdateOneWithoutAttendancesNestedInput
   }
 
   export type AttendanceUncheckedUpdateWithoutStudentInput = {
@@ -28307,6 +28596,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28317,6 +28607,7 @@ export namespace Prisma {
     subjectId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28617,6 +28908,7 @@ export namespace Prisma {
     studentId: string
     date: Date | string
     status: $Enums.AttendanceStatus
+    periodId?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -28655,6 +28947,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     institution?: InstitutionUpdateOneRequiredWithoutAttendancesNestedInput
     student?: StudentProfileUpdateOneRequiredWithoutAttendancesNestedInput
+    period?: AcademicPeriodUpdateOneWithoutAttendancesNestedInput
   }
 
   export type AttendanceUncheckedUpdateWithoutSubjectInput = {
@@ -28663,6 +28956,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28673,6 +28967,7 @@ export namespace Prisma {
     studentId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    periodId?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28795,6 +29090,17 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type AttendanceCreateManyPeriodInput = {
+    id?: string
+    tenant_id: string
+    studentId: string
+    subjectId: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type ExamUpdateWithoutPeriodInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -28826,6 +29132,39 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     courseId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUpdateWithoutPeriodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    institution?: InstitutionUpdateOneRequiredWithoutAttendancesNestedInput
+    student?: StudentProfileUpdateOneRequiredWithoutAttendancesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateWithoutPeriodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutPeriodInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
