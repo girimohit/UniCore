@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AttendanceChart } from "@/components/student/attendance-chart"
 import { CardContent } from "@/components/ui/card"
 import { CalendarCheck } from "lucide-react"
-import { getAcademicLabel } from "@/lib/utils/academic";
+import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 
 export default async function StudentAttendancePage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -89,7 +89,7 @@ export default async function StudentAttendancePage({ params }: { params: Promis
                 </SelectTrigger>
                 <SelectContent className="bg-card/90 backdrop-blur-xl border-border/40 rounded-2xl">
                     <SelectItem value="curr" className="font-bold">
-                      {academic.label} {student.semester ?? 'Current'}
+                      {student.semester ? formatCycleLabel(academic.type, student.semester) : 'Current'}
                     </SelectItem>
                 </SelectContent>
              </Select>

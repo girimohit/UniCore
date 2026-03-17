@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
 import { randomBytes } from 'crypto';
+import { SubjectService } from '@/lib/services/subject-service';
 
 // GET /api/students – list all students for admin's tenant
 export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
@@ -74,6 +75,11 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
             status: 'PENDING_ACTIVATION',
           }
         });
+
+        // Validate semester/cycleNumber if provided
+        if (semester) {
+          await SubjectService.validateCycleNumber(user.tenant_id, parseInt(semester));
+        }
 
         // Create StudentProfile
         await tx.studentProfile.create({

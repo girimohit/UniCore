@@ -12,7 +12,7 @@ import {
   Bell,
   GraduationCap
 } from "lucide-react";
-import { getAcademicLabel } from '@/lib/utils/academic';
+import { getAcademicLabel, formatCycleLabel } from '@/lib/utils/academic';
 import Link from 'next/link';
 
 export default async function StudentDashboard({ params }: { params: Promise<{ tenant: string }> }) {
@@ -109,7 +109,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
               </h1>
               <p className="text-white/60 font-medium max-w-lg text-lg leading-relaxed">
                 {student.course ? (
-                  <><span className="text-white/90">{student.course.name}</span>{student.semester ? ` · ${academic.label} ${student.semester}` : ''} · </>
+                  <><span className="text-white/90">{student.course.name}</span>{student.semester ? ` · ${formatCycleLabel(academic.type, student.semester)}` : ''} · </>
                 ) : null}
                 {institution.name}
               </p>
@@ -158,7 +158,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
                 <BookOpen className="h-5 w-5" />
               </div>
               <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 tracking-widest uppercase">
-                {academic.label} {student.semester ?? '—'}
+                {student.semester ? formatCycleLabel(academic.type, student.semester) : '—'}
               </span>
             </div>
             <div className="space-y-1">
@@ -275,7 +275,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
               <div className="space-y-6">
                 {[
                   { label: "Course", value: student.course?.name ?? "N/A", icon: GraduationCap },
-                  { label: academic.label, value: student.semester ?? "N/A", icon: CalendarCheck },
+                  { label: academic.label, value: student.semester ? formatCycleLabel(academic.type, student.semester) : "N/A", icon: CalendarCheck },
                   { label: "Enrollment ID", value: student.roll_number, icon: TrendingUp },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-4 group">

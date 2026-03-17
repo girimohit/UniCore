@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db';
+import { getAcademicLabel } from '@/lib/utils/academic';
 
 export class SubjectService {
   /**
@@ -20,10 +21,11 @@ export class SubjectService {
     }
 
     const structure = institution.academicStructure as any;
-    const totalCycles = structure?.totalCycles || 8; // Default to 8 if not set
+    const academic = getAcademicLabel(structure);
+    const totalCycles = academic.totalCycles;
 
     if (cycleNumber > totalCycles) {
-      throw new Error("Invalid cycleNumber for this tenant's academic structure");
+      throw new Error(`Invalid cycleNumber for this tenant's academic structure (Expected ${academic.label} 1 to ${totalCycles})`);
     }
 
     return true;

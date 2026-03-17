@@ -6,7 +6,7 @@ import {
   Loader2, Search, GraduationCap, Pencil, X, BookOpen
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
-import { getAcademicLabel, AcademicSystem } from "@/lib/utils/academic";
+import { getAcademicLabel, formatCycleLabel, AcademicSystem } from "@/lib/utils/academic";
 
 interface StudentManagerProps {
   courses: { id: string; name: string }[];
@@ -216,7 +216,18 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">{academic.label}</label>
-                  <input type="number" value={form.semester} onChange={e => setForm(f => ({ ...f, semester: e.target.value }))} placeholder="e.g. 1" className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all" />
+                  <select
+                    value={form.semester}
+                    onChange={e => setForm(f => ({ ...f, semester: e.target.value }))}
+                    className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="">Select {academic.label}</option>
+                    {Array.from({ length: academic.totalCycles }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>
+                        {formatCycleLabel(academic.type, num)}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <button type="submit" disabled={loading} className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2">
@@ -314,7 +325,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                           </td>
                           <td className="px-6 py-4">
                             {s.semester != null ? (
-                              <span className="text-sm font-bold">{s.semester}</span>
+                              <span className="text-sm font-bold">{formatCycleLabel(academic.type, s.semester)}</span>
                             ) : (
                               <span className="text-xs text-muted-foreground italic">—</span>
                             )}
@@ -375,15 +386,19 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
 
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-muted-foreground">{academic.label}</label>
-                <input
+                <select
                   required
-                  type="number"
-                  min={1}
                   value={enrollForm.semester}
                   onChange={e => setEnrollForm(f => ({ ...f, semester: e.target.value }))}
-                  placeholder="e.g. 1"
-                  className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
-                />
+                  className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="">Select {academic.label}</option>
+                  {Array.from({ length: academic.totalCycles }, (_, i) => i + 1).map(num => (
+                    <option key={num} value={num}>
+                      {formatCycleLabel(academic.type, num)}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {enrollError && (

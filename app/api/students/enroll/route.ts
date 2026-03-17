@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
+import { SubjectService } from '@/lib/services/subject-service';
 
 // POST /api/students/enroll
 // Body: { studentId, courseId, semester, sectionId? }
@@ -40,6 +41,13 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
         { error: 'Course not found in this tenant' },
         { status: 404 }
       );
+    }
+
+    // 3.5 Validate semester/cycleNumber
+    try {
+      await SubjectService.validateCycleNumber(user.tenant_id, parseInt(String(semester)));
+    } catch (err: any) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
     }
 
     // 4. Update StudentProfile

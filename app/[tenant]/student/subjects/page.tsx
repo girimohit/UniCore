@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth-server';
 import { Card, CardContent } from "@/components/ui/card"
 import { BookOpen, User, GraduationCap, ChevronRight } from "lucide-react"
-import { getAcademicLabel } from "@/lib/utils/academic";
+import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 
 export default async function StudentSubjectsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -62,7 +62,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
         <h1 className="text-3xl font-display font-black text-foreground tracking-tight">My Subjects 📚</h1>
         <p className="text-muted-foreground font-medium mt-1">
           {student.course ? (
-            <><span className="text-foreground tracking-tight">{student.course.name}</span>{student.semester ? ` · ${academic.label} ${student.semester}` : ''} · </>
+            <><span className="text-foreground tracking-tight">{student.course.name}</span>{student.semester ? ` · ${formatCycleLabel(academic.type, student.semester)}` : ''} · </>
           ) : null}
           {institution.name}
         </p>
@@ -114,7 +114,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
                     <div className="flex items-center gap-2">
                       <GraduationCap className="h-4 w-4 text-primary opacity-60" />
                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                        {academic.label} {sub.cycleNumber ?? '—'}
+                        {sub.cycleNumber ? formatCycleLabel(academic.type, sub.cycleNumber) : '—'}
                       </span>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary scale-0 group-hover:scale-100 transition-transform duration-300">

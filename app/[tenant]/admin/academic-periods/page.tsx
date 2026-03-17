@@ -9,7 +9,7 @@ export default async function AcademicPeriodsPage({ params }: { params: Promise<
   // Resolve institution and fetch periods
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true },
+    select: { id: true, name: true, academic_system: true, academicStructure: true },
   });
 
   if (!institution) return notFound();
@@ -31,7 +31,10 @@ export default async function AcademicPeriodsPage({ params }: { params: Promise<
         </p>
       </div>
 
-      <AcademicPeriodManager initialPeriods={JSON.parse(JSON.stringify(periods))} />
+      <AcademicPeriodManager 
+        initialPeriods={JSON.parse(JSON.stringify(periods))} 
+        academicSystem={institution.academicStructure as any || institution.academic_system}
+      />
     </div>
   );
 }

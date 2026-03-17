@@ -7,7 +7,7 @@ import {
   Calendar
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
-import { getAcademicLabel } from "@/lib/utils/academic";
+import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 
 interface SubjectManagerProps {
   initialSubjects: any[];
@@ -319,7 +319,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                             <td className="px-6 py-4">
                               {s.cycleNumber ? (
                                 <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-secondary/20 text-foreground/70 uppercase">
-                                  {academic.label} {s.cycleNumber}
+                                  {formatCycleLabel(academic.type, s.cycleNumber)}
                                 </span>
                               ) : (
                                 <span className="text-[10px] text-muted-foreground italic">Not Mapped</span>

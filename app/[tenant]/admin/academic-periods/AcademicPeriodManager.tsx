@@ -10,6 +10,7 @@ import {
   Trash2,
   X
 } from "lucide-react";
+import { getAcademicLabel, formatCycleLabel, AcademicSystem } from "@/lib/utils/academic";
 import {
   Table,
   TableBody,
@@ -32,9 +33,11 @@ interface AcademicPeriod {
 
 interface ManagerProps {
   initialPeriods: AcademicPeriod[];
+  academicSystem: AcademicSystem;
 }
 
-export default function AcademicPeriodManager({ initialPeriods }: ManagerProps) {
+export default function AcademicPeriodManager({ initialPeriods, academicSystem }: ManagerProps) {
+  const academic = getAcademicLabel(academicSystem);
   const [periods, setPeriods] = useState<AcademicPeriod[]>(initialPeriods);
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -105,7 +108,7 @@ export default function AcademicPeriodManager({ initialPeriods }: ManagerProps) 
             <div className="space-y-2">
               <label className="text-sm font-semibold">Period Name</label>
               <Input 
-                placeholder="e.g. Semester 1, Year 2024-25"
+                placeholder={`e.g. ${formatCycleLabel(academic.type, 1)}, ${academic.label} 2024-25`}
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 required

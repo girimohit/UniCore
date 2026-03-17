@@ -112,7 +112,7 @@ export default function InstitutionSettingsManager({ initialSettings }: Settings
              </div>
              <p className="text-[11px] text-muted-foreground leading-relaxed px-1">
                 This defines the maximum number of {structure.type.toLowerCase()}s a student can be enrolled in. 
-                For example, a 4-year degree follows the SEVENTH and EIGHTH SEMESTERS at its peak.
+                For example, a 4-year degree typically spans across 8 cycles in a semester-based model.
              </p>
           </div>
         </section>
