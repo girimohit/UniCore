@@ -120,15 +120,147 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.AcademicPeriodScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  type: 'type',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  created_at: 'created_at'
+};
+
+exports.Prisma.AttendanceScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  studentId: 'studentId',
+  subjectId: 'subjectId',
+  date: 'date',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  periodId: 'periodId'
+};
+
+exports.Prisma.CourseScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  code: 'code',
+  departmentId: 'departmentId',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.DepartmentScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  code: 'code',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.EnrolledCourseScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  courseId: 'courseId'
+};
+
+exports.Prisma.ExamScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  date: 'date',
+  courseId: 'courseId',
+  subjectId: 'subjectId',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  periodId: 'periodId'
+};
+
+exports.Prisma.FacultyProfileScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  employee_number: 'employee_number',
+  department_id: 'department_id',
+  designation: 'designation'
+};
+
+exports.Prisma.GradeScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  examId: 'examId',
+  studentId: 'studentId',
+  score: 'score',
+  remarks: 'remarks',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.InstitutionScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
   status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
   academic_system: 'academic_system',
-  academicStructure: 'academicStructure',
+  academicStructure: 'academicStructure'
+};
+
+exports.Prisma.InstitutionModuleScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  moduleId: 'moduleId',
+  isEnabled: 'isEnabled',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.InvitationTokenScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  email: 'email',
+  role: 'role',
+  token: 'token',
+  expires_at: 'expires_at',
+  used: 'used',
+  created_at: 'created_at'
+};
+
+exports.Prisma.ModuleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.StudentProfileScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  roll_number: 'roll_number',
+  course_id: 'course_id',
+  semester: 'semester',
+  phone: 'phone'
+};
+
+exports.Prisma.SubjectScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  code: 'code',
+  courseId: 'courseId',
+  cycleNumber: 'cycleNumber',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TaughtSubjectScalarFieldEnum = {
+  id: 'id',
+  subjectId: 'subjectId',
+  facultyId: 'facultyId'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -143,16 +275,67 @@ exports.Prisma.UserScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.StudentProfileScalarFieldEnum = {
-  id: 'id',
-  user_id: 'user_id',
-  roll_number: 'roll_number',
-  course_id: 'course_id',
-  semester: 'semester',
-  phone: 'phone'
+exports.Prisma.SortOrder = {
+  asc: 'asc',
+  desc: 'desc'
 };
 
-exports.Prisma.FacultyProfileScalarFieldEnum = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.AcademicPeriodOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  type: 'type'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  studentId: 'studentId',
+  subjectId: 'subjectId',
+  periodId: 'periodId'
+};
+
+exports.Prisma.CourseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  code: 'code',
+  departmentId: 'departmentId'
+};
+
+exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  code: 'code'
+};
+
+exports.Prisma.EnrolledCourseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  courseId: 'courseId'
+};
+
+exports.Prisma.ExamOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  courseId: 'courseId',
+  subjectId: 'subjectId',
+  periodId: 'periodId'
+};
+
+exports.Prisma.FacultyProfileOrderByRelevanceFieldEnum = {
   id: 'id',
   user_id: 'user_id',
   employee_number: 'employee_number',
@@ -160,128 +343,12 @@ exports.Prisma.FacultyProfileScalarFieldEnum = {
   designation: 'designation'
 };
 
-exports.Prisma.InvitationTokenScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  email: 'email',
-  role: 'role',
-  token: 'token',
-  expires_at: 'expires_at',
-  used: 'used',
-  created_at: 'created_at'
-};
-
-exports.Prisma.DepartmentScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  code: 'code',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.CourseScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  code: 'code',
-  departmentId: 'departmentId',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.SubjectScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  code: 'code',
-  courseId: 'courseId',
-  cycleNumber: 'cycleNumber',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.EnrolledCourseScalarFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
-  courseId: 'courseId'
-};
-
-exports.Prisma.TaughtSubjectScalarFieldEnum = {
-  id: 'id',
-  subjectId: 'subjectId',
-  facultyId: 'facultyId'
-};
-
-exports.Prisma.AttendanceScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  studentId: 'studentId',
-  subjectId: 'subjectId',
-  date: 'date',
-  status: 'status',
-  periodId: 'periodId',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.ExamScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  date: 'date',
-  courseId: 'courseId',
-  subjectId: 'subjectId',
-  periodId: 'periodId',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.GradeScalarFieldEnum = {
+exports.Prisma.GradeOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
   examId: 'examId',
   studentId: 'studentId',
-  score: 'score',
-  remarks: 'remarks',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.ModuleScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.InstitutionModuleScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  moduleId: 'moduleId',
-  isEnabled: 'isEnabled',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.AcademicPeriodScalarFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  type: 'type',
-  start_date: 'start_date',
-  end_date: 'end_date',
-  created_at: 'created_at'
-};
-
-exports.Prisma.SortOrder = {
-  asc: 'asc',
-  desc: 'desc'
-};
-
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
+  remarks: 'remarks'
 };
 
 exports.Prisma.JsonNullValueFilter = {
@@ -302,18 +369,23 @@ exports.Prisma.InstitutionOrderByRelevanceFieldEnum = {
   status: 'status'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
+exports.Prisma.InstitutionModuleOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
-  identifier: 'identifier',
-  password_hash: 'password_hash',
+  moduleId: 'moduleId'
+};
+
+exports.Prisma.InvitationTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
   email: 'email',
-  status: 'status'
+  token: 'token'
+};
+
+exports.Prisma.ModuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
 };
 
 exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
@@ -324,47 +396,11 @@ exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
   phone: 'phone'
 };
 
-exports.Prisma.FacultyProfileOrderByRelevanceFieldEnum = {
-  id: 'id',
-  user_id: 'user_id',
-  employee_number: 'employee_number',
-  department_id: 'department_id',
-  designation: 'designation'
-};
-
-exports.Prisma.InvitationTokenOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  email: 'email',
-  token: 'token'
-};
-
-exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  code: 'code'
-};
-
-exports.Prisma.CourseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  code: 'code',
-  departmentId: 'departmentId'
-};
-
 exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
   name: 'name',
   code: 'code',
-  courseId: 'courseId'
-};
-
-exports.Prisma.EnrolledCourseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
   courseId: 'courseId'
 };
 
@@ -374,86 +410,58 @@ exports.Prisma.TaughtSubjectOrderByRelevanceFieldEnum = {
   facultyId: 'facultyId'
 };
 
-exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
-  studentId: 'studentId',
-  subjectId: 'subjectId',
-  periodId: 'periodId'
+  identifier: 'identifier',
+  password_hash: 'password_hash',
+  email: 'email',
+  status: 'status'
 };
-
-exports.Prisma.ExamOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  courseId: 'courseId',
-  subjectId: 'subjectId',
-  periodId: 'periodId'
-};
-
-exports.Prisma.GradeOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  examId: 'examId',
-  studentId: 'studentId',
-  remarks: 'remarks'
-};
-
-exports.Prisma.ModuleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description'
-};
-
-exports.Prisma.InstitutionModuleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  moduleId: 'moduleId'
-};
-
-exports.Prisma.AcademicPeriodOrderByRelevanceFieldEnum = {
-  id: 'id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  type: 'type'
-};
-exports.AcademicSystem = exports.$Enums.AcademicSystem = {
-  SEMESTER: 'SEMESTER',
-  ANNUAL: 'ANNUAL',
-  YEARLY: 'YEARLY'
-};
-
-exports.Role = exports.$Enums.Role = {
-  SUPER_ADMIN: 'SUPER_ADMIN',
-  ADMIN: 'ADMIN',
-  FACULTY: 'FACULTY',
-  STUDENT: 'STUDENT'
-};
-
-exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
+exports.attendance_status = exports.$Enums.attendance_status = {
   PRESENT: 'PRESENT',
   ABSENT: 'ABSENT',
   LATE: 'LATE',
   EXCUSED: 'EXCUSED'
 };
 
+exports.institution_academic_system = exports.$Enums.institution_academic_system = {
+  SEMESTER: 'SEMESTER',
+  ANNUAL: 'ANNUAL',
+  YEARLY: 'YEARLY'
+};
+
+exports.invitationtoken_role = exports.$Enums.invitationtoken_role = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  FACULTY: 'FACULTY',
+  STUDENT: 'STUDENT'
+};
+
+exports.user_role = exports.$Enums.user_role = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  FACULTY: 'FACULTY',
+  STUDENT: 'STUDENT'
+};
+
 exports.Prisma.ModelName = {
-  Institution: 'Institution',
-  User: 'User',
-  StudentProfile: 'StudentProfile',
-  FacultyProfile: 'FacultyProfile',
-  InvitationToken: 'InvitationToken',
-  Department: 'Department',
-  Course: 'Course',
-  Subject: 'Subject',
-  EnrolledCourse: 'EnrolledCourse',
-  TaughtSubject: 'TaughtSubject',
+  AcademicPeriod: 'AcademicPeriod',
   Attendance: 'Attendance',
+  Course: 'Course',
+  Department: 'Department',
+  EnrolledCourse: 'EnrolledCourse',
   Exam: 'Exam',
+  FacultyProfile: 'FacultyProfile',
   Grade: 'Grade',
-  Module: 'Module',
+  Institution: 'Institution',
   InstitutionModule: 'InstitutionModule',
-  AcademicPeriod: 'AcademicPeriod'
+  InvitationToken: 'InvitationToken',
+  Module: 'Module',
+  StudentProfile: 'StudentProfile',
+  Subject: 'Subject',
+  TaughtSubject: 'TaughtSubject',
+  User: 'User'
 };
 
 /**
