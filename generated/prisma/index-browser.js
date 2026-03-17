@@ -229,6 +229,7 @@ exports.Prisma.ExamScalarFieldEnum = {
   date: 'date',
   courseId: 'courseId',
   subjectId: 'subjectId',
+  periodId: 'periodId',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -259,6 +260,16 @@ exports.Prisma.InstitutionModuleScalarFieldEnum = {
   isEnabled: 'isEnabled',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.AcademicPeriodScalarFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  type: 'type',
+  start_date: 'start_date',
+  end_date: 'end_date',
+  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -357,7 +368,8 @@ exports.Prisma.ExamOrderByRelevanceFieldEnum = {
   tenant_id: 'tenant_id',
   name: 'name',
   courseId: 'courseId',
-  subjectId: 'subjectId'
+  subjectId: 'subjectId',
+  periodId: 'periodId'
 };
 
 exports.Prisma.GradeOrderByRelevanceFieldEnum = {
@@ -378,6 +390,13 @@ exports.Prisma.InstitutionModuleOrderByRelevanceFieldEnum = {
   id: 'id',
   tenant_id: 'tenant_id',
   moduleId: 'moduleId'
+};
+
+exports.Prisma.AcademicPeriodOrderByRelevanceFieldEnum = {
+  id: 'id',
+  tenant_id: 'tenant_id',
+  name: 'name',
+  type: 'type'
 };
 exports.AcademicSystem = exports.$Enums.AcademicSystem = {
   SEMESTER: 'SEMESTER',
@@ -413,7 +432,8 @@ exports.Prisma.ModelName = {
   Exam: 'Exam',
   Grade: 'Grade',
   Module: 'Module',
-  InstitutionModule: 'InstitutionModule'
+  InstitutionModule: 'InstitutionModule',
+  AcademicPeriod: 'AcademicPeriod'
 };
 
 /**

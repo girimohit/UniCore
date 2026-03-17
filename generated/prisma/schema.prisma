@@ -38,6 +38,7 @@ model Institution {
   grades             Grade[]
   institutionModules InstitutionModule[]
   invitationTokens   InvitationToken[]
+  academicPeriods    AcademicPeriod[]
 
   @@index([slug])
 }
@@ -220,21 +221,24 @@ model Attendance {
 }
 
 model Exam {
-  id          String      @id @default(uuid())
+  id          String         @id @default(uuid())
   tenant_id   String
-  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  institution Institution    @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
   name        String
   date        DateTime
   courseId    String
-  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course      Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subjectId   String
-  subject     Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
+  subject     Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  periodId    String
+  period      AcademicPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
 
   grades Grade[]
 
   @@index([tenant_id])
+  @@index([tenant_id, periodId])
   @@index([tenant_id, courseId])
   @@index([tenant_id, subjectId])
 }
@@ -279,5 +283,20 @@ model InstitutionModule {
   updated_at  DateTime    @updatedAt
 
   @@unique([tenant_id, moduleId])
+  @@index([tenant_id])
+}
+
+model AcademicPeriod {
+  id          String      @id @default(uuid())
+  tenant_id   String
+  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  name        String
+  type        String // SEMESTER / YEAR / TERM
+  start_date  DateTime
+  end_date    DateTime
+  created_at  DateTime    @default(now())
+
+  exams Exam[]
+
   @@index([tenant_id])
 }
