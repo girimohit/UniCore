@@ -35,29 +35,12 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   // Aggregate attendance by subject
   const subjectsMap: Record<string, any> = {};
   
-  // Initialize with all subjects from the tenant's courses if possible, 
-  // or just subjects the student has attendance for.
-  // For better UX, let's get all subjects for the student's course.
+  // Get all subjects for the student's current course assignment
   const courseSubjects = student.course_id ? await prisma.subject.findMany({
     where: { courseId: student.course_id }
   }) : [];
 
-  courseSubjects.forEach(s => {
-    subjectsMap[s.id] = {
-      id: s.id,
-      name: s.name,
-      code: s.code,
-      attended: 0,
-      total: 0,
-      color: "#10b981", // default
-      bg: "bg-emerald-500",
-      light: "bg-emerald-50",
-      text: "text-emerald-700",
-      border: "border-emerald-100"
-    };
-  });
-
-  // Color palette for variety
+  // Color palette for charts
   const colors = [
     { color: "#10b981", bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-100" },
     { color: "#3b82f6", bg: "bg-blue-500", light: "bg-blue-50", text: "text-blue-700", border: "border-blue-100" },
@@ -68,9 +51,17 @@ export default async function StudentAttendancePage({ params }: { params: Promis
 
   courseSubjects.forEach((s, i) => {
     const palette = colors[i % colors.length];
-    subjectsMap[s.id] = { ...subjectsMap[s.id], ...palette };
+    subjectsMap[s.id] = {
+      id: s.id,
+      name: s.name,
+      code: s.code,
+      attended: 0,
+      total: 0,
+      ...palette
+    };
   });
 
+  // Calculate attended/total counts
   student.attendances.forEach(a => {
     if (subjectsMap[a.subjectId]) {
       subjectsMap[a.subjectId].total++;
@@ -95,14 +86,25 @@ export default async function StudentAttendancePage({ params }: { params: Promis
                     <SelectValue placeholder={`Select ${academic.label}`} />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="curr">{academic.label} 4</SelectItem>
-                    <SelectItem value="prev">{academic.label} 3</SelectItem>
+                    <SelectItem value="curr">
+                      {academic.label} {student.semester ?? 'Current'}
+                    </SelectItem>
                 </SelectContent>
              </Select>
         </div>
       </div>
 
-      <AttendanceChart subjects={processedSubjects} />
+      {processedSubjects.length === 0 ? (
+        <CardContent className="p-16 flex flex-col items-center justify-center text-center gap-4 border border-slate-200 rounded-xl bg-white">
+          <CalendarCheck className="h-10 w-10 text-emerald-500 opacity-30" />
+          <p className="text-sm font-medium text-slate-500 max-w-xs">No attendance records found. Make sure you are enrolled in a course and subjects are assigned.</p>
+        </CardContent>
+      ) : (
+        <AttendanceChart subjects={processedSubjects} />
+      )}
     </div>
   );
 }
+
+// Re-importing missing Icon for empty state
+import { CalendarCheck } from "lucide-react";
