@@ -15,7 +15,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true }
+    select: { id: true, name: true, academic_system: true, academicStructure: true }
   });
 
   if (!institution) notFound();
@@ -30,7 +30,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
   if (!student) notFound();
 
-  const academic = getAcademicLabel(institution.academic_system);
+  const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
   const initials = student.user.identifier.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || student.roll_number.slice(0, 2).toUpperCase();
 
   return (

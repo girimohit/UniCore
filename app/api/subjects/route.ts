@@ -52,6 +52,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
             code: item.code.toUpperCase(),
             tenant_id: user.tenant_id,
             courseId: course.id,
+            semester: item.semester ? parseInt(item.semester) : null,
           }
         });
         created.push(subject);

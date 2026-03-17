@@ -15,7 +15,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true }
+    select: { id: true, name: true, academic_system: true, academicStructure: true }
   });
 
   if (!institution) notFound();
@@ -27,7 +27,7 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
   if (!student) notFound();
 
-  const academic = getAcademicLabel(institution.academic_system);
+  const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
 
   // Real subjects for the student's course, with real faculty
   const subjects = student.course_id ? await prisma.subject.findMany({

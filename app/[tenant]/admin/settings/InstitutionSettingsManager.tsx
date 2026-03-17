@@ -5,31 +5,41 @@ import { Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
 interface SettingsManagerProps {
   initialSettings: {
-    academic_system: 'SEMESTER' | 'ANNUAL';
+    academic_system: 'SEMESTER' | 'ANNUAL' | 'YEARLY';
+    academicStructure: {
+      type: 'SEMESTER' | 'YEARLY';
+      totalCycles: number;
+    } | null;
   };
 }
 
 export default function InstitutionSettingsManager({ initialSettings }: SettingsManagerProps) {
-  const [academicSystem, setAcademicSystem] = useState(initialSettings.academic_system);
+  const [structure, setStructure] = useState(initialSettings.academicStructure || {
+    type: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
+    totalCycles: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 4 : 8
+  });
+  
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   const handleSave = async () => {
+    if (structure.totalCycles <= 0) {
+      setMessage({ type: 'error', text: "Total cycles must be a positive integer." });
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
     try {
       const res = await fetch("/api/institutions/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ academic_system: academicSystem }),
+        body: JSON.stringify({ academicStructure: structure }),
       });
 
       if (!res.ok) throw new Error("Failed to update settings");
 
-      setMessage({ type: 'success', text: "Settings updated successfully! Terminology across the dashboard will now reflect your choice." });
-      
-      // Optional: Force a refresh after a short delay to update navigation/etc if needed
-      // setTimeout(() => window.location.reload(), 1500);
+      setMessage({ type: 'success', text: "Academic structure updated successfully! Cycle counts and terminology will reflect this choice." });
       
     } catch (err) {
       setMessage({ type: 'error', text: "An error occurred while saving settings." });
@@ -38,39 +48,72 @@ export default function InstitutionSettingsManager({ initialSettings }: Settings
     }
   };
 
+  const isChanged = JSON.stringify(structure) !== JSON.stringify(initialSettings.academicStructure || {
+    type: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
+    totalCycles: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 4 : 8
+  });
+
   return (
     <div className="max-w-4xl space-y-6">
       <div className="glass rounded-3xl p-8 border border-border/50 space-y-8">
-        <section className="space-y-4">
+        <section className="space-y-6">
           <div className="flex flex-col gap-1">
-            <h3 className="text-lg font-bold text-foreground">Academic Structure</h3>
-            <p className="text-sm text-muted-foreground">Select the primary system followed by your institution for organization and grading.</p>
+            <h3 className="text-xl font-bold text-foreground">Academic Configuration</h3>
+            <p className="text-sm text-muted-foreground">Define how your institution's academic timeline is structured and how many cycles it spans.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button
-              onClick={() => setAcademicSystem('SEMESTER')}
-              className={`flex flex-col p-6 rounded-2xl border-2 transition-all text-left gap-2 ${
-                academicSystem === 'SEMESTER' 
+              onClick={() => setStructure(s => ({ ...s, type: 'SEMESTER' }))}
+              className={`flex flex-col p-6 rounded-2xl border-2 transition-all text-left gap-2 group ${
+                structure.type === 'SEMESTER' 
                 ? "border-primary bg-primary/5 shadow-md shadow-primary/10" 
                 : "border-border/40 bg-secondary/5 hover:border-border/80"
               }`}
             >
-              <span className="font-bold text-base">Semester System</span>
-              <span className="text-xs text-muted-foreground leading-relaxed">Divides the academic year into two equal halves. Uses "Semester 1", "Semester 2", etc.</span>
+              <span className="font-bold text-lg flex items-center justify-between">
+                Semester System
+                {structure.type === 'SEMESTER' && <CheckCircle2 className="w-5 h-5 text-primary" />}
+              </span>
+              <span className="text-xs text-muted-foreground leading-relaxed">Standard university model. Typically two semesters per year.</span>
             </button>
 
             <button
-              onClick={() => setAcademicSystem('ANNUAL')}
-              className={`flex flex-col p-6 rounded-2xl border-2 transition-all text-left gap-2 ${
-                academicSystem === 'ANNUAL' 
+              onClick={() => setStructure(s => ({ ...s, type: 'YEARLY' }))}
+              className={`flex flex-col p-6 rounded-2xl border-2 transition-all text-left gap-2 group ${
+                structure.type === 'YEARLY' 
                 ? "border-primary bg-primary/5 shadow-md shadow-primary/10" 
                 : "border-border/40 bg-secondary/5 hover:border-border/80"
               }`}
             >
-              <span className="font-bold text-base">Annual Year System</span>
-              <span className="text-xs text-muted-foreground leading-relaxed">One continuous academic cycle per year. Uses "Year 1", "Year 2", etc.</span>
+              <span className="font-bold text-lg flex items-center justify-between">
+                Yearly System
+                {structure.type === 'YEARLY' && <CheckCircle2 className="w-5 h-5 text-primary" />}
+              </span>
+              <span className="text-xs text-muted-foreground leading-relaxed">Direct annual progression. Ideal for traditional schooling or long-term programs.</span>
             </button>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-secondary/10 border border-border/40 space-y-4">
+             <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                   <h4 className="font-bold text-sm">Total {structure.type === 'YEARLY' ? 'Years' : 'Semesters'}</h4>
+                   <p className="text-[10px] text-muted-foreground tracking-wide uppercase font-bold">Configurable Cycle Count</p>
+                </div>
+                <div className="w-24">
+                   <input 
+                      type="number"
+                      min="1"
+                      value={structure.totalCycles}
+                      onChange={e => setStructure(s => ({ ...s, totalCycles: parseInt(e.target.value) || 1 }))}
+                      className="w-full bg-background border border-border/60 rounded-xl py-2 px-3 text-center text-sm font-black focus:ring-2 focus:ring-primary/40 transition-all"
+                   />
+                </div>
+             </div>
+             <p className="text-[11px] text-muted-foreground leading-relaxed px-1">
+                This defines the maximum number of {structure.type.toLowerCase()}s a student can be enrolled in. 
+                For example, a 4-year degree follows the SEVENTH and EIGHTH SEMESTERS at its peak.
+             </p>
           </div>
         </section>
 
@@ -87,11 +130,11 @@ export default function InstitutionSettingsManager({ initialSettings }: Settings
           </div>
           <button
             onClick={handleSave}
-            disabled={loading || academicSystem === initialSettings.academic_system && !message}
+            disabled={loading || (!isChanged && !message)}
             className="flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:translate-y-0"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-            Save Changes
+            Save Architecture
           </button>
         </div>
       </div>

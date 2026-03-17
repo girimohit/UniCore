@@ -25,7 +25,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true }
+    select: { id: true, name: true, academic_system: true, academicStructure: true }
   });
 
   if (!institution) notFound();
@@ -77,7 +77,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
     ? (student.grades.reduce((acc, curr) => acc + curr.score, 0) / student.grades.length / 25).toFixed(1)
     : null;
 
-  const academic = getAcademicLabel(institution.academic_system);
+  const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
 
   // Recent subjects for the student's course
   const recentSubjects = student.course_id ? await prisma.subject.findMany({

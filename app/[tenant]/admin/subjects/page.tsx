@@ -8,7 +8,7 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
   // Resolve institution
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true },
+    select: { id: true, name: true, academic_system: true, academicStructure: true },
   });
 
   if (!institution) return notFound();
@@ -38,7 +38,12 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
         </p>
       </div>
 
-      <SubjectManager initialSubjects={subjects} courses={courses} tenantId={institution.id} />
+      <SubjectManager 
+        initialSubjects={subjects} 
+        courses={courses} 
+        tenantId={institution.id} 
+        academicSystem={institution.academicStructure as any || institution.academic_system}
+      />
     </div>
   );
 }

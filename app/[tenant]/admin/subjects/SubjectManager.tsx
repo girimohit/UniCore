@@ -3,27 +3,33 @@
 import { useState } from "react";
 import { 
   Bookmark, Plus, Upload, CheckCircle, XCircle, 
-  Loader2, Search, Trash2, Pencil, GraduationCap
+  Loader2, Search, Trash2, Pencil, GraduationCap,
+  Calendar
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
+import { getAcademicLabel } from "@/lib/utils/academic";
 
 interface SubjectManagerProps {
   initialSubjects: any[];
   courses: { id: string; name: string; code: string }[];
   tenantId: string;
+  academicSystem: any;
 }
 
-export default function SubjectManager({ initialSubjects, courses }: SubjectManagerProps) {
+export default function SubjectManager({ initialSubjects, courses, academicSystem }: SubjectManagerProps) {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "csv">("list");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
   
+  const academic = getAcademicLabel(academicSystem);
+
   // Form state
   const [form, setForm] = useState({
     name: "",
     code: "",
     course: "", // Uses name or code for the API
+    semester: "",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -45,7 +51,7 @@ export default function SubjectManager({ initialSubjects, courses }: SubjectMana
       }
       if (data.created && data.created.length > 0) {
         setResults(data.created);
-        setForm({ name: "", code: "", course: "" });
+        setForm({ name: "", code: "", course: "", semester: "" });
         setActiveTab("list");
       }
     } catch (err) {
@@ -145,6 +151,23 @@ export default function SubjectManager({ initialSubjects, courses }: SubjectMana
                     {courses.map(c => <option key={c.id} value={c.code}>{c.name} ({c.code})</option>)}
                   </select>
                 </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">
+                    {academic.label} (Cycle)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max={academic.totalCycles}
+                    value={form.semester}
+                    onChange={e => setForm(f => ({ ...f, semester: e.target.value }))}
+                    placeholder={`e.g. 1 to ${academic.totalCycles}`}
+                    className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
+                  />
+                  <p className="text-[10px] text-muted-foreground ml-1 italic">
+                    Mapping this subject to a specific {academic.label.toLowerCase()}.
+                  </p>
+                </div>
               </div>
               <button 
                 type="submit" 
@@ -167,6 +190,7 @@ export default function SubjectManager({ initialSubjects, courses }: SubjectMana
                 { key: "name", label: "Name", required: true },
                 { key: "code", label: "Code", required: true },
                 { key: "course", label: "Course", required: true },
+                { key: "semester", label: academic.label, required: false },
               ]}
             />
           </div>
@@ -208,11 +232,12 @@ export default function SubjectManager({ initialSubjects, courses }: SubjectMana
                    <table className="w-full text-sm text-left">
                      <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                        <tr>
-                         <th className="px-6 py-4">Code</th>
-                         <th className="px-6 py-4">Subject Name</th>
-                         <th className="px-6 py-4">Course</th>
-                         <th className="px-6 py-4 text-right">Actions</th>
-                       </tr>
+                          <th className="px-6 py-4">Code</th>
+                          <th className="px-6 py-4">Subject Name</th>
+                          <th className="px-6 py-4">Course</th>
+                          <th className="px-6 py-4">{academic.label}</th>
+                          <th className="px-6 py-4 text-right">Actions</th>
+                        </tr>
                      </thead>
                      <tbody className="divide-y divide-border/20">
                        {(results.length > 0 ? results : initialSubjects).map((s, i) => (
@@ -222,9 +247,18 @@ export default function SubjectManager({ initialSubjects, courses }: SubjectMana
                            <td className="px-6 py-4">
                              <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600">
                                {s.course?.code || '-'}
-                             </span>
-                           </td>
-                           <td className="px-6 py-4 text-right">
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              {s.semester ? (
+                                <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-secondary/20 text-foreground/70 uppercase">
+                                  {academic.label} {s.semester}
+                                </span>
+                              ) : (
+                                <span className="text-[10px] text-muted-foreground italic">Not Mapped</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-right">
                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
                                 <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
                                 <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>

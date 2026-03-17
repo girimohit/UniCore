@@ -126,6 +126,7 @@ exports.Prisma.InstitutionScalarFieldEnum = {
   slug: 'slug',
   status: 'status',
   academic_system: 'academic_system',
+  academicStructure: 'academicStructure',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -195,6 +196,7 @@ exports.Prisma.SubjectScalarFieldEnum = {
   name: 'name',
   code: 'code',
   courseId: 'courseId',
+  semester: 'semester',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -276,6 +278,21 @@ exports.Prisma.AcademicPeriodScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.InstitutionOrderByRelevanceFieldEnum = {
@@ -402,7 +419,8 @@ exports.Prisma.AcademicPeriodOrderByRelevanceFieldEnum = {
 };
 exports.AcademicSystem = exports.$Enums.AcademicSystem = {
   SEMESTER: 'SEMESTER',
-  ANNUAL: 'ANNUAL'
+  ANNUAL: 'ANNUAL',
+  YEARLY: 'YEARLY'
 };
 
 exports.Role = exports.$Enums.Role = {

@@ -19,7 +19,7 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   const institution = await resolveTenant(tenant);
   if (!institution) notFound();
 
-  const academic = getAcademicLabel(institution.academic_system);
+  const academic = getAcademicLabel((institution as any).academicStructure || institution.academic_system);
 
   const student = await prisma.studentProfile.findUnique({
     where: { user_id: session.user_id },

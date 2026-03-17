@@ -19,6 +19,7 @@ enum Role {
 enum AcademicSystem {
   SEMESTER
   ANNUAL
+  YEARLY
 }
 
 model Institution {
@@ -26,8 +27,9 @@ model Institution {
   name            String
   slug            String         @unique
   status          String         @default("ACTIVE")
-  academic_system AcademicSystem @default(SEMESTER)
-  created_at      DateTime       @default(now())
+  academic_system      AcademicSystem @default(SEMESTER)
+  academicStructure    Json           @default("{\"type\":\"SEMESTER\", \"totalCycles\":8}")
+  created_at           DateTime       @default(now())
   updated_at      DateTime       @updatedAt
 
   users              User[]
@@ -159,6 +161,7 @@ model Subject {
   code        String
   courseId    String
   course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  semester    Int?
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
 
