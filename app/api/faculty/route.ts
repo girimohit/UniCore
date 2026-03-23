@@ -7,7 +7,7 @@ import { sendEmail, getFacultyWelcomeEmailTemplate } from '@/lib/mail';
 import { resolveTenant } from '@/lib/tenant/resolver';
 import { getTenantUrl } from '@/lib/config';
 
-// Utility: generate temporary password
+// generate temp password
 function generateTempPassword(): string {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
   let pass = '';
@@ -109,7 +109,8 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
 
         // Trigger Faculty Welcome Email
         const institution = await resolveTenant(user.tenant_id);
-        const loginLink = getTenantUrl(user.tenant_id as any, 'login');
+        // const loginLink = getTenantUrl(user.tenant_id as any, 'login');
+        const loginLink = getTenantUrl(institution?.name as any, 'login');
 
         await sendEmail({
           to: email,

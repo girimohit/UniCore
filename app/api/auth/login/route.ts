@@ -45,7 +45,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    if (user.status !== "ACTIVE") {
+    // Allow login for both ACTIVE and TEMP (first-time) users
+    if (user.status !== "ACTIVE" && user.status !== "TEMP") {
       return NextResponse.json({ error: "User is not active" }, { status: 403 });
     }
 
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
         identifier: user.identifier,
         role: user.role,
         tenant_id: user.tenant_id,
+        status: user.status,
       },
     });
 

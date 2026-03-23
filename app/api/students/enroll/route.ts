@@ -10,7 +10,6 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
   try {
     const { studentId, courseId, semester, sectionId } = await req.json();
 
-    // 1. Basic validation
     if (!studentId || !courseId || semester == null) {
       return NextResponse.json(
         { error: 'Missing required fields: studentId, courseId, semester' },
@@ -18,7 +17,6 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
       );
     }
 
-    // 2. Ensure student belongs to this tenant
     const student = await prisma.user.findFirst({
       where: { id: studentId, tenant_id: user.tenant_id, role: 'STUDENT' },
       include: { studentProfile: true }
@@ -31,7 +29,7 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
       );
     }
 
-    // 3. Ensure course belongs to this tenant
+    // Ensure course belongs to this tenant
     const course = await prisma.course.findFirst({
       where: { id: courseId, tenant_id: user.tenant_id }
     });
@@ -43,14 +41,14 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
       );
     }
 
-    // 3.5 Validate semester/cycleNumber
+    // Validate semester/cycleNumber
     try {
       await SubjectService.validateCycleNumber(user.tenant_id, parseInt(String(semester)));
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
 
-    // 4. Update StudentProfile
+    // Update student profile
     const updated = await prisma.studentProfile.update({
       where: { id: student.studentProfile.id },
       data: {

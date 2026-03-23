@@ -118,6 +118,11 @@ function LoginForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Invalid credentials.");
 
+      if (data.user.status === "TEMP") {
+        router.push(`/${subdomain}/setup-password?identifier=${encodeURIComponent(identifier.trim())}`);
+        return;
+      }
+
       const role = data.user.role as string;
       const redirectMap: Record<string, string> = {
         ADMIN: `/${subdomain}/admin/dashboard`,

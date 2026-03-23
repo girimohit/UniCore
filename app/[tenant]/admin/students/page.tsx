@@ -31,6 +31,7 @@ export default async function AdminStudentsPage({ params }: { params: Promise<{ 
           Manage student enrollment, bulk import, and status for <span className="text-primary">{institution.name}</span>
         </p>
       </div>
+      
 
       <StudentManager 
         courses={courses} 

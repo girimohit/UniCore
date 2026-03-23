@@ -279,7 +279,7 @@ model TaughtSubject {
   @@index([subjectId], map: "TaughtSubject_subjectId_idx")
   @@map("taughtsubject")
 }
-10348
+
 model User {
   id             String          @id @default(cuid())
   tenant_id      String

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { 
   UserPlus, Upload, CheckCircle, XCircle, 
   Loader2, Eye, EyeOff, Search, GraduationCap,
@@ -19,6 +19,9 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
   const [showPasswords, setShowPasswords] = useState<{ [key: string]: boolean }>({});
+  const [facultyList, setFacultyList] = useState<any[]>([]);
+  const [fetchingList, setFetchingList] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Form state
   const [form, setForm] = useState({
@@ -31,6 +34,35 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
   const togglePassword = (id: string) => {
     setShowPasswords(prev => ({ ...prev, [id]: !prev[id] }));
   };
+
+  const fetchFacultyList = async () => {
+    setFetchingList(true);
+    try {
+      const res = await fetch("/api/faculty");
+      const data = await res.json();
+      if (data.faculty) {
+        setFacultyList(data.faculty);
+      }
+    } catch (err) {
+      console.error("Failed to fetch faculty list", err);
+    } finally {
+      setFetchingList(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "list") {
+      fetchFacultyList();
+    }
+  }, [activeTab]);
+
+  const filteredFaculty = facultyList.filter(f => 
+    f.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.identifier?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.employee_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.department?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -261,16 +293,103 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                 </div>
              )}
 
-            <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
-              <div className="p-4 rounded-full bg-secondary/10">
-                <GraduationCap className="w-12 h-12 text-primary opacity-40" />
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 bg-secondary/5 border border-border/40 p-2 rounded-2xl">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input 
+                    type="text"
+                    placeholder="Search by name, ID, employee #, or department..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-transparent border-none py-2.5 pl-11 pr-4 text-sm focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-2 px-4 border-l border-border/40">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {facultyList.length} Total Faculty
+                  </span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-bold">Faculty Management</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  Add faculty members and manage their accounts. Temporary passwords will be generated for new members.
-                </p>
-              </div>
+
+              {fetchingList ? (
+                <div className="glass rounded-3xl p-20 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground font-medium">Fetching faculty database...</p>
+                </div>
+              ) : filteredFaculty.length > 0 ? (
+                <div className="glass rounded-3xl border border-border/50 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left border-collapse">
+                      <thead>
+                        <tr className="bg-secondary/10 border-b border-border/40">
+                          <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">ID & Emp #</th>
+                          <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">Faculty Member</th>
+                          <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">Department</th>
+                          <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground">Status</th>
+                          <th className="px-6 py-4 font-bold text-xs uppercase tracking-wider text-muted-foreground text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/40">
+                        {filteredFaculty.map((f) => (
+                          <tr key={f.id} className="hover:bg-secondary/5 transition-colors group">
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col">
+                                <span className="font-mono font-bold text-primary">{f.identifier}</span>
+                                <span className="text-[10px] text-muted-foreground font-semibold uppercase">{f.employee_number}</span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-primary font-bold text-xs">
+                                  {f.name?.[0] || "?"}
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="font-bold text-foreground group-hover:text-primary transition-colors">{f.name}</span>
+                                  <span className="text-xs text-muted-foreground">{f.email}</span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-secondary/20 text-secondary-foreground text-[10px] font-bold uppercase tracking-wider">
+                                {f.department || "No Department"}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${
+                                f.status === "ACTIVE" 
+                                  ? "bg-emerald-500/10 text-emerald-600" 
+                                  : "bg-amber-500/10 text-amber-600"
+                              }`}>
+                                <div className={`w-1 h-1 rounded-full ${f.status === "ACTIVE" ? "bg-emerald-500" : "bg-amber-500"}`} />
+                                {f.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button className="p-2 hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
+                                <FileText className="w-4 h-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ) : (
+                <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="p-4 rounded-full bg-secondary/10">
+                    <GraduationCap className="w-12 h-12 text-primary opacity-40" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">No Faculty Found</h3>
+                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                      {searchTerm ? "No results match your search criteria." : "There are no faculty members registered in your institution yet."}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
