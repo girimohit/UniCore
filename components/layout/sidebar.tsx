@@ -147,6 +147,25 @@ const adminLinks = [
   },
 ];
 
+const facultyLinks = [
+  {
+    name: "Dashboard",
+    href: "/faculty/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    name: "Mark Attendance",
+    href: "/faculty/attendance",
+    icon: CalendarCheck,
+    moduleId: "attendance",
+  },
+  {
+    name: "My Profile",
+    href: "/faculty/profile",
+    icon: User,
+  },
+];
+
 interface SidebarProps {
   tenantId: string;
   urlSlug: string;
@@ -209,7 +228,7 @@ export default function Sidebar({
             <p className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 opacity-70">
               Main Menu
             </p>
-            {(role === "admin" ? adminLinks : studentLinks)
+            {(role === "admin" ? adminLinks : role === "faculty" ? facultyLinks : studentLinks)
               .filter(
                 (item) =>
                   !item.moduleId ||
