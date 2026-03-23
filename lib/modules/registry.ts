@@ -19,7 +19,7 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     name: 'Departments',
     description: 'Manage institutional departments',
     type: 'CORE',
-    icon: 'Building',
+    icon: 'Building2',
     routePath: '/departments',
     defaultEnabled: true,
   },
@@ -33,6 +33,34 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     defaultEnabled: true,
     dependencies: ['departments']
   },
+  faculty: {
+    id: 'faculty',
+    name: 'Faculty Management',
+    description: 'Manage institutional faculty and staff',
+    type: 'CORE',
+    icon: 'GraduationCap',
+    routePath: '/faculty',
+    defaultEnabled: true,
+  },
+  students: {
+    id: 'students',
+    name: 'Student Management',
+    description: 'Manage student profiles and enrollments',
+    type: 'CORE',
+    icon: 'Users',
+    routePath: '/students',
+    defaultEnabled: true,
+  },
+  subjects: {
+    id: 'subjects',
+    name: 'Subject Management',
+    description: 'Manage academic subjects and curriculum',
+    type: 'CORE',
+    icon: 'Box',
+    routePath: '/subjects',
+    defaultEnabled: true,
+    dependencies: ['courses']
+  },
   attendance: {
     id: 'attendance',
     name: 'Attendance',
@@ -43,6 +71,16 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     defaultEnabled: true,
     dependencies: ['courses']
   },
+  exams: {
+    id: 'exams',
+    name: 'Exam Management',
+    description: 'Schedule exams and manage grades',
+    type: 'CORE',
+    icon: 'ClipboardCheck',
+    routePath: '/exams',
+    defaultEnabled: true,
+    dependencies: ['subjects']
+  },
   library: {
     id: 'library',
     name: 'Library Management',
@@ -52,5 +90,4 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     routePath: '/library',
     defaultEnabled: false,
   },
-  // Add additional modules here
 };

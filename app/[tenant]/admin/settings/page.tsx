@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import InstitutionSettingsManager from "./InstitutionSettingsManager";
-import { Settings } from "lucide-react";
+import ModuleManager from "@/components/admin/modules/ModuleManager";
+import { Settings, Box } from "lucide-react";
+import { getActiveInstitutionModules } from "@/lib/modules/loader";
 
 export default async function AdminSettingsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -13,6 +15,8 @@ export default async function AdminSettingsPage({ params }: { params: Promise<{ 
   });
 
   if (!institution) return notFound();
+
+  const activeModules = await getActiveInstitutionModules(institution.id);
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
@@ -32,6 +36,14 @@ export default async function AdminSettingsPage({ params }: { params: Promise<{ 
           academicStructure: institution.academicStructure as any 
         }} 
       />
+
+      <div className="pt-8">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2 mb-6">
+          <Box className="w-6 h-6 text-primary" />
+          Feature Modules
+        </h2>
+        <ModuleManager initialModules={activeModules} />
+      </div>
     </div>
   );
 }

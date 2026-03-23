@@ -4,8 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  Sparkles, ArrowRight, Loader2, Lock, Hash,
-  GraduationCap, Briefcase, ShieldCheck, Building2, AlertTriangle
+  // Sparkles,
+  ArrowRight,
+  Loader2,
+  Lock,
+  Hash,
+  GraduationCap,
+  Briefcase,
+  ShieldCheck,
+  Building2,
+  AlertTriangle,
 } from "lucide-react";
 
 type LoginTab = "student" | "faculty" | "admin";
@@ -72,8 +80,14 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
     setError("");
 
     const currentTab = TABS.find((t) => t.key === activeTab)!;
-    if (!identifier.trim()) { setError(`${currentTab.identifierLabel} is required.`); return; }
-    if (!password) { setError("Password is required."); return; }
+    if (!identifier.trim()) {
+      setError(`${currentTab.identifierLabel} is required.`);
+      return;
+    } 
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -110,10 +124,15 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
   // Institution inactive — show clear block message
   if (!isActive) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: "var(--bg-base)" }}>
+      <div
+        className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        style={{ background: "var(--bg-base)" }}
+      >
         <div className="glass p-10 rounded-2xl max-w-md w-full text-center">
           <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-amber-400" />
-          <h1 className="text-2xl font-black mb-2" style={{ color: "var(--text-primary)" }}>Institution Inactive</h1>
+          <h1 className="text-2xl font-black mb-2" style={{ color: "var(--text-primary)" }}>
+            Institution Inactive
+          </h1>
           <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
             <strong>{institutionName}</strong> is currently not active. Please contact your administrator.
           </p>
@@ -123,14 +142,22 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style={{ background: "var(--bg-base)" }}>
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: "var(--bg-base)" }}
+    >
       {/* Ambient glows */}
-      <div className="absolute top-[-15%] left-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none" style={{ background: "var(--uc-purple)", filter: "blur(120px)" }} />
-      <div className="absolute bottom-[-15%] right-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none" style={{ background: "var(--uc-cyan)", filter: "blur(120px)" }} />
+      <div
+        className="absolute top-[-15%] left-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none"
+        style={{ background: "var(--uc-purple)", filter: "blur(120px)" }}
+      />
+      <div
+        className="absolute bottom-[-15%] right-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none"
+        style={{ background: "var(--uc-cyan)", filter: "blur(120px)" }}
+      />
 
       <div className="w-full max-w-md relative z-10">
         <div className="glass p-8 sm:p-10 rounded-[28px] shadow-2xl">
-
           {/* Institution branding header — key UX difference from global login */}
           <div className="text-center mb-8">
             <div
@@ -139,23 +166,32 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
             >
               <Building2 className="w-7 h-7 text-white" />
             </div>
-            <h1 className="font-display font-black text-2xl tracking-tight leading-tight" style={{ color: "var(--text-primary)" }}>
+            <h1
+              className="font-display font-black text-2xl tracking-tight leading-tight"
+              style={{ color: "var(--text-primary)" }}
+            >
               {institutionName}
             </h1>
             <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--text-secondary)" }}>
-              Student Portal &middot;{" "}
-              <span className="font-mono opacity-70">{tenantSlug}.unicore.app</span>
+              Student Portal &middot; <span className="font-mono opacity-70">{tenantSlug}.unicore.app</span>
             </p>
           </div>
 
           {/* Role tabs */}
-          <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl mb-7" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)" }}>
+          <div
+            className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl mb-7"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)" }}
+          >
             {TABS.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => handleTabChange(tab.key)}
                 className={`flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${activeTab === tab.key ? "text-white shadow-md" : "opacity-50 hover:opacity-80"}`}
-                style={activeTab === tab.key ? { background: ROLE_GRADIENT[tab.key] } : { color: "var(--text-primary)" }}
+                style={
+                  activeTab === tab.key
+                    ? { background: ROLE_GRADIENT[tab.key] }
+                    : { color: "var(--text-primary)" }
+                }
               >
                 {tab.icon}
                 {tab.label}
@@ -165,7 +201,14 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
 
           {/* Error */}
           {error && (
-            <div className="mb-5 p-3 text-sm rounded-xl" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
+            <div
+              className="mb-5 p-3 text-sm rounded-xl"
+              style={{
+                background: "rgba(239,68,68,0.08)",
+                border: "1px solid rgba(239,68,68,0.2)",
+                color: "#f87171",
+              }}
+            >
               {error}
             </div>
           )}
@@ -173,7 +216,10 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "var(--text-muted)" }}>
+              <label
+                className="block text-xs font-semibold uppercase tracking-wider mb-1.5"
+                style={{ color: "var(--text-muted)" }}
+              >
                 {currentTab.identifierLabel}
               </label>
               <div className="relative">
@@ -195,10 +241,17 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+                <label
+                  className="block text-xs font-semibold uppercase tracking-wider"
+                  style={{ color: "var(--text-muted)" }}
+                >
                   Password
                 </label>
-                <a href="#" className="text-xs opacity-60 hover:opacity-100 transition-opacity" style={{ color: "var(--text-secondary)" }}>
+                <a
+                  href="#"
+                  className="text-xs opacity-60 hover:opacity-100 transition-opacity"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   Forgot password?
                 </a>
               </div>
@@ -223,7 +276,13 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm text-white mt-2 transition-all shadow-xl hover:shadow-2xl hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed"
               style={{ background: gradient }}
             >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>Sign In as {currentTab.label} <ArrowRight className="w-4 h-4" /></>}
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <>
+                  Sign In as {currentTab.label} <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
@@ -231,7 +290,11 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
           {activeTab === "student" && (
             <p className="text-center text-xs mt-6" style={{ color: "var(--text-secondary)" }}>
               First time here?{" "}
-              <Link href={`/${tenantSlug}/activate`} className="font-semibold hover:text-[#7c5cbf] transition-colors" style={{ color: "var(--text-primary)" }}>
+              <Link
+                href={`/${tenantSlug}/activate`}
+                className="font-semibold hover:text-[#7c5cbf] transition-colors"
+                style={{ color: "var(--text-primary)" }}
+              >
                 Activate your account
               </Link>
             </p>
@@ -240,7 +303,9 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
 
         {/* Back to global site */}
         <p className="text-center text-xs mt-5 opacity-40" style={{ color: "var(--text-secondary)" }}>
-          <Link href="/" className="hover:opacity-70 transition-opacity">← Back to UNICORE</Link>
+          <Link href="/" className="hover:opacity-70 transition-opacity">
+            ← Back to UNICORE
+          </Link>
         </p>
       </div>
     </div>

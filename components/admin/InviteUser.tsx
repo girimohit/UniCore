@@ -82,7 +82,7 @@ export default function InviteUser({ tenantId }: { tenantId: string }) {
           >
             <option value="STUDENT">Student</option>
             <option value="FACULTY">Faculty</option>
-            <option value="INSTITUTION_ADMIN">Sub-Admin</option>
+            {/* <option value="INSTITUTION_ADMIN">Sub-Admin</option> */}
           </select>
         </div>
 
@@ -104,7 +104,7 @@ export default function InviteUser({ tenantId }: { tenantId: string }) {
         {result?.url && (
           <div className="mt-4 p-3 pb-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col gap-2">
             <p className="text-xs font-bold text-emerald-600 uppercase tracking-wide flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Invite generated
+              <CheckCircle2 className="w-3.5 h-3.5" /> Invite generated and sent to the user's email. 
             </p>
             <div className="flex items-center gap-2">
               <div className="flex-1 overflow-hidden bg-background/60 p-2 rounded-lg border border-border/50 text-xs text-muted-foreground font-mono truncate select-all">

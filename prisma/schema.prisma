@@ -8,7 +8,7 @@ datasource db {
 }
 
 model AcademicPeriod {
-  id          String       @id
+  id          String       @id @default(cuid())
   tenant_id   String
   name        String
   type        String
@@ -24,14 +24,14 @@ model AcademicPeriod {
 }
 
 model Attendance {
-  id             String            @id
+  id             String            @id @default(cuid())
   tenant_id      String
   studentId      String
   subjectId      String
   date           DateTime
   status         attendance_status
   created_at     DateTime          @default(now())
-  updated_at     DateTime
+  updated_at     DateTime          @updatedAt
   periodId       String?
   academicPeriod AcademicPeriod?   @relation(fields: [periodId], references: [id], map: "Attendance_periodId_fkey")
   studentProfile StudentProfile    @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "Attendance_studentId_fkey")
@@ -48,13 +48,13 @@ model Attendance {
 }
 
 model Course {
-  id              String           @id
+  id              String           @id @default(cuid())
   tenant_id       String
   name            String
   code            String
   departmentId    String
   created_at      DateTime         @default(now())
-  updated_at      DateTime
+  updated_at      DateTime         @updatedAt
   department      Department       @relation(fields: [departmentId], references: [id], onDelete: Cascade, map: "Course_departmentId_fkey")
   institution     Institution      @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Course_tenant_id_fkey")
   enrolledCourses EnrolledCourse[]
@@ -70,12 +70,12 @@ model Course {
 }
 
 model Department {
-  id              String           @id
+  id              String           @id @default(cuid())
   tenant_id       String
   name            String
   code            String
   created_at      DateTime         @default(now())
-  updated_at      DateTime
+  updated_at      DateTime         @updatedAt
   courses         Course[]
   institution     Institution      @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Department_tenant_id_fkey")
   faculties       FacultyProfile[]
@@ -86,7 +86,7 @@ model Department {
 }
 
 model EnrolledCourse {
-  id             String         @id
+  id             String         @id @default(cuid())
   studentId      String
   courseId       String
   course         Course         @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "EnrolledCourse_courseId_fkey")
@@ -99,14 +99,14 @@ model EnrolledCourse {
 }
 
 model Exam {
-  id             String         @id
+  id             String         @id @default(cuid())
   tenant_id      String
   name           String
   date           DateTime
   courseId       String
   subjectId      String
   created_at     DateTime       @default(now())
-  updated_at     DateTime
+  updated_at     DateTime       @updatedAt
   periodId       String
   course         Course         @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "Exam_courseId_fkey")
   academicPeriod AcademicPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade, map: "Exam_periodId_fkey")
@@ -125,7 +125,7 @@ model Exam {
 }
 
 model FacultyProfile {
-  id              String          @id
+  id              String          @id @default(cuid())
   user_id         String          @unique(map: "FacultyProfile_user_id_key")
   employee_number String
   department_id   String?
@@ -139,14 +139,14 @@ model FacultyProfile {
 }
 
 model Grade {
-  id             String         @id
+  id             String         @id @default(cuid())
   tenant_id      String
   examId         String
   studentId      String
   score          Float
   remarks        String?
   created_at     DateTime       @default(now())
-  updated_at     DateTime
+  updated_at     DateTime       @updatedAt
   exam           Exam           @relation(fields: [examId], references: [id], onDelete: Cascade, map: "Grade_examId_fkey")
   studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "Grade_studentId_fkey")
   institution    Institution    @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Grade_tenant_id_fkey")
@@ -160,12 +160,12 @@ model Grade {
 }
 
 model Institution {
-  id                 String                      @id
+  id                 String                      @id @default(cuid())
   name               String
   slug               String                      @unique(map: "Institution_slug_key")
   status             String                      @default("ACTIVE")
   created_at         DateTime                    @default(now())
-  updated_at         DateTime
+  updated_at         DateTime                    @updatedAt
   academic_system    institution_academic_system @default(SEMESTER)
   academicStructure  Json?                       @default("{\"type\":\"SEMESTER\", \"totalCycles\":8}")
   academicPeriods    AcademicPeriod[]
@@ -184,12 +184,12 @@ model Institution {
 }
 
 model InstitutionModule {
-  id          String      @id
+  id          String      @id @default(cuid())
   tenant_id   String
   moduleId    String
   isEnabled   Boolean     @default(true)
   created_at  DateTime    @default(now())
-  updated_at  DateTime
+  updated_at  DateTime    @updatedAt
   module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade, map: "InstitutionModule_moduleId_fkey")
   institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "InstitutionModule_tenant_id_fkey")
 
@@ -200,7 +200,7 @@ model InstitutionModule {
 }
 
 model InvitationToken {
-  id          String               @id
+  id          String               @id @default(cuid())
   tenant_id   String
   email       String
   role        invitationtoken_role
@@ -217,18 +217,18 @@ model InvitationToken {
 }
 
 model Module {
-  id                 String              @id
+  id                 String              @id @default(cuid())
   name               String              @unique(map: "Module_name_key")
   description        String?
   created_at         DateTime            @default(now())
-  updated_at         DateTime
+  updated_at         DateTime            @updatedAt
   institutionModules InstitutionModule[]
 
   @@map("module")
 }
 
 model StudentProfile {
-  id              String           @id
+  id              String           @id @default(cuid())
   user_id         String           @unique(map: "StudentProfile_user_id_key")
   roll_number     String
   course_id       String?
@@ -246,14 +246,14 @@ model StudentProfile {
 }
 
 model Subject {
-  id             String          @id
+  id             String          @id @default(cuid())
   tenant_id      String
   name           String
   code           String
   courseId       String
   cycleNumber    Int             @default(1)
   created_at     DateTime        @default(now())
-  updated_at     DateTime
+  updated_at     DateTime        @updatedAt
   attendances    Attendance[]
   exams          Exam[]
   course         Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "Subject_courseId_fkey")
@@ -268,7 +268,7 @@ model Subject {
 }
 
 model TaughtSubject {
-  id             String         @id
+  id             String         @id @default(cuid())
   subjectId      String
   facultyId      String
   facultyProfile FacultyProfile @relation(fields: [facultyId], references: [id], onDelete: Cascade, map: "TaughtSubject_facultyId_fkey")
@@ -279,9 +279,9 @@ model TaughtSubject {
   @@index([subjectId], map: "TaughtSubject_subjectId_idx")
   @@map("taughtsubject")
 }
-
+10348
 model User {
-  id             String          @id
+  id             String          @id @default(cuid())
   tenant_id      String
   identifier     String
   password_hash  String
@@ -289,7 +289,7 @@ model User {
   email          String?
   status         String          @default("ACTIVE")
   created_at     DateTime        @default(now())
-  updated_at     DateTime
+  updated_at     DateTime        @updatedAt
   facultyProfile FacultyProfile?
   studentProfile StudentProfile?
   institution    Institution     @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "User_tenant_id_fkey")

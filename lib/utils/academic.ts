@@ -24,7 +24,7 @@ export function getAcademicLabel(structure: AcademicStructure | AcademicSystem |
       label: 'Year',
       plural: 'Years',
       full: 'Yearly System',
-      totalCycles: 1, // Default for legacy
+      totalCycles: 4, // Default for legacy
       type: 'YEARLY'
     };
   }

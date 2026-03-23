@@ -1,7 +1,5 @@
-/**
- * Tenant index page — redirects visitors to the tenant login page.
- * Handles: localhost:3000/amity → localhost:3000/amity/login
- */
+// Tenant index page — redirects visitors to the tenant login page.
+
 import { redirect } from "next/navigation";
 
 interface PageProps {

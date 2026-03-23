@@ -189,7 +189,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
               </div>
 
               {(results.length > 0 ? results : initialExams).length > 0 && (
-                <div className="w-full max-w-4xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
+                <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
                    <table className="w-full text-sm text-left">
                      <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                        <tr>

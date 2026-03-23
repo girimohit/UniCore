@@ -33,9 +33,9 @@ export default function Topbar({ institution }: { institution: Institution }) {
           <span className="text-sm font-bold text-foreground tracking-tight">
             {institution.name}
           </span>
-          <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full mt-0.5">
+          {/* <span className="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2 py-0.5 rounded-full mt-0.5">
             Active Workspace
-          </span>
+          </span> */}
         </div>
         
         <div className="h-8 w-px bg-border/60 mx-1 hidden sm:block"></div>

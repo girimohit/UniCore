@@ -12,10 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "UNICORE SaaS ERP",
+  title: "UNICORE",
   description: "Multi-tenant SaaS ERP for Educational Institutions",
 };
 
@@ -36,6 +39,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

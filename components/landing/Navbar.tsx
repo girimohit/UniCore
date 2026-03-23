@@ -35,12 +35,12 @@ export default function Navbar() {
       <div className="shimmer-bar fixed top-0 inset-x-0 z-[60]" />
 
       {/* Floating capsule nav */}
-      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+      <header className="fixed top-4 inset-x-0 z-50 flex justify-center  px-4 pointer-events-none">
         <nav
           className={`
             nav-capsule pointer-events-auto
             flex items-center gap-2 px-4 py-2.5
-            transition-all duration-500
+            transition-all duration-500 backdrop-blur-sm bg-white/0  dark:bg-black/0
             ${scrolled
               ? "w-full max-w-3xl shadow-xl"
               : "w-full max-w-2xl shadow-md"}

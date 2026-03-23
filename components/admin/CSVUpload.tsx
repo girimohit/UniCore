@@ -35,13 +35,18 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
         throw new Error("CSV file is empty or missing headers.");
       }
 
-      const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/\s+/g, "_"));
-      const data = lines.slice(1).map(line => {
-        const values = line.split(",").map(v => v.trim());
+      const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+      const data = lines.slice(1).map((line) => {
+        const values = line.split(",").map((v) => v.trim());
         const obj: any = {};
         headers.forEach((h, i) => {
-          // Map headers to schema keys if needed, but for now we assume headers match schema labels or keys
-          const field = schema.find(s => s.label.toLowerCase() === h || s.key === h);
+          // Robust matching: check sanitized label, exact label, or key
+          const field = schema.find(
+            (s) =>
+              s.label.toLowerCase() === h ||
+              s.label.toLowerCase().replace(/\s+/g, "_") === h ||
+              s.key.toLowerCase() === h,
+          );
           if (field) {
             obj[field.key] = values[i] ?? "";
           }
@@ -52,7 +57,7 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
       // Simple validation
       const validationErrors: string[] = [];
       data.forEach((row, index) => {
-        schema.forEach(field => {
+        schema.forEach((field) => {
           if (field.required && !row[field.key]) {
             validationErrors.push(`Row ${index + 1}: Missing required field "${field.label}"`);
           }
@@ -77,7 +82,7 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
   };
 
   const downloadTemplate = () => {
-    const header = schema.map(s => s.label).join(",");
+    const header = schema.map((s) => s.label).join(",");
     const blob = new Blob([header], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -92,9 +97,11 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h3 className="font-display font-black text-xl text-foreground">{title}</h3>
-          <p className="text-xs text-muted-foreground font-medium">Upload a CSV file to add multiple entries at once.</p>
+          <p className="text-xs text-muted-foreground font-medium">
+            Upload a CSV file to add multiple entries at once.
+          </p>
         </div>
-        <button 
+        <button
           onClick={downloadTemplate}
           className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary transition-all active:scale-95 shadow-sm shadow-primary/5 whitespace-nowrap"
         >
@@ -107,13 +114,23 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
 
       {!file ? (
         <div
-          onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragActive(true);
+          }}
           onDragLeave={() => setDragActive(false)}
-          onDrop={(e) => { e.preventDefault(); setDragActive(false); if (e.dataTransfer.files?.[0]) handleFile(e.dataTransfer.files[0]); }}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragActive(false);
+            if (e.dataTransfer.files?.[0]) handleFile(e.dataTransfer.files[0]);
+          }}
           onClick={onButtonClick}
-          className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all ${
-            dragActive ? "border-primary bg-primary/5" : "border-border/60 hover:border-primary/50 hover:bg-primary/5"
-          }`}
+          className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all 
+            ${
+              dragActive
+                ? "border-primary bg-primary/5"
+                : "border-border/60 hover:border-primary/50 hover:bg-primary/5"
+            }`}
         >
           <input
             ref={fileInputRef}
@@ -137,11 +154,17 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
               </div>
               <div>
                 <p className="text-sm font-bold">{file.name}</p>
-                <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB • {preview.length} rows</p>
+                <p className="text-xs text-muted-foreground">
+                  {(file.size / 1024).toFixed(1)} KB • {preview.length} rows
+                </p>
               </div>
             </div>
-            <button 
-              onClick={() => { setFile(null); setPreview([]); setErrors([]); }}
+            <button
+              onClick={() => {
+                setFile(null);
+                setPreview([]);
+                setErrors([]);
+              }}
               className="p-1.5 rounded-full hover:bg-destructive/10 text-destructive transition-colors"
             >
               <X className="w-4 h-4" />
@@ -160,7 +183,9 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
                 <AlertCircle className="w-4 h-4" /> Invalid CSV Data
               </div>
               <ul className="text-xs space-y-1 text-destructive/80 ml-6 list-disc">
-                {errors.map((err, i) => <li key={i}>{err}</li>)}
+                {errors.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -171,16 +196,23 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
                 <table className="w-full text-[10px] text-left">
                   <thead className="sticky top-0 bg-background border-b border-border/40">
                     <tr>
-                      {schema.map(s => (
-                        <th key={s.key} className="px-3 py-2 font-bold uppercase tracking-wider text-muted-foreground">{s.label}</th>
+                      {schema.map((s) => (
+                        <th
+                          key={s.key}
+                          className="px-3 py-2 font-bold uppercase tracking-wider text-muted-foreground"
+                        >
+                          {s.label}
+                        </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {preview.slice(0, 5).map((row, i) => (
                       <tr key={i} className="border-b border-border/20 last:border-0">
-                        {schema.map(s => (
-                          <td key={s.key} className="px-3 py-2 truncate max-w-[100px]">{row[s.key]}</td>
+                        {schema.map((s) => (
+                          <td key={s.key} className="px-3 py-2 truncate max-w-[100px]">
+                            {row[s.key]}
+                          </td>
                         ))}
                       </tr>
                     ))}
@@ -192,7 +224,7 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
                   Showing first 5 of {preview.length} rows
                 </p>
               )}
-              <button 
+              <button
                 onClick={() => onUpload(preview)}
                 className="w-full py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center justify-center gap-2"
               >

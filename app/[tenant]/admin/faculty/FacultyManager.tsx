@@ -75,9 +75,8 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
       const data = await res.json();
       setResults(data.created ?? []);
       setErrors(data.errors ?? []);
-      if (data.created?.length > 0) {
-        setActiveTab("list");
-      }
+      // Always switch to list tab to show results/errors summary
+      setActiveTab("list");
     } catch (err) {
       setErrors([{ employee_number: "CSV", error: "Upload failed" }]);
     } finally {

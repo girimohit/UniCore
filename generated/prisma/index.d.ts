@@ -20554,7 +20554,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -20566,7 +20566,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     type: string
@@ -20602,7 +20602,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     type: string
@@ -20631,11 +20631,11 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateInput = {
-    id: string
+    id?: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academicPeriod?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
     studentProfile: StudentProfileCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
@@ -20643,14 +20643,14 @@ export namespace Prisma {
   }
 
   export type AttendanceUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
@@ -20679,14 +20679,14 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
@@ -20711,11 +20711,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
@@ -20725,13 +20725,13 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
@@ -20767,13 +20767,13 @@ export namespace Prisma {
   }
 
   export type CourseCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type CourseUpdateManyMutationInput = {
@@ -20795,23 +20795,23 @@ export namespace Prisma {
   }
 
   export type DepartmentCreateInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseCreateNestedManyWithoutDepartmentInput
     institution: InstitutionCreateNestedOneWithoutDepartmentsInput
     faculties?: FacultyProfileCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutDepartmentInput
     faculties?: FacultyProfileUncheckedCreateNestedManyWithoutDepartmentInput
   }
@@ -20839,12 +20839,12 @@ export namespace Prisma {
   }
 
   export type DepartmentCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type DepartmentUpdateManyMutationInput = {
@@ -20865,13 +20865,13 @@ export namespace Prisma {
   }
 
   export type EnrolledCourseCreateInput = {
-    id: string
+    id?: string
     course: CourseCreateNestedOneWithoutEnrolledCoursesInput
     studentProfile: StudentProfileCreateNestedOneWithoutEnrolledCoursesInput
   }
 
   export type EnrolledCourseUncheckedCreateInput = {
-    id: string
+    id?: string
     studentId: string
     courseId: string
   }
@@ -20889,7 +20889,7 @@ export namespace Prisma {
   }
 
   export type EnrolledCourseCreateManyInput = {
-    id: string
+    id?: string
     studentId: string
     courseId: string
   }
@@ -20905,11 +20905,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     course: CourseCreateNestedOneWithoutExamsInput
     academicPeriod: AcademicPeriodCreateNestedOneWithoutExamsInput
     subject: SubjectCreateNestedOneWithoutExamsInput
@@ -20918,14 +20918,14 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
     grades?: GradeUncheckedCreateNestedManyWithoutExamInput
   }
@@ -20957,14 +20957,14 @@ export namespace Prisma {
   }
 
   export type ExamCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
   }
 
@@ -20989,7 +20989,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileCreateInput = {
-    id: string
+    id?: string
     employee_number: string
     designation?: string | null
     department?: DepartmentCreateNestedOneWithoutFacultiesInput
@@ -20998,7 +20998,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileUncheckedCreateInput = {
-    id: string
+    id?: string
     user_id: string
     employee_number: string
     department_id?: string | null
@@ -21025,7 +21025,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileCreateManyInput = {
-    id: string
+    id?: string
     user_id: string
     employee_number: string
     department_id?: string | null
@@ -21047,25 +21047,25 @@ export namespace Prisma {
   }
 
   export type GradeCreateInput = {
-    id: string
+    id?: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exam: ExamCreateNestedOneWithoutGradesInput
     studentProfile: StudentProfileCreateNestedOneWithoutGradesInput
     institution: InstitutionCreateNestedOneWithoutGradesInput
   }
 
   export type GradeUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     examId: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeUpdateInput = {
@@ -21091,14 +21091,14 @@ export namespace Prisma {
   }
 
   export type GradeCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     examId: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeUpdateManyMutationInput = {
@@ -21121,12 +21121,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -21142,12 +21142,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -21205,12 +21205,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateManyInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
   }
@@ -21238,21 +21238,21 @@ export namespace Prisma {
   }
 
   export type InstitutionModuleCreateInput = {
-    id: string
+    id?: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     module: ModuleCreateNestedOneWithoutInstitutionModulesInput
     institution: InstitutionCreateNestedOneWithoutInstitutionModulesInput
   }
 
   export type InstitutionModuleUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     moduleId: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleUpdateInput = {
@@ -21274,12 +21274,12 @@ export namespace Prisma {
   }
 
   export type InstitutionModuleCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     moduleId: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleUpdateManyMutationInput = {
@@ -21299,7 +21299,7 @@ export namespace Prisma {
   }
 
   export type InvitationTokenCreateInput = {
-    id: string
+    id?: string
     email: string
     role: $Enums.invitationtoken_role
     token: string
@@ -21310,7 +21310,7 @@ export namespace Prisma {
   }
 
   export type InvitationTokenUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     email: string
     role: $Enums.invitationtoken_role
@@ -21343,7 +21343,7 @@ export namespace Prisma {
   }
 
   export type InvitationTokenCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     email: string
     role: $Enums.invitationtoken_role
@@ -21375,20 +21375,20 @@ export namespace Prisma {
   }
 
   export type ModuleCreateInput = {
-    id: string
+    id?: string
     name: string
     description?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     institutionModules?: InstitutionModuleCreateNestedManyWithoutModuleInput
   }
 
   export type ModuleUncheckedCreateInput = {
-    id: string
+    id?: string
     name: string
     description?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     institutionModules?: InstitutionModuleUncheckedCreateNestedManyWithoutModuleInput
   }
 
@@ -21411,11 +21411,11 @@ export namespace Prisma {
   }
 
   export type ModuleCreateManyInput = {
-    id: string
+    id?: string
     name: string
     description?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type ModuleUpdateManyMutationInput = {
@@ -21435,7 +21435,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -21447,7 +21447,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     course_id?: string | null
@@ -21483,7 +21483,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateManyInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     course_id?: string | null
@@ -21508,12 +21508,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceCreateNestedManyWithoutSubjectInput
     exams?: ExamCreateNestedManyWithoutSubjectInput
     course: CourseCreateNestedOneWithoutSubjectsInput
@@ -21522,14 +21522,14 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceUncheckedCreateNestedManyWithoutSubjectInput
     exams?: ExamUncheckedCreateNestedManyWithoutSubjectInput
     taughtBy?: TaughtSubjectUncheckedCreateNestedManyWithoutSubjectInput
@@ -21564,14 +21564,14 @@ export namespace Prisma {
   }
 
   export type SubjectCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type SubjectUpdateManyMutationInput = {
@@ -21595,13 +21595,13 @@ export namespace Prisma {
   }
 
   export type TaughtSubjectCreateInput = {
-    id: string
+    id?: string
     facultyProfile: FacultyProfileCreateNestedOneWithoutTaughtSubjectsInput
     subject: SubjectCreateNestedOneWithoutTaughtByInput
   }
 
   export type TaughtSubjectUncheckedCreateInput = {
-    id: string
+    id?: string
     subjectId: string
     facultyId: string
   }
@@ -21619,7 +21619,7 @@ export namespace Prisma {
   }
 
   export type TaughtSubjectCreateManyInput = {
-    id: string
+    id?: string
     subjectId: string
     facultyId: string
   }
@@ -21635,21 +21635,21 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileCreateNestedOneWithoutUserInput
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
-    id: string
+    id?: string
     tenant_id: string
     identifier: string
     password_hash: string
@@ -21657,7 +21657,7 @@ export namespace Prisma {
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileUncheckedCreateNestedOneWithoutUserInput
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
   }
@@ -21691,7 +21691,7 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id: string
+    id?: string
     tenant_id: string
     identifier: string
     password_hash: string
@@ -21699,7 +21699,7 @@ export namespace Prisma {
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -24835,12 +24835,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutAcademicPeriodsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     attendances?: AttendanceCreateNestedManyWithoutInstitutionInput
@@ -24855,12 +24855,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutAcademicPeriodsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     attendances?: AttendanceUncheckedCreateNestedManyWithoutInstitutionInput
@@ -24880,25 +24880,25 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateWithoutAcademicPeriodInput = {
-    id: string
+    id?: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     studentProfile: StudentProfileCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutAcademicPeriodInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type AttendanceCreateOrConnectWithoutAcademicPeriodInput = {
@@ -24912,11 +24912,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateWithoutAcademicPeriodInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     course: CourseCreateNestedOneWithoutExamsInput
     subject: SubjectCreateNestedOneWithoutExamsInput
     institution: InstitutionCreateNestedOneWithoutExamsInput
@@ -24924,14 +24924,14 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateWithoutAcademicPeriodInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     grades?: GradeUncheckedCreateNestedManyWithoutExamInput
   }
 
@@ -25059,7 +25059,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -25070,7 +25070,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodUncheckedCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     type: string
@@ -25086,7 +25086,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -25097,7 +25097,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     course_id?: string | null
@@ -25113,12 +25113,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exams?: ExamCreateNestedManyWithoutSubjectInput
     course: CourseCreateNestedOneWithoutSubjectsInput
     institution: InstitutionCreateNestedOneWithoutSubjectsInput
@@ -25126,14 +25126,14 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exams?: ExamUncheckedCreateNestedManyWithoutSubjectInput
     taughtBy?: TaughtSubjectUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -25144,12 +25144,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -25164,12 +25164,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutAttendancesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25343,22 +25343,22 @@ export namespace Prisma {
   }
 
   export type DepartmentCreateWithoutCoursesInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutDepartmentsInput
     faculties?: FacultyProfileCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutCoursesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     faculties?: FacultyProfileUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
@@ -25368,12 +25368,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutCoursesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -25388,12 +25388,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutCoursesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25413,12 +25413,12 @@ export namespace Prisma {
   }
 
   export type EnrolledCourseCreateWithoutCourseInput = {
-    id: string
+    id?: string
     studentProfile: StudentProfileCreateNestedOneWithoutEnrolledCoursesInput
   }
 
   export type EnrolledCourseUncheckedCreateWithoutCourseInput = {
-    id: string
+    id?: string
     studentId: string
   }
 
@@ -25433,11 +25433,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateWithoutCourseInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academicPeriod: AcademicPeriodCreateNestedOneWithoutExamsInput
     subject: SubjectCreateNestedOneWithoutExamsInput
     institution: InstitutionCreateNestedOneWithoutExamsInput
@@ -25445,13 +25445,13 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateWithoutCourseInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
     grades?: GradeUncheckedCreateNestedManyWithoutExamInput
   }
@@ -25467,7 +25467,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateWithoutCourseInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -25478,7 +25478,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateWithoutCourseInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     semester?: number | null
@@ -25499,12 +25499,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateWithoutCourseInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceCreateNestedManyWithoutSubjectInput
     exams?: ExamCreateNestedManyWithoutSubjectInput
     institution: InstitutionCreateNestedOneWithoutSubjectsInput
@@ -25512,13 +25512,13 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateWithoutCourseInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceUncheckedCreateNestedManyWithoutSubjectInput
     exams?: ExamUncheckedCreateNestedManyWithoutSubjectInput
     taughtBy?: TaughtSubjectUncheckedCreateNestedManyWithoutSubjectInput
@@ -25716,11 +25716,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutDepartmentInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
     exams?: ExamCreateNestedManyWithoutCourseInput
@@ -25729,12 +25729,12 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutDepartmentInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
@@ -25752,12 +25752,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutDepartmentsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -25772,12 +25772,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutDepartmentsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -25797,7 +25797,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileCreateWithoutDepartmentInput = {
-    id: string
+    id?: string
     employee_number: string
     designation?: string | null
     user: UserCreateNestedOneWithoutFacultyProfileInput
@@ -25805,7 +25805,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileUncheckedCreateWithoutDepartmentInput = {
-    id: string
+    id?: string
     user_id: string
     employee_number: string
     designation?: string | null
@@ -25930,11 +25930,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutEnrolledCoursesInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     exams?: ExamCreateNestedManyWithoutCourseInput
@@ -25943,13 +25943,13 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutEnrolledCoursesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
@@ -25961,7 +25961,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateWithoutEnrolledCoursesInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -25972,7 +25972,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateWithoutEnrolledCoursesInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     course_id?: string | null
@@ -26058,11 +26058,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutExamsInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
@@ -26071,13 +26071,13 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutExamsInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
@@ -26089,7 +26089,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateWithoutExamsInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -26100,7 +26100,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodUncheckedCreateWithoutExamsInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     type: string
@@ -26116,12 +26116,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateWithoutExamsInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceCreateNestedManyWithoutSubjectInput
     course: CourseCreateNestedOneWithoutSubjectsInput
     institution: InstitutionCreateNestedOneWithoutSubjectsInput
@@ -26129,14 +26129,14 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateWithoutExamsInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceUncheckedCreateNestedManyWithoutSubjectInput
     taughtBy?: TaughtSubjectUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -26147,12 +26147,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutExamsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -26167,12 +26167,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutExamsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -26192,23 +26192,23 @@ export namespace Prisma {
   }
 
   export type GradeCreateWithoutExamInput = {
-    id: string
+    id?: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     studentProfile: StudentProfileCreateNestedOneWithoutGradesInput
     institution: InstitutionCreateNestedOneWithoutGradesInput
   }
 
   export type GradeUncheckedCreateWithoutExamInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeCreateOrConnectWithoutExamInput = {
@@ -26410,22 +26410,22 @@ export namespace Prisma {
   }
 
   export type DepartmentCreateWithoutFacultiesInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseCreateNestedManyWithoutDepartmentInput
     institution: InstitutionCreateNestedOneWithoutDepartmentsInput
   }
 
   export type DepartmentUncheckedCreateWithoutFacultiesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
@@ -26435,20 +26435,20 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutFacultyProfileInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutFacultyProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     identifier: string
     password_hash: string
@@ -26456,7 +26456,7 @@ export namespace Prisma {
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -26466,12 +26466,12 @@ export namespace Prisma {
   }
 
   export type TaughtSubjectCreateWithoutFacultyProfileInput = {
-    id: string
+    id?: string
     subject: SubjectCreateNestedOneWithoutTaughtByInput
   }
 
   export type TaughtSubjectUncheckedCreateWithoutFacultyProfileInput = {
-    id: string
+    id?: string
     subjectId: string
   }
 
@@ -26579,11 +26579,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateWithoutGradesInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     course: CourseCreateNestedOneWithoutExamsInput
     academicPeriod: AcademicPeriodCreateNestedOneWithoutExamsInput
     subject: SubjectCreateNestedOneWithoutExamsInput
@@ -26591,14 +26591,14 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateWithoutGradesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
   }
 
@@ -26608,7 +26608,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateWithoutGradesInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -26619,7 +26619,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateWithoutGradesInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     course_id?: string | null
@@ -26635,12 +26635,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutGradesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -26655,12 +26655,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutGradesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -26799,7 +26799,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -26810,7 +26810,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -26831,24 +26831,24 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academicPeriod?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
     studentProfile: StudentProfileCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
@@ -26863,11 +26863,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
     exams?: ExamCreateNestedManyWithoutCourseInput
@@ -26876,12 +26876,12 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
@@ -26899,21 +26899,21 @@ export namespace Prisma {
   }
 
   export type DepartmentCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseCreateNestedManyWithoutDepartmentInput
     faculties?: FacultyProfileCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutDepartmentInput
     faculties?: FacultyProfileUncheckedCreateNestedManyWithoutDepartmentInput
   }
@@ -26929,11 +26929,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     course: CourseCreateNestedOneWithoutExamsInput
     academicPeriod: AcademicPeriodCreateNestedOneWithoutExamsInput
     subject: SubjectCreateNestedOneWithoutExamsInput
@@ -26941,13 +26941,13 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
     grades?: GradeUncheckedCreateNestedManyWithoutExamInput
   }
@@ -26963,23 +26963,23 @@ export namespace Prisma {
   }
 
   export type GradeCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exam: ExamCreateNestedOneWithoutGradesInput
     studentProfile: StudentProfileCreateNestedOneWithoutGradesInput
   }
 
   export type GradeUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     examId: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeCreateOrConnectWithoutInstitutionInput = {
@@ -26993,19 +26993,19 @@ export namespace Prisma {
   }
 
   export type InstitutionModuleCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     module: ModuleCreateNestedOneWithoutInstitutionModulesInput
   }
 
   export type InstitutionModuleUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     moduleId: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleCreateOrConnectWithoutInstitutionInput = {
@@ -27019,7 +27019,7 @@ export namespace Prisma {
   }
 
   export type InvitationTokenCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     email: string
     role: $Enums.invitationtoken_role
     token: string
@@ -27029,7 +27029,7 @@ export namespace Prisma {
   }
 
   export type InvitationTokenUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     email: string
     role: $Enums.invitationtoken_role
     token: string
@@ -27049,12 +27049,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceCreateNestedManyWithoutSubjectInput
     exams?: ExamCreateNestedManyWithoutSubjectInput
     course: CourseCreateNestedOneWithoutSubjectsInput
@@ -27062,13 +27062,13 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceUncheckedCreateNestedManyWithoutSubjectInput
     exams?: ExamUncheckedCreateNestedManyWithoutSubjectInput
     taughtBy?: TaughtSubjectUncheckedCreateNestedManyWithoutSubjectInput
@@ -27085,27 +27085,27 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileCreateNestedOneWithoutUserInput
     studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInstitutionInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileUncheckedCreateNestedOneWithoutUserInput
     studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
   }
@@ -27347,19 +27347,19 @@ export namespace Prisma {
   }
 
   export type ModuleCreateWithoutInstitutionModulesInput = {
-    id: string
+    id?: string
     name: string
     description?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type ModuleUncheckedCreateWithoutInstitutionModulesInput = {
-    id: string
+    id?: string
     name: string
     description?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type ModuleCreateOrConnectWithoutInstitutionModulesInput = {
@@ -27368,12 +27368,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutInstitutionModulesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -27388,12 +27388,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutInstitutionModulesInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -27491,12 +27491,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutInvitationTokensInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -27511,12 +27511,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutInvitationTokensInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -27587,19 +27587,19 @@ export namespace Prisma {
   }
 
   export type InstitutionModuleCreateWithoutModuleInput = {
-    id: string
+    id?: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     institution: InstitutionCreateNestedOneWithoutInstitutionModulesInput
   }
 
   export type InstitutionModuleUncheckedCreateWithoutModuleInput = {
-    id: string
+    id?: string
     tenant_id: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleCreateOrConnectWithoutModuleInput = {
@@ -27629,24 +27629,24 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academicPeriod?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
@@ -27661,12 +27661,12 @@ export namespace Prisma {
   }
 
   export type EnrolledCourseCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     course: CourseCreateNestedOneWithoutEnrolledCoursesInput
   }
 
   export type EnrolledCourseUncheckedCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     courseId: string
   }
 
@@ -27681,23 +27681,23 @@ export namespace Prisma {
   }
 
   export type GradeCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     exam: ExamCreateNestedOneWithoutGradesInput
     institution: InstitutionCreateNestedOneWithoutGradesInput
   }
 
   export type GradeUncheckedCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     examId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeCreateOrConnectWithoutStudentProfileInput = {
@@ -27711,11 +27711,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutStudentProfilesInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
@@ -27724,13 +27724,13 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutStudentProfilesInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
@@ -27742,20 +27742,20 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     identifier: string
     password_hash: string
@@ -27763,7 +27763,7 @@ export namespace Prisma {
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     facultyProfile?: FacultyProfileUncheckedCreateNestedOneWithoutUserInput
   }
 
@@ -27895,24 +27895,24 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academicPeriod?: AcademicPeriodCreateNestedOneWithoutAttendancesInput
     studentProfile: StudentProfileCreateNestedOneWithoutAttendancesInput
     institution: InstitutionCreateNestedOneWithoutAttendancesInput
   }
 
   export type AttendanceUncheckedCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
@@ -27927,11 +27927,11 @@ export namespace Prisma {
   }
 
   export type ExamCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     course: CourseCreateNestedOneWithoutExamsInput
     academicPeriod: AcademicPeriodCreateNestedOneWithoutExamsInput
     institution: InstitutionCreateNestedOneWithoutExamsInput
@@ -27939,13 +27939,13 @@ export namespace Prisma {
   }
 
   export type ExamUncheckedCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
     grades?: GradeUncheckedCreateNestedManyWithoutExamInput
   }
@@ -27961,11 +27961,11 @@ export namespace Prisma {
   }
 
   export type CourseCreateWithoutSubjectsInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     department: DepartmentCreateNestedOneWithoutCoursesInput
     institution: InstitutionCreateNestedOneWithoutCoursesInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutCourseInput
@@ -27974,13 +27974,13 @@ export namespace Prisma {
   }
 
   export type CourseUncheckedCreateWithoutSubjectsInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     studentProfiles?: StudentProfileUncheckedCreateNestedManyWithoutCourseInput
@@ -27992,12 +27992,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutSubjectsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -28012,12 +28012,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutSubjectsInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -28037,12 +28037,12 @@ export namespace Prisma {
   }
 
   export type TaughtSubjectCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     facultyProfile: FacultyProfileCreateNestedOneWithoutTaughtSubjectsInput
   }
 
   export type TaughtSubjectUncheckedCreateWithoutSubjectInput = {
-    id: string
+    id?: string
     facultyId: string
   }
 
@@ -28193,7 +28193,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileCreateWithoutTaughtSubjectsInput = {
-    id: string
+    id?: string
     employee_number: string
     designation?: string | null
     department?: DepartmentCreateNestedOneWithoutFacultiesInput
@@ -28201,7 +28201,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileUncheckedCreateWithoutTaughtSubjectsInput = {
-    id: string
+    id?: string
     user_id: string
     employee_number: string
     department_id?: string | null
@@ -28214,12 +28214,12 @@ export namespace Prisma {
   }
 
   export type SubjectCreateWithoutTaughtByInput = {
-    id: string
+    id?: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceCreateNestedManyWithoutSubjectInput
     exams?: ExamCreateNestedManyWithoutSubjectInput
     course: CourseCreateNestedOneWithoutSubjectsInput
@@ -28227,14 +28227,14 @@ export namespace Prisma {
   }
 
   export type SubjectUncheckedCreateWithoutTaughtByInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     attendances?: AttendanceUncheckedCreateNestedManyWithoutSubjectInput
     exams?: ExamUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -28309,7 +28309,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileCreateWithoutUserInput = {
-    id: string
+    id?: string
     employee_number: string
     designation?: string | null
     department?: DepartmentCreateNestedOneWithoutFacultiesInput
@@ -28317,7 +28317,7 @@ export namespace Prisma {
   }
 
   export type FacultyProfileUncheckedCreateWithoutUserInput = {
-    id: string
+    id?: string
     employee_number: string
     department_id?: string | null
     designation?: string | null
@@ -28330,7 +28330,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileCreateWithoutUserInput = {
-    id: string
+    id?: string
     roll_number: string
     semester?: number | null
     phone?: string | null
@@ -28341,7 +28341,7 @@ export namespace Prisma {
   }
 
   export type StudentProfileUncheckedCreateWithoutUserInput = {
-    id: string
+    id?: string
     roll_number: string
     course_id?: string | null
     semester?: number | null
@@ -28357,12 +28357,12 @@ export namespace Prisma {
   }
 
   export type InstitutionCreateWithoutUsersInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodCreateNestedManyWithoutInstitutionInput
@@ -28377,12 +28377,12 @@ export namespace Prisma {
   }
 
   export type InstitutionUncheckedCreateWithoutUsersInput = {
-    id: string
+    id?: string
     name: string
     slug: string
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     academic_system?: $Enums.institution_academic_system
     academicStructure?: NullableJsonNullValueInput | InputJsonValue
     academicPeriods?: AcademicPeriodUncheckedCreateNestedManyWithoutInstitutionInput
@@ -28513,25 +28513,25 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateManyAcademicPeriodInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type ExamCreateManyAcademicPeriodInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type AttendanceUpdateWithoutAcademicPeriodInput = {
@@ -28603,23 +28603,23 @@ export namespace Prisma {
   }
 
   export type EnrolledCourseCreateManyCourseInput = {
-    id: string
+    id?: string
     studentId: string
   }
 
   export type ExamCreateManyCourseInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
   }
 
   export type StudentProfileCreateManyCourseInput = {
-    id: string
+    id?: string
     user_id: string
     roll_number: string
     semester?: number | null
@@ -28627,13 +28627,13 @@ export namespace Prisma {
   }
 
   export type SubjectCreateManyCourseInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type EnrolledCourseUpdateWithoutCourseInput = {
@@ -28753,16 +28753,16 @@ export namespace Prisma {
   }
 
   export type CourseCreateManyDepartmentInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type FacultyProfileCreateManyDepartmentInput = {
-    id: string
+    id?: string
     user_id: string
     employee_number: string
     designation?: string | null
@@ -28827,13 +28827,13 @@ export namespace Prisma {
   }
 
   export type GradeCreateManyExamInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type GradeUpdateWithoutExamInput = {
@@ -28867,7 +28867,7 @@ export namespace Prisma {
   }
 
   export type TaughtSubjectCreateManyFacultyProfileInput = {
-    id: string
+    id?: string
     subjectId: string
   }
 
@@ -28887,7 +28887,7 @@ export namespace Prisma {
   }
 
   export type AcademicPeriodCreateManyInstitutionInput = {
-    id: string
+    id?: string
     name: string
     type: string
     start_date: Date | string
@@ -28896,64 +28896,64 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateManyInstitutionInput = {
-    id: string
+    id?: string
     studentId: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
   export type CourseCreateManyInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     departmentId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type DepartmentCreateManyInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type ExamCreateManyInstitutionInput = {
-    id: string
+    id?: string
     name: string
     date: Date | string
     courseId: string
     subjectId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
   }
 
   export type GradeCreateManyInstitutionInput = {
-    id: string
+    id?: string
     examId: string
     studentId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleCreateManyInstitutionInput = {
-    id: string
+    id?: string
     moduleId: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InvitationTokenCreateManyInstitutionInput = {
-    id: string
+    id?: string
     email: string
     role: $Enums.invitationtoken_role
     token: string
@@ -28963,24 +28963,24 @@ export namespace Prisma {
   }
 
   export type SubjectCreateManyInstitutionInput = {
-    id: string
+    id?: string
     name: string
     code: string
     courseId: string
     cycleNumber?: number
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type UserCreateManyInstitutionInput = {
-    id: string
+    id?: string
     identifier: string
     password_hash: string
     role: $Enums.user_role
     email?: string | null
     status?: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type AcademicPeriodUpdateWithoutInstitutionInput = {
@@ -29303,11 +29303,11 @@ export namespace Prisma {
   }
 
   export type InstitutionModuleCreateManyModuleInput = {
-    id: string
+    id?: string
     tenant_id: string
     isEnabled?: boolean
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type InstitutionModuleUpdateWithoutModuleInput = {
@@ -29335,29 +29335,29 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateManyStudentProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     subjectId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
   export type EnrolledCourseCreateManyStudentProfileInput = {
-    id: string
+    id?: string
     courseId: string
   }
 
   export type GradeCreateManyStudentProfileInput = {
-    id: string
+    id?: string
     tenant_id: string
     examId: string
     score: number
     remarks?: string | null
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
   }
 
   export type AttendanceUpdateWithoutStudentProfileInput = {
@@ -29439,29 +29439,29 @@ export namespace Prisma {
   }
 
   export type AttendanceCreateManySubjectInput = {
-    id: string
+    id?: string
     tenant_id: string
     studentId: string
     date: Date | string
     status: $Enums.attendance_status
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId?: string | null
   }
 
   export type ExamCreateManySubjectInput = {
-    id: string
+    id?: string
     tenant_id: string
     name: string
     date: Date | string
     courseId: string
     created_at?: Date | string
-    updated_at: Date | string
+    updated_at?: Date | string
     periodId: string
   }
 
   export type TaughtSubjectCreateManySubjectInput = {
-    id: string
+    id?: string
     facultyId: string
   }
 

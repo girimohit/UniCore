@@ -66,9 +66,8 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
       const data = await res.json();
       setResults(data.created ?? []);
       setErrors(data.errors ?? []);
-      if (data.created?.length > 0) {
-        setActiveTab("list");
-      }
+      // Always switch to list tab to show results/errors summary
+      setActiveTab("list");
     } catch (err) {
       setErrors([{ code: "CSV", error: "Upload failed" }]);
     } finally {
@@ -200,7 +199,7 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
               </div>
 
               {initialDepartments.length > 0 || results.length > 0 ? (
-                <div className="w-full max-w-2xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
+                <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
                    <table className="w-full text-sm text-left">
                      <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                        <tr>

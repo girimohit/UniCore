@@ -3,6 +3,9 @@ import { prisma } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
 import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
+import { sendEmail, getFacultyWelcomeEmailTemplate } from '@/lib/mail';
+import { resolveTenant } from '@/lib/tenant/resolver';
+import { getTenantUrl } from '@/lib/config';
 
 // Utility: generate temporary password
 function generateTempPassword(): string {
@@ -102,6 +105,16 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
             designation: name, // store name as designation for now
             department_id: departmentRecord?.id ?? null,
           }
+        });
+
+        // Trigger Faculty Welcome Email
+        const institution = await resolveTenant(user.tenant_id);
+        const loginLink = getTenantUrl(user.tenant_id as any, 'login');
+
+        await sendEmail({
+          to: email,
+          subject: `Welcome to ${institution?.name || 'Unicore'} Faculty Portal`,
+          html: getFacultyWelcomeEmailTemplate(institution?.name || 'Unicore', identifier, tempPassword, loginLink)
         });
 
         results.push({ name, employee_number, identifier, temp_password: tempPassword });

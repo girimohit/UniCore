@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getTenantContext } from '@/lib/tenant';
 import { getTenantUrl } from '@/lib/config';
 import crypto from 'crypto';
+import { sendEmail, getInviteEmailTemplate } from '@/lib/mail';
 
 export async function POST(req: Request) {
   try {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Tenant context invalid' }, { status: 404 });
     }
 
-    // Check if user already exists
+    // if user already exists
     const existingUser = await prisma.user.findFirst({
       where: { email, tenant_id: institution.id }
     });
@@ -31,9 +32,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User already exists in this institution' }, { status: 409 });
     }
 
-    // Generate random secure hex token
+    // Generate random token
     const token = crypto.randomBytes(32).toString('hex');
-    
+
     // Set expiration (e.g., 48 hours from now)
     const expires_at = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
@@ -47,12 +48,19 @@ export async function POST(req: Request) {
       }
     });
 
-    // In a real system, you would TRIGGER EMAIL SENDING HERE
-    // Ex: await sendEmail(email, `Join ${institution.name} ERP!`, `Link: ${getTenantUrl(subdomain, 'accept-invite')}?token=${token}`);
+    // Trigger Email Sending
+    const inviteLink = `${getTenantUrl(subdomain, 'accept-invite')}?token=${token}`;
 
-    return NextResponse.json({ 
-      message: 'Invitation generated successfully',
-      debug_link: `${getTenantUrl(subdomain, 'accept-invite')}?token=${token}` // For local testing only
+    const emailResult = await sendEmail({
+      to: email,
+      subject: `Invitation to join ${institution.name}`,
+      html: getInviteEmailTemplate(institution.name, inviteLink, role)
+    });
+
+    return NextResponse.json({
+      message: 'Invitation generated and sent successfully',
+      email_sent: emailResult.success,
+      debug_link: inviteLink // For local testing only
     }, { status: 201 });
 
   } catch (error) {

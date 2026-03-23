@@ -1,5 +1,36 @@
-import { prisma } from '@/lib/db';
-import { notFound } from 'next/navigation';
+import { prisma } from "@/lib/db";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+// export const metadata: Metadata = {
+//   title: "UNICORE",
+//   description: "Multi-tenant SaaS ERP for Educational Institutions",
+// };
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ tenant: string }>;
+}): Promise<Metadata> {
+  const { tenant } = await params;
+
+  const institution = await prisma.institution.findUnique({
+    where: { slug: tenant },
+    select: { name: true },
+  });
+
+  if (!institution) {
+    return {
+      title: "Not Found",
+    };
+  }
+
+  return {
+    title: `${institution.name} | UNICORE`,
+    description: `Dashboard for ${institution.name}`,
+  };
+}
 
 export default async function TenantLayout({
   children,
@@ -21,8 +52,5 @@ export default async function TenantLayout({
   if (!institution) {
     notFound();
   }
-
-  // Just render children — login page needs no shell,
-  // dashboard pages add their own layout via nested layouts
   return <>{children}</>;
 }

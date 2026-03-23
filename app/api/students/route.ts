@@ -4,6 +4,9 @@ import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
 import { randomBytes } from 'crypto';
 import { SubjectService } from '@/lib/services/subject-service';
+import { sendEmail, getStudentActivationEmailTemplate } from '@/lib/mail';
+import { resolveTenant } from '@/lib/tenant/resolver';
+import { getTenantUrl } from '@/lib/config';
 
 // GET /api/students – list all students for admin's tenant
 export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
@@ -103,9 +106,16 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
           }
         });
 
-        // NOTE: In production, send an email here via Resend/SendGrid etc.
-        // For now, return the activation link in the API response.
-        const activationLink = `/student/activate?token=${token}`;
+        // Trigger Activation Email
+        const institution = await resolveTenant(user.tenant_id);
+        const activationLink = getTenantUrl(user.tenant_id as any, 'student/activate') + `?token=${token}`;
+        
+        await sendEmail({
+          to: email,
+          subject: `Activate your student account at ${institution?.name || 'Unicore'}`,
+          html: getStudentActivationEmailTemplate(institution?.name || 'Unicore', activationLink, name)
+        });
+
         results.push({ name, roll_number, email, activation_link: activationLink });
       });
     } catch (err: any) {

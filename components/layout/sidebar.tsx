@@ -17,7 +17,7 @@ import {
   GraduationCap,
   Users,
   Building2,
-  Settings
+  Settings,
 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -36,6 +36,7 @@ const studentLinks = [
     name: "My Attendance",
     href: "/student/attendance",
     icon: CalendarCheck,
+    moduleId: "attendance",
     activeColor: "bg-emerald-100 text-emerald-700",
     hoverColor: "hover:bg-emerald-50 hover:text-emerald-700",
   },
@@ -43,6 +44,7 @@ const studentLinks = [
     name: "Timetable",
     href: "/student/timetable",
     icon: CalendarDays,
+    moduleId: "timetable",
     activeColor: "bg-blue-100 text-blue-700",
     hoverColor: "hover:bg-blue-50 hover:text-blue-700",
   },
@@ -50,6 +52,7 @@ const studentLinks = [
     name: "My Subjects",
     href: "/student/subjects",
     icon: BookOpen,
+    moduleId: "subjects",
     activeColor: "bg-purple-100 text-purple-700",
     hoverColor: "hover:bg-purple-50 hover:text-purple-700",
   },
@@ -57,6 +60,7 @@ const studentLinks = [
     name: "Notices",
     href: "/student/notices",
     icon: Bell,
+    moduleId: "notices",
     activeColor: "bg-amber-100 text-amber-700",
     hoverColor: "hover:bg-amber-50 hover:text-amber-700",
   },
@@ -64,6 +68,7 @@ const studentLinks = [
     name: "Fees",
     href: "/student/fees",
     icon: Wallet,
+    moduleId: "fees",
     activeColor: "bg-rose-100 text-rose-700",
     hoverColor: "hover:bg-rose-50 hover:text-rose-700",
   },
@@ -88,6 +93,7 @@ const adminLinks = [
     name: "Students",
     href: "/admin/students",
     icon: Users,
+    moduleId: "students",
     activeColor: "bg-emerald-100 text-emerald-700",
     hoverColor: "hover:bg-emerald-50 hover:text-emerald-700",
   },
@@ -95,6 +101,7 @@ const adminLinks = [
     name: "Faculty",
     href: "/admin/faculty",
     icon: GraduationCap,
+    moduleId: "faculty",
     activeColor: "bg-blue-100 text-blue-700",
     hoverColor: "hover:bg-blue-50 hover:text-blue-700",
   },
@@ -102,6 +109,7 @@ const adminLinks = [
     name: "Departments",
     href: "/admin/departments",
     icon: Building2,
+    moduleId: "departments",
     activeColor: "bg-purple-100 text-purple-700",
     hoverColor: "hover:bg-purple-50 hover:text-purple-700",
   },
@@ -109,6 +117,7 @@ const adminLinks = [
     name: "Courses",
     href: "/admin/courses",
     icon: BookOpen,
+    moduleId: "courses",
     activeColor: "bg-amber-100 text-amber-700",
     hoverColor: "hover:bg-amber-50 hover:text-amber-700",
   },
@@ -116,6 +125,7 @@ const adminLinks = [
     name: "Subjects",
     href: "/admin/subjects",
     icon: Box,
+    moduleId: "subjects",
     activeColor: "bg-rose-100 text-rose-700",
     hoverColor: "hover:bg-rose-50 hover:text-rose-700",
   },
@@ -123,6 +133,7 @@ const adminLinks = [
     name: "Exams",
     href: "/admin/exams",
     icon: Icons.ClipboardCheck,
+    moduleId: "exams",
     activeColor: "bg-indigo-100 text-indigo-700",
     hoverColor: "hover:bg-indigo-50 hover:text-indigo-700",
   },
@@ -139,31 +150,40 @@ interface SidebarProps {
   tenantId: string;
   urlSlug: string;
   role: string;
+  username: string;
   initialModules?: ModuleMetadata[];
 }
 
-export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }: SidebarProps) {
+export default function Sidebar({
+  tenantId,
+  urlSlug,
+  role,
+  username,
+  initialModules = [],
+}: SidebarProps) {
   const pathname = usePathname();
   const { isOpen, setIsOpen } = useSidebar();
 
   return (
     <>
-      <div 
+      <div
         className={cn(
-          "fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300",
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          "fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300 ",
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none",
         )}
         onClick={() => setIsOpen(false)}
       />
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border/40 bg-card/80 backdrop-blur-xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl dark:shadow-none",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-12 items-center justify-between px-6 mb-8">
-          <Link 
-            href={`/${urlSlug}/${role}/dashboard`} 
+          <Link
+            href={`/${urlSlug}/${role}/dashboard`}
             className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform"
             onClick={() => setIsOpen(false)}
           >
@@ -175,7 +195,7 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
             </span>
           </Link>
 
-          <button 
+          <button
             className="lg:hidden p-1.5 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
             onClick={() => setIsOpen(false)}
           >
@@ -185,61 +205,91 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
 
         <div className="flex-1 overflow-y-auto px-4 scrollbar-thin scrollbar-thumb-border">
           <div className="space-y-1">
-            <p className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 opacity-70">Main Menu</p>
-            {(role === "admin" ? adminLinks : studentLinks).map((item) => {
-              const fullPathLabels = `/${urlSlug}${item.href}`;
-              const isActive = pathname.startsWith(fullPathLabels);
-              return (
-                <Link
-                  key={item.name}
-                  href={fullPathLabels}
-                  className={cn(
-                    "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
-                    isActive ? item.activeColor : `text-slate-500 ${item.hoverColor}`,
-                  )}
-                >
-                  <item.icon
+            <p className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 opacity-70">
+              Main Menu
+            </p>
+            {(role === "admin" ? adminLinks : studentLinks)
+              .filter(
+                (item) =>
+                  !item.moduleId ||
+                  initialModules.some((m) => m.id === item.moduleId),
+              )
+              .map((item) => {
+                const fullPathLabels = `/${urlSlug}${item.href}`;
+                const isActive = pathname.startsWith(fullPathLabels);
+                return (
+                  <Link
+                    key={item.name}
+                    href={fullPathLabels}
                     className={cn(
-                      "h-5 w-5 transition-transform group-hover:scale-110",
-                      isActive ? "text-current" : "text-slate-400 group-hover:text-current",
+                      "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
+                      isActive
+                        ? item.activeColor
+                        : `text-slate-500 ${item.hoverColor}`,
                     )}
-                  />
-                  {item.name}
-                </Link>
-              );
-            })}
+                  >
+                    <item.icon
+                      className={cn(
+                        "h-5 w-5 transition-transform group-hover:scale-110",
+                        isActive
+                          ? "text-current"
+                          : "text-slate-400 group-hover:text-current",
+                      )}
+                    />
+                    {item.name}
+                  </Link>
+                );
+              })}
 
-            {/* {initialModules.length > 0 && (
+            {initialModules.filter(
+              (m) =>
+                !adminLinks.some((al) => al.moduleId === m.id) &&
+                !studentLinks.some((sl) => sl.moduleId === m.id),
+            ).length > 0 && (
               <>
                 <div className="pt-6 pb-2">
-                  <p className="px-4 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Additional Modules</p>
+                  <p className="px-4 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-1 opacity-70">
+                    Additional Modules
+                  </p>
                 </div>
-                {initialModules.map((moduleItem) => {
-                  const Icon = moduleItem.icon ? (Icons as any)[moduleItem.icon] : Box;
-                  const linkPath = `/${urlSlug}/${role}${moduleItem.routePath}`;
-                  const isActive = pathname.startsWith(linkPath);
+                {initialModules
+                  .filter(
+                    (m) =>
+                      !adminLinks.some((al) => al.moduleId === m.id) &&
+                      !studentLinks.some((sl) => sl.moduleId === m.id),
+                  )
+                  .map((moduleItem) => {
+                    const Icon = moduleItem.icon
+                      ? (Icons as any)[moduleItem.icon]
+                      : Box;
+                    const linkPath = `/${urlSlug}/${role}/${moduleItem.routePath}`;
+                    const isActive = pathname.startsWith(linkPath);
 
-                  return (
-                    <Link
-                      key={moduleItem.id}
-                      href={linkPath}
-                      className={cn(
-                        "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
-                        isActive ? "bg-indigo-100 text-indigo-700" : "text-slate-500 hover:bg-indigo-50 hover:text-indigo-700",
-                      )}
-                    >
-                      <Icon
+                    return (
+                      <Link
+                        key={moduleItem.id}
+                        href={linkPath}
                         className={cn(
-                          "h-5 w-5 transition-transform group-hover:scale-110",
-                          isActive ? "text-current" : "text-slate-400 group-hover:text-current",
+                          "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
+                          isActive
+                            ? "bg-indigo-100 text-indigo-700"
+                            : "text-slate-500 hover:bg-indigo-50 hover:text-indigo-700",
                         )}
-                      />
-                      {moduleItem.name}
-                    </Link>
-                  );
-                })}                   
+                      >
+                        <Icon
+                          className={cn(
+                            "h-5 w-5 transition-transform group-hover:scale-110",
+                            isActive
+                              ? "text-current"
+                              : "text-slate-400 group-hover:text-current",
+                          )}
+                        />
+                        {moduleItem.name}
+                      </Link>
+                    );
+                  })}
               </>
-            )} */}
+            )}
           </div>
         </div>
 
@@ -250,8 +300,13 @@ export default function Sidebar({ tenantId, urlSlug, role, initialModules = [] }
                 {role === "admin" ? "A" : "U"}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-bold text-foreground truncate">{role === "admin" ? "Admin User" : "Student User"}</p>
-                <p className="text-[10px] text-muted-foreground truncate uppercase tracking-widest font-black">{role}</p>
+                {/* <p className="text-sm font-bold text-foreground truncate">{role === "admin" ? "Admin User" : "Student User"}</p> */}
+                <p className="text-sm font-bold text-foreground truncate">
+                  {role === "admin" ? `${username}` : `${username}`}
+                </p>
+                <p className="text-[10px] text-muted-foreground truncate uppercase tracking-widest font-black">
+                  {role}
+                </p>
               </div>
             </div>
           </div>
