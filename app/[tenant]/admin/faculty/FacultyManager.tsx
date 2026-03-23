@@ -136,7 +136,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => { setActiveTab(tab.id as any); if (tab.id === 'list') fetchFacultyList(); }}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
               activeTab === tab.id 
                 ? "bg-primary text-white shadow-lg shadow-primary/20" 

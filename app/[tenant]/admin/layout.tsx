@@ -36,9 +36,10 @@ export default async function AdminLayout({
   if (session.role !== "ADMIN" && session.role !== "SUPER_ADMIN") {
     return notFound();
   }
-  const user  =  await prisma.user.findUnique({
-    where: {id : session.user_id},
-  })
+  const user = await prisma.user.findUnique({
+    where: { id: session.user_id },
+    select: { name: true, identifier: true, avatar_url: true }
+  });
 
 
   return (
@@ -66,11 +67,11 @@ export default async function AdminLayout({
           tenantId={institution.id}
           urlSlug={institution.slug}
           role="admin"
-          username={user?.identifier||"Admin"}
+          username={user?.name || user?.identifier || "Admin"}
           initialModules={modules}
         />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
-          <Topbar institution={institution} />
+          <Topbar institution={institution} user={user as any} />
           <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-background/30 backdrop-blur-[2px]">
             {children}
           </main>

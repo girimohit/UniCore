@@ -22,11 +22,14 @@ export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user:
     students: students.map((s) => ({
       id: s.id,
       identifier: s.identifier,
+      name: s.name,
       email: s.email,
       status: s.status,
       roll_number: s.studentProfile?.roll_number,
       semester: s.studentProfile?.semester,
       course: s.studentProfile?.course?.name ?? null,
+      date_of_birth: s.studentProfile?.date_of_birth,
+      gender: s.studentProfile?.gender,
     }))
   });
 });
@@ -40,6 +43,8 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
     email: string;
     course: string;
     semester: string;
+    date_of_birth?: string;
+    gender?: string;
   }> = Array.isArray(body) ? body : [body];
 
   if (entries.length === 0)
@@ -49,7 +54,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
   const errors: Array<{ roll_number: string; error: string }> = [];
 
   for (const entry of entries) {
-    const { name, roll_number, email, course, semester } = entry;
+    const { name, roll_number, email, course, semester, date_of_birth, gender } = entry;
 
     if (!name || !roll_number || !email) {
       errors.push({ roll_number: roll_number ?? '?', error: 'Missing required fields (name, roll_number, email)' });
@@ -72,6 +77,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
           data: {
             tenant_id: user.tenant_id,
             identifier: roll_number, // Roll number IS the identifier for students
+            name,                    // Save to User table
             password_hash: '',        // Empty — set during activation
             role: 'STUDENT',
             email,
@@ -91,6 +97,8 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
             roll_number,
             course_id: courseRecord?.id ?? null,
             semester: semester ? parseInt(semester) : null,
+            date_of_birth: date_of_birth ? new Date(date_of_birth) : null,
+            gender: gender || null,
           }
         });
 

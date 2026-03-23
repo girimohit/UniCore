@@ -233,7 +233,8 @@ model StudentProfile {
   roll_number     String
   course_id       String?
   semester        Int?
-  phone           String?
+  date_of_birth   DateTime?
+  gender          String?
   attendances     Attendance[]
   enrolledCourses EnrolledCourse[]
   grades          Grade[]
@@ -285,8 +286,11 @@ model User {
   tenant_id      String
   identifier     String
   password_hash  String
-  role           user_role
+  name           String          @default("New User")
   email          String?
+  phone          String?
+  avatar_url     String?
+  role           user_role
   status         String          @default("ACTIVE")
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt

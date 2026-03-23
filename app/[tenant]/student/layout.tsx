@@ -31,12 +31,11 @@ export default async function StudentLayout({
   if (session.role !== "STUDENT" && session.role !== "ADMIN") {
     return notFound();
   }
-  const studentName = await prisma.studentProfile.findUnique({
-    where: { user_id: session.user_id },
-  });
+  // No need to fetch studentProfile separately if not used for name
 
   const user = await prisma.user.findUnique({
     where: { id: session.user_id },
+    select: { name: true, identifier: true, avatar_url: true }
   });
 
   return (
@@ -64,11 +63,11 @@ export default async function StudentLayout({
           tenantId={institution.id}
           urlSlug={tenant}
           role="student"
-          username={studentName?.roll_number ?? user?.identifier ?? ""}
+          username={user?.name || user?.identifier || "Student"}
           initialModules={modules}
         />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">
-          <Topbar institution={institution} />
+          <Topbar institution={institution} user={user as any} />
           <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-background/30 backdrop-blur-[2px]">
             {children}
           </main>

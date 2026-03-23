@@ -62,9 +62,11 @@ export async function POST(req: Request) {
       user: {
         id: user.id,
         identifier: user.identifier,
+        name: user.name,
         role: user.role,
         tenant_id: user.tenant_id,
         status: user.status,
+        avatar_url: user.avatar_url,
       },
     });
 

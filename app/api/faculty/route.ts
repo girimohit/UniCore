@@ -30,12 +30,11 @@ export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user:
     identifier: f.identifier,
     email: f.email,
     status: f.status,
-    name: f.facultyProfile
-      ? `${f.facultyProfile.designation ?? ''}`
-      : 'N/A',
+    name: f.name,
     employee_number: f.facultyProfile?.employee_number ?? null,
     department: f.facultyProfile?.department?.name ?? null,
     designation: f.facultyProfile?.designation ?? null,
+    avatar_url: f.avatar_url,
   }));
 
   return NextResponse.json({ faculty: result });
@@ -90,6 +89,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
           data: {
             tenant_id: user.tenant_id,
             identifier,
+            name, // Save to User table
             password_hash: hashed,
             role: 'FACULTY',
             email,
@@ -102,7 +102,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
           data: {
             user_id: newUser.id,
             employee_number,
-            designation: name, // store name as designation for now
+            designation: 'Faculty', // default designation
             department_id: departmentRecord?.id ?? null,
           }
         });

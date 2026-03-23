@@ -14778,7 +14778,8 @@ export namespace Prisma {
     roll_number: string | null
     course_id: string | null
     semester: number | null
-    phone: string | null
+    date_of_birth: Date | null
+    gender: string | null
   }
 
   export type StudentProfileMaxAggregateOutputType = {
@@ -14787,7 +14788,8 @@ export namespace Prisma {
     roll_number: string | null
     course_id: string | null
     semester: number | null
-    phone: string | null
+    date_of_birth: Date | null
+    gender: string | null
   }
 
   export type StudentProfileCountAggregateOutputType = {
@@ -14796,7 +14798,8 @@ export namespace Prisma {
     roll_number: number
     course_id: number
     semester: number
-    phone: number
+    date_of_birth: number
+    gender: number
     _all: number
   }
 
@@ -14815,7 +14818,8 @@ export namespace Prisma {
     roll_number?: true
     course_id?: true
     semester?: true
-    phone?: true
+    date_of_birth?: true
+    gender?: true
   }
 
   export type StudentProfileMaxAggregateInputType = {
@@ -14824,7 +14828,8 @@ export namespace Prisma {
     roll_number?: true
     course_id?: true
     semester?: true
-    phone?: true
+    date_of_birth?: true
+    gender?: true
   }
 
   export type StudentProfileCountAggregateInputType = {
@@ -14833,7 +14838,8 @@ export namespace Prisma {
     roll_number?: true
     course_id?: true
     semester?: true
-    phone?: true
+    date_of_birth?: true
+    gender?: true
     _all?: true
   }
 
@@ -14929,7 +14935,8 @@ export namespace Prisma {
     roll_number: string
     course_id: string | null
     semester: number | null
-    phone: string | null
+    date_of_birth: Date | null
+    gender: string | null
     _count: StudentProfileCountAggregateOutputType | null
     _avg: StudentProfileAvgAggregateOutputType | null
     _sum: StudentProfileSumAggregateOutputType | null
@@ -14957,7 +14964,8 @@ export namespace Prisma {
     roll_number?: boolean
     course_id?: boolean
     semester?: boolean
-    phone?: boolean
+    date_of_birth?: boolean
+    gender?: boolean
     attendances?: boolean | StudentProfile$attendancesArgs<ExtArgs>
     enrolledCourses?: boolean | StudentProfile$enrolledCoursesArgs<ExtArgs>
     grades?: boolean | StudentProfile$gradesArgs<ExtArgs>
@@ -14974,10 +14982,11 @@ export namespace Prisma {
     roll_number?: boolean
     course_id?: boolean
     semester?: boolean
-    phone?: boolean
+    date_of_birth?: boolean
+    gender?: boolean
   }
 
-  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "roll_number" | "course_id" | "semester" | "phone", ExtArgs["result"]["studentProfile"]>
+  export type StudentProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "roll_number" | "course_id" | "semester" | "date_of_birth" | "gender", ExtArgs["result"]["studentProfile"]>
   export type StudentProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendances?: boolean | StudentProfile$attendancesArgs<ExtArgs>
     enrolledCourses?: boolean | StudentProfile$enrolledCoursesArgs<ExtArgs>
@@ -15002,7 +15011,8 @@ export namespace Prisma {
       roll_number: string
       course_id: string | null
       semester: number | null
-      phone: string | null
+      date_of_birth: Date | null
+      gender: string | null
     }, ExtArgs["result"]["studentProfile"]>
     composites: {}
   }
@@ -15382,7 +15392,8 @@ export namespace Prisma {
     readonly roll_number: FieldRef<"StudentProfile", 'String'>
     readonly course_id: FieldRef<"StudentProfile", 'String'>
     readonly semester: FieldRef<"StudentProfile", 'Int'>
-    readonly phone: FieldRef<"StudentProfile", 'String'>
+    readonly date_of_birth: FieldRef<"StudentProfile", 'DateTime'>
+    readonly gender: FieldRef<"StudentProfile", 'String'>
   }
     
 
@@ -17862,8 +17873,11 @@ export namespace Prisma {
     tenant_id: string | null
     identifier: string | null
     password_hash: string | null
-    role: $Enums.user_role | null
+    name: string | null
     email: string | null
+    phone: string | null
+    avatar_url: string | null
+    role: $Enums.user_role | null
     status: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -17874,8 +17888,11 @@ export namespace Prisma {
     tenant_id: string | null
     identifier: string | null
     password_hash: string | null
-    role: $Enums.user_role | null
+    name: string | null
     email: string | null
+    phone: string | null
+    avatar_url: string | null
+    role: $Enums.user_role | null
     status: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -17886,8 +17903,11 @@ export namespace Prisma {
     tenant_id: number
     identifier: number
     password_hash: number
-    role: number
+    name: number
     email: number
+    phone: number
+    avatar_url: number
+    role: number
     status: number
     created_at: number
     updated_at: number
@@ -17900,8 +17920,11 @@ export namespace Prisma {
     tenant_id?: true
     identifier?: true
     password_hash?: true
-    role?: true
+    name?: true
     email?: true
+    phone?: true
+    avatar_url?: true
+    role?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -17912,8 +17935,11 @@ export namespace Prisma {
     tenant_id?: true
     identifier?: true
     password_hash?: true
-    role?: true
+    name?: true
     email?: true
+    phone?: true
+    avatar_url?: true
+    role?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -17924,8 +17950,11 @@ export namespace Prisma {
     tenant_id?: true
     identifier?: true
     password_hash?: true
-    role?: true
+    name?: true
     email?: true
+    phone?: true
+    avatar_url?: true
+    role?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -18009,8 +18038,11 @@ export namespace Prisma {
     tenant_id: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name: string
     email: string | null
+    phone: string | null
+    avatar_url: string | null
+    role: $Enums.user_role
     status: string
     created_at: Date
     updated_at: Date
@@ -18038,8 +18070,11 @@ export namespace Prisma {
     tenant_id?: boolean
     identifier?: boolean
     password_hash?: boolean
-    role?: boolean
+    name?: boolean
     email?: boolean
+    phone?: boolean
+    avatar_url?: boolean
+    role?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -18055,14 +18090,17 @@ export namespace Prisma {
     tenant_id?: boolean
     identifier?: boolean
     password_hash?: boolean
-    role?: boolean
+    name?: boolean
     email?: boolean
+    phone?: boolean
+    avatar_url?: boolean
+    role?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenant_id" | "identifier" | "password_hash" | "role" | "email" | "status" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenant_id" | "identifier" | "password_hash" | "name" | "email" | "phone" | "avatar_url" | "role" | "status" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     facultyProfile?: boolean | User$facultyProfileArgs<ExtArgs>
     studentProfile?: boolean | User$studentProfileArgs<ExtArgs>
@@ -18081,8 +18119,11 @@ export namespace Prisma {
       tenant_id: string
       identifier: string
       password_hash: string
-      role: $Enums.user_role
+      name: string
       email: string | null
+      phone: string | null
+      avatar_url: string | null
+      role: $Enums.user_role
       status: string
       created_at: Date
       updated_at: Date
@@ -18462,8 +18503,11 @@ export namespace Prisma {
     readonly tenant_id: FieldRef<"User", 'String'>
     readonly identifier: FieldRef<"User", 'String'>
     readonly password_hash: FieldRef<"User", 'String'>
-    readonly role: FieldRef<"User", 'user_role'>
+    readonly name: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
+    readonly phone: FieldRef<"User", 'String'>
+    readonly avatar_url: FieldRef<"User", 'String'>
+    readonly role: FieldRef<"User", 'user_role'>
     readonly status: FieldRef<"User", 'String'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
@@ -19044,7 +19088,8 @@ export namespace Prisma {
     roll_number: 'roll_number',
     course_id: 'course_id',
     semester: 'semester',
-    phone: 'phone'
+    date_of_birth: 'date_of_birth',
+    gender: 'gender'
   };
 
   export type StudentProfileScalarFieldEnum = (typeof StudentProfileScalarFieldEnum)[keyof typeof StudentProfileScalarFieldEnum]
@@ -19078,8 +19123,11 @@ export namespace Prisma {
     tenant_id: 'tenant_id',
     identifier: 'identifier',
     password_hash: 'password_hash',
-    role: 'role',
+    name: 'name',
     email: 'email',
+    phone: 'phone',
+    avatar_url: 'avatar_url',
+    role: 'role',
     status: 'status',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -19257,7 +19305,7 @@ export namespace Prisma {
     user_id: 'user_id',
     roll_number: 'roll_number',
     course_id: 'course_id',
-    phone: 'phone'
+    gender: 'gender'
   };
 
   export type StudentProfileOrderByRelevanceFieldEnum = (typeof StudentProfileOrderByRelevanceFieldEnum)[keyof typeof StudentProfileOrderByRelevanceFieldEnum]
@@ -19288,7 +19336,10 @@ export namespace Prisma {
     tenant_id: 'tenant_id',
     identifier: 'identifier',
     password_hash: 'password_hash',
+    name: 'name',
     email: 'email',
+    phone: 'phone',
+    avatar_url: 'avatar_url',
     status: 'status'
   };
 
@@ -20267,7 +20318,8 @@ export namespace Prisma {
     roll_number?: StringFilter<"StudentProfile"> | string
     course_id?: StringNullableFilter<"StudentProfile"> | string | null
     semester?: IntNullableFilter<"StudentProfile"> | number | null
-    phone?: StringNullableFilter<"StudentProfile"> | string | null
+    date_of_birth?: DateTimeNullableFilter<"StudentProfile"> | Date | string | null
+    gender?: StringNullableFilter<"StudentProfile"> | string | null
     attendances?: AttendanceListRelationFilter
     enrolledCourses?: EnrolledCourseListRelationFilter
     grades?: GradeListRelationFilter
@@ -20281,7 +20333,8 @@ export namespace Prisma {
     roll_number?: SortOrder
     course_id?: SortOrderInput | SortOrder
     semester?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
+    date_of_birth?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
     attendances?: AttendanceOrderByRelationAggregateInput
     enrolledCourses?: EnrolledCourseOrderByRelationAggregateInput
     grades?: GradeOrderByRelationAggregateInput
@@ -20300,7 +20353,8 @@ export namespace Prisma {
     roll_number?: StringFilter<"StudentProfile"> | string
     course_id?: StringNullableFilter<"StudentProfile"> | string | null
     semester?: IntNullableFilter<"StudentProfile"> | number | null
-    phone?: StringNullableFilter<"StudentProfile"> | string | null
+    date_of_birth?: DateTimeNullableFilter<"StudentProfile"> | Date | string | null
+    gender?: StringNullableFilter<"StudentProfile"> | string | null
     attendances?: AttendanceListRelationFilter
     enrolledCourses?: EnrolledCourseListRelationFilter
     grades?: GradeListRelationFilter
@@ -20314,7 +20368,8 @@ export namespace Prisma {
     roll_number?: SortOrder
     course_id?: SortOrderInput | SortOrder
     semester?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
+    date_of_birth?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
     _count?: StudentProfileCountOrderByAggregateInput
     _avg?: StudentProfileAvgOrderByAggregateInput
     _max?: StudentProfileMaxOrderByAggregateInput
@@ -20331,7 +20386,8 @@ export namespace Prisma {
     roll_number?: StringWithAggregatesFilter<"StudentProfile"> | string
     course_id?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
     semester?: IntNullableWithAggregatesFilter<"StudentProfile"> | number | null
-    phone?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
+    date_of_birth?: DateTimeNullableWithAggregatesFilter<"StudentProfile"> | Date | string | null
+    gender?: StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
   }
 
   export type SubjectWhereInput = {
@@ -20478,8 +20534,11 @@ export namespace Prisma {
     tenant_id?: StringFilter<"User"> | string
     identifier?: StringFilter<"User"> | string
     password_hash?: StringFilter<"User"> | string
-    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
+    name?: StringFilter<"User"> | string
     email?: StringNullableFilter<"User"> | string | null
+    phone?: StringNullableFilter<"User"> | string | null
+    avatar_url?: StringNullableFilter<"User"> | string | null
+    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
     status?: StringFilter<"User"> | string
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
@@ -20493,8 +20552,11 @@ export namespace Prisma {
     tenant_id?: SortOrder
     identifier?: SortOrder
     password_hash?: SortOrder
-    role?: SortOrder
+    name?: SortOrder
     email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    avatar_url?: SortOrderInput | SortOrder
+    role?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -20513,8 +20575,11 @@ export namespace Prisma {
     tenant_id?: StringFilter<"User"> | string
     identifier?: StringFilter<"User"> | string
     password_hash?: StringFilter<"User"> | string
-    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
+    name?: StringFilter<"User"> | string
     email?: StringNullableFilter<"User"> | string | null
+    phone?: StringNullableFilter<"User"> | string | null
+    avatar_url?: StringNullableFilter<"User"> | string | null
+    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
     status?: StringFilter<"User"> | string
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
@@ -20528,8 +20593,11 @@ export namespace Prisma {
     tenant_id?: SortOrder
     identifier?: SortOrder
     password_hash?: SortOrder
-    role?: SortOrder
+    name?: SortOrder
     email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    avatar_url?: SortOrderInput | SortOrder
+    role?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -20546,8 +20614,11 @@ export namespace Prisma {
     tenant_id?: StringWithAggregatesFilter<"User"> | string
     identifier?: StringWithAggregatesFilter<"User"> | string
     password_hash?: StringWithAggregatesFilter<"User"> | string
-    role?: Enumuser_roleWithAggregatesFilter<"User"> | $Enums.user_role
+    name?: StringWithAggregatesFilter<"User"> | string
     email?: StringNullableWithAggregatesFilter<"User"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"User"> | string | null
+    avatar_url?: StringNullableWithAggregatesFilter<"User"> | string | null
+    role?: Enumuser_roleWithAggregatesFilter<"User"> | $Enums.user_role
     status?: StringWithAggregatesFilter<"User"> | string
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -21438,7 +21509,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutStudentProfileInput
     grades?: GradeCreateNestedManyWithoutStudentProfileInput
@@ -21452,7 +21524,8 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutStudentProfileInput
     grades?: GradeUncheckedCreateNestedManyWithoutStudentProfileInput
@@ -21462,7 +21535,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUpdateManyWithoutStudentProfileNestedInput
@@ -21476,7 +21550,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUncheckedUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUncheckedUpdateManyWithoutStudentProfileNestedInput
@@ -21488,14 +21563,16 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
   }
 
   export type StudentProfileUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type StudentProfileUncheckedUpdateManyInput = {
@@ -21504,7 +21581,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SubjectCreateInput = {
@@ -21638,8 +21716,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -21653,8 +21734,11 @@ export namespace Prisma {
     tenant_id: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -21666,8 +21750,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21681,8 +21768,11 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21695,8 +21785,11 @@ export namespace Prisma {
     tenant_id: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -21706,8 +21799,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21718,8 +21814,11 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22627,6 +22726,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type CourseNullableScalarRelationFilter = {
     is?: CourseWhereInput | null
     isNot?: CourseWhereInput | null
@@ -22649,7 +22759,8 @@ export namespace Prisma {
     roll_number?: SortOrder
     course_id?: SortOrder
     semester?: SortOrder
-    phone?: SortOrder
+    date_of_birth?: SortOrder
+    gender?: SortOrder
   }
 
   export type StudentProfileAvgOrderByAggregateInput = {
@@ -22662,7 +22773,8 @@ export namespace Prisma {
     roll_number?: SortOrder
     course_id?: SortOrder
     semester?: SortOrder
-    phone?: SortOrder
+    date_of_birth?: SortOrder
+    gender?: SortOrder
   }
 
   export type StudentProfileMinOrderByAggregateInput = {
@@ -22671,7 +22783,8 @@ export namespace Prisma {
     roll_number?: SortOrder
     course_id?: SortOrder
     semester?: SortOrder
-    phone?: SortOrder
+    date_of_birth?: SortOrder
+    gender?: SortOrder
   }
 
   export type StudentProfileSumOrderByAggregateInput = {
@@ -22692,6 +22805,20 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -22840,8 +22967,11 @@ export namespace Prisma {
     tenant_id?: SortOrder
     identifier?: SortOrder
     password_hash?: SortOrder
-    role?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
+    avatar_url?: SortOrder
+    role?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22852,8 +22982,11 @@ export namespace Prisma {
     tenant_id?: SortOrder
     identifier?: SortOrder
     password_hash?: SortOrder
-    role?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
+    avatar_url?: SortOrder
+    role?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22864,8 +22997,11 @@ export namespace Prisma {
     tenant_id?: SortOrder
     identifier?: SortOrder
     password_hash?: SortOrder
-    role?: SortOrder
+    name?: SortOrder
     email?: SortOrder
+    phone?: SortOrder
+    avatar_url?: SortOrder
+    role?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -24173,6 +24309,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type AttendanceUpdateManyWithoutStudentProfileNestedInput = {
     create?: XOR<AttendanceCreateWithoutStudentProfileInput, AttendanceUncheckedCreateWithoutStudentProfileInput> | AttendanceCreateWithoutStudentProfileInput[] | AttendanceUncheckedCreateWithoutStudentProfileInput[]
     connectOrCreate?: AttendanceCreateOrConnectWithoutStudentProfileInput | AttendanceCreateOrConnectWithoutStudentProfileInput[]
@@ -24774,6 +24914,17 @@ export namespace Prisma {
     _max?: NestedEnuminvitationtoken_roleFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -24799,6 +24950,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -25089,7 +25254,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutStudentProfileInput
     grades?: GradeCreateNestedManyWithoutStudentProfileInput
     course?: CourseCreateNestedOneWithoutStudentProfilesInput
@@ -25102,7 +25268,8 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutStudentProfileInput
     grades?: GradeUncheckedCreateNestedManyWithoutStudentProfileInput
   }
@@ -25236,7 +25403,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     enrolledCourses?: EnrolledCourseUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUpdateManyWithoutStudentProfileNestedInput
     course?: CourseUpdateOneWithoutStudentProfilesNestedInput
@@ -25249,7 +25417,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     enrolledCourses?: EnrolledCourseUncheckedUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUncheckedUpdateManyWithoutStudentProfileNestedInput
   }
@@ -25470,7 +25639,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutStudentProfileInput
     grades?: GradeCreateNestedManyWithoutStudentProfileInput
@@ -25482,7 +25652,8 @@ export namespace Prisma {
     user_id: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutStudentProfileInput
     grades?: GradeUncheckedCreateNestedManyWithoutStudentProfileInput
@@ -25682,7 +25853,8 @@ export namespace Prisma {
     roll_number?: StringFilter<"StudentProfile"> | string
     course_id?: StringNullableFilter<"StudentProfile"> | string | null
     semester?: IntNullableFilter<"StudentProfile"> | number | null
-    phone?: StringNullableFilter<"StudentProfile"> | string | null
+    date_of_birth?: DateTimeNullableFilter<"StudentProfile"> | Date | string | null
+    gender?: StringNullableFilter<"StudentProfile"> | string | null
   }
 
   export type SubjectUpsertWithWhereUniqueWithoutCourseInput = {
@@ -25964,7 +26136,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceCreateNestedManyWithoutStudentProfileInput
     grades?: GradeCreateNestedManyWithoutStudentProfileInput
     course?: CourseCreateNestedOneWithoutStudentProfilesInput
@@ -25977,7 +26150,8 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentProfileInput
     grades?: GradeUncheckedCreateNestedManyWithoutStudentProfileInput
   }
@@ -26039,7 +26213,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUpdateManyWithoutStudentProfileNestedInput
     course?: CourseUpdateOneWithoutStudentProfilesNestedInput
@@ -26052,7 +26227,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUncheckedUpdateManyWithoutStudentProfileNestedInput
   }
@@ -26438,8 +26614,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -26452,8 +26631,11 @@ export namespace Prisma {
     tenant_id: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -26531,8 +26713,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26545,8 +26730,11 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26611,7 +26799,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutStudentProfileInput
     course?: CourseCreateNestedOneWithoutStudentProfilesInput
@@ -26624,7 +26813,8 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutStudentProfileInput
   }
@@ -26729,7 +26919,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUpdateManyWithoutStudentProfileNestedInput
     course?: CourseUpdateOneWithoutStudentProfilesNestedInput
@@ -26742,7 +26933,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUncheckedUpdateManyWithoutStudentProfileNestedInput
   }
@@ -27088,8 +27280,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -27101,8 +27296,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -27339,8 +27537,11 @@ export namespace Prisma {
     tenant_id?: StringFilter<"User"> | string
     identifier?: StringFilter<"User"> | string
     password_hash?: StringFilter<"User"> | string
-    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
+    name?: StringFilter<"User"> | string
     email?: StringNullableFilter<"User"> | string | null
+    phone?: StringNullableFilter<"User"> | string | null
+    avatar_url?: StringNullableFilter<"User"> | string | null
+    role?: Enumuser_roleFilter<"User"> | $Enums.user_role
     status?: StringFilter<"User"> | string
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
@@ -27745,8 +27946,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -27759,8 +27963,11 @@ export namespace Prisma {
     tenant_id: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -27872,8 +28079,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27886,8 +28096,11 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28333,7 +28546,8 @@ export namespace Prisma {
     id?: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseCreateNestedManyWithoutStudentProfileInput
     grades?: GradeCreateNestedManyWithoutStudentProfileInput
@@ -28345,7 +28559,8 @@ export namespace Prisma {
     roll_number: string
     course_id?: string | null
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
     attendances?: AttendanceUncheckedCreateNestedManyWithoutStudentProfileInput
     enrolledCourses?: EnrolledCourseUncheckedCreateNestedManyWithoutStudentProfileInput
     grades?: GradeUncheckedCreateNestedManyWithoutStudentProfileInput
@@ -28443,7 +28658,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUpdateManyWithoutStudentProfileNestedInput
@@ -28455,7 +28671,8 @@ export namespace Prisma {
     roll_number?: StringFieldUpdateOperationsInput | string
     course_id?: NullableStringFieldUpdateOperationsInput | string | null
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUncheckedUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUncheckedUpdateManyWithoutStudentProfileNestedInput
@@ -28623,7 +28840,8 @@ export namespace Prisma {
     user_id: string
     roll_number: string
     semester?: number | null
-    phone?: string | null
+    date_of_birth?: Date | string | null
+    gender?: string | null
   }
 
   export type SubjectCreateManyCourseInput = {
@@ -28690,7 +28908,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUpdateManyWithoutStudentProfileNestedInput
@@ -28702,7 +28921,8 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
     attendances?: AttendanceUncheckedUpdateManyWithoutStudentProfileNestedInput
     enrolledCourses?: EnrolledCourseUncheckedUpdateManyWithoutStudentProfileNestedInput
     grades?: GradeUncheckedUpdateManyWithoutStudentProfileNestedInput
@@ -28713,7 +28933,8 @@ export namespace Prisma {
     user_id?: StringFieldUpdateOperationsInput | string
     roll_number?: StringFieldUpdateOperationsInput | string
     semester?: NullableIntFieldUpdateOperationsInput | number | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    date_of_birth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SubjectUpdateWithoutCourseInput = {
@@ -28976,8 +29197,11 @@ export namespace Prisma {
     id?: string
     identifier: string
     password_hash: string
-    role: $Enums.user_role
+    name?: string
     email?: string | null
+    phone?: string | null
+    avatar_url?: string | null
+    role: $Enums.user_role
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -29269,8 +29493,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29282,8 +29509,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29295,8 +29525,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     identifier?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
-    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
+    name?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar_url?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: Enumuser_roleFieldUpdateOperationsInput | $Enums.user_role
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string

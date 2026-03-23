@@ -243,7 +243,8 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   roll_number: 'roll_number',
   course_id: 'course_id',
   semester: 'semester',
-  phone: 'phone'
+  date_of_birth: 'date_of_birth',
+  gender: 'gender'
 };
 
 exports.Prisma.SubjectScalarFieldEnum = {
@@ -268,8 +269,11 @@ exports.Prisma.UserScalarFieldEnum = {
   tenant_id: 'tenant_id',
   identifier: 'identifier',
   password_hash: 'password_hash',
-  role: 'role',
+  name: 'name',
   email: 'email',
+  phone: 'phone',
+  avatar_url: 'avatar_url',
+  role: 'role',
   status: 'status',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -393,7 +397,7 @@ exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
   user_id: 'user_id',
   roll_number: 'roll_number',
   course_id: 'course_id',
-  phone: 'phone'
+  gender: 'gender'
 };
 
 exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
@@ -415,7 +419,10 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   tenant_id: 'tenant_id',
   identifier: 'identifier',
   password_hash: 'password_hash',
+  name: 'name',
   email: 'email',
+  phone: 'phone',
+  avatar_url: 'avatar_url',
   status: 'status'
 };
 exports.attendance_status = exports.$Enums.attendance_status = {

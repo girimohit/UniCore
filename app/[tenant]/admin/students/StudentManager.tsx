@@ -17,11 +17,14 @@ interface StudentManagerProps {
 interface Student {
   id: string;
   identifier: string;
+  name: string;
   email: string | null;
   status: string;
   roll_number: string;
   semester: number | null;
   course: string | null;
+  date_of_birth: string | null;
+  gender: string | null;
 }
 
 export default function StudentManager({ courses, academicSystem }: StudentManagerProps) {
@@ -48,7 +51,9 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
     roll_number: "",
     email: "",
     course: "",
-    semester: ""
+    semester: "",
+    date_of_birth: "",
+    gender: ""
   });
 
   const fetchStudents = async () => {
@@ -83,7 +88,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
       if (data.errors?.length > 0) setErrors(data.errors);
       if (data.created?.length > 0) {
         setResults(data.created);
-        setForm({ name: "", roll_number: "", email: "", course: "", semester: "" });
+        setForm({ name: "", roll_number: "", email: "", course: "", semester: "", date_of_birth: "", gender: "" });
         setActiveTab("list");
       }
     } catch {
@@ -209,6 +214,19 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                   <input required type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="john@example.com" className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all" />
                 </div>
                 <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Date of Birth</label>
+                  <input type="date" value={form.date_of_birth} onChange={e => setForm(f => ({ ...f, date_of_birth: e.target.value }))} className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Gender</label>
+                  <select value={form.gender} onChange={e => setForm(f => ({ ...f, gender: e.target.value }))} className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Course</label>
                   <select value={form.course} onChange={e => setForm(f => ({ ...f, course: e.target.value }))} className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer">
                     <option value="">Select a Course</option>
@@ -251,6 +269,8 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                 { key: "email", label: "Email", required: true },
                 { key: "course", label: "Course", required: true },
                 { key: "semester", label: academic.label },
+                { key: "date_of_birth", label: "Date of Birth (YYYY-MM-DD)" },
+                { key: "gender", label: "Gender" },
               ]}
             />
           </div>
@@ -311,8 +331,15 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                       {students.map(s => (
                         <tr key={s.id} className="hover:bg-secondary/5 transition-colors group">
                           <td className="px-6 py-4">
-                            <p className="font-bold text-foreground">{s.identifier}</p>
-                            <p className="text-xs text-muted-foreground">{s.email ?? '—'}</p>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                {s.name?.[0] || "?"}
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-bold text-foreground">{s.name}</span>
+                                <span className="text-xs text-muted-foreground">{s.email ?? '—'}</span>
+                              </div>
+                            </div>
                           </td>
                           <td className="px-6 py-4 font-mono font-bold text-primary">{s.roll_number ?? '—'}</td>
                           <td className="px-6 py-4">
@@ -358,7 +385,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
               <div>
                 <h3 className="text-lg font-extrabold text-foreground">Assign Enrollment</h3>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  <span className="font-bold text-primary">{enrollTarget.identifier}</span> · {enrollTarget.roll_number}
+                  <span className="font-bold text-primary">{enrollTarget.name}</span> · {enrollTarget.roll_number}
                 </p>
               </div>
               <button

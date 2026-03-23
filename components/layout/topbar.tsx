@@ -6,7 +6,13 @@ import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Menu } from "lucide-react";
 import { useSidebar } from "./sidebar-context";
 
-export default function Topbar({ institution }: { institution: Institution }) {
+export default function Topbar({ 
+  institution, 
+  user 
+}: { 
+  institution: Institution, 
+  user?: { name: string; avatar_url: string | null } 
+}) {
   const { toggle } = useSidebar();
 
   return (
@@ -43,8 +49,17 @@ export default function Topbar({ institution }: { institution: Institution }) {
         <ThemeToggle />
 
         <div className="flex items-center gap-2 md:gap-4 bg-muted/30 dark:bg-white/5 backdrop-blur-md border border-border/40 dark:border-white/10 px-2 py-1.5 md:px-3 rounded-full shadow-sm">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform duration-300">
-            {institution.name[0]}
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform duration-300 overflow-hidden">
+              {user?.avatar_url ? (
+                <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                (user?.name?.[0] || institution.name[0])
+              )}
+            </div>
+            <span className="hidden sm:block text-xs font-bold text-foreground pr-1">
+              {user?.name || "User"}
+            </span>
           </div>
           <div className="h-4 w-px bg-border/60"></div>
           <LogoutButton variant="icon" />

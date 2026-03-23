@@ -2,7 +2,8 @@ import { prisma } from '@/lib/db';
 import { notFound, redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth-server';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, User, Shield, BookOpen, GraduationCap, Hash } from "lucide-react"
+import { Mail, User, Shield, BookOpen, GraduationCap, Hash, CalendarDays } from "lucide-react"
+import * as Icons from "lucide-react";
 import { getAcademicLabel } from '@/lib/utils/academic';
 
 export default async function StudentProfilePage({ params }: { params: Promise<{ tenant: string }> }) {
@@ -23,7 +24,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   const student = await prisma.studentProfile.findUnique({
     where: { user_id: session.user_id },
     include: {
-      user: { select: { identifier: true, email: true, status: true } },
+      user: { select: { name: true, identifier: true, email: true, status: true, avatar_url: true } },
       course: { select: { name: true, code: true } }
     }
   });
@@ -31,7 +32,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   if (!student) notFound();
 
   const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
-  const initials = student.user.identifier.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || student.roll_number.slice(0, 2).toUpperCase();
+  const initials = (student.user.name || student.user.identifier).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-10">
@@ -51,11 +52,14 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
             <div className="px-8 pb-8 relative">
               <div className="w-28 h-28 rounded-3xl bg-card p-1.5 mx-auto -mt-14 relative shadow-2xl border border-border/40 rotate-1 group-hover:rotate-0 transition-transform">
                 <div className="w-full h-full rounded-2xl bg-muted overflow-hidden flex items-center justify-center text-primary font-black text-3xl shadow-inner">
-                  {initials}
+                  {student.user.avatar_url ? (
+                    <img src={student.user.avatar_url} alt={student.user.name} className="w-full h-full object-cover" />
+                  ) : initials}
                 </div>
               </div>
               <div className="mt-6 space-y-2">
-                <h3 className="text-2xl font-display font-black text-foreground tracking-tight">{student.user.identifier}</h3>
+                <h3 className="text-2xl font-display font-black text-foreground tracking-tight">{student.user.name}</h3>
+                <p className="text-xs font-mono text-muted-foreground opacity-60">@{student.user.identifier}</p>
                 <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest opacity-70">
                   {student.course?.name ?? 'No course assigned'}
                   {student.semester ? ` · ${academic.label} ${student.semester}` : ''}
@@ -98,12 +102,22 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {
                   icon: User,
                   label: 'Full Identity',
-                  value: student.user.identifier,
+                  value: student.user.name,
                 },
                 {
                   icon: Mail,
                   label: 'Nexus Email',
                   value: student.user.email ?? '—',
+                },
+                {
+                   icon: GraduationCap,
+                   label: 'Gender',
+                   value: student.gender ?? 'Not specified',
+                },
+                {
+                   icon: CalendarDays,
+                   label: 'Date of Birth',
+                   value: student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Not specified',
                 },
                 {
                   icon: Shield,
@@ -122,11 +136,11 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                   value: student.semester != null ? String(student.semester) : 'Not assigned',
                 },
                 {
-                  icon: GraduationCap,
+                  icon: Icons.Building,
                   label: 'Parent Institution',
                   value: institution.name,
                 },
-              ].map(({ icon: Icon, label, value, mono }) => (
+              ].map(({ icon: Icon, label, value, mono }: any) => (
                 <div key={label} className="flex items-center gap-6 py-6 px-8 group transition-colors hover:bg-muted/30">
                   <div className="w-12 h-12 rounded-2xl bg-muted/50 border border-border/40 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform group-hover:bg-primary/5 group-hover:text-primary">
                     <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
