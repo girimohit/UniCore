@@ -9,6 +9,7 @@ import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { getActiveInstitutionModules } from "@/lib/modules/loader";
 import { getCurrentUser } from "@/lib/auth-server";
+import { redirect } from "next/navigation";
 
 export default async function FacultyLayout({
   children,
@@ -27,7 +28,14 @@ export default async function FacultyLayout({
   const modules = await getActiveInstitutionModules(institution.id);
 
   const session = await getCurrentUser();
-  if (!session) return null;
+  if (!session) {
+    redirect(`/${tenant}/login`);
+  }
+
+  if (session.role !== "FACULTY" && session.role !== "ADMIN") {
+    return notFound(); // Or a custom forbidden page
+  }
+
   const facultyName = await prisma.facultyProfile.findUnique({ where: { user_id: session.user_id } });
   const user = await prisma.user.findUnique({ where: { id: session.user_id } });
 

@@ -5,10 +5,10 @@ const FEATURES = [
     icon: "🗄",
     title: "Tenant Isolation",
     desc: "Every institution gets a secure, isolated data context with Row-Level Security — no data leaks, ever.",
-    glow: "rgba(124,92,191,0.14)",
-    border: "rgba(124,92,191,0.28)",
-    iconBg: "rgba(124,92,191,0.10)",
-    iconBorder: "rgba(124,92,191,0.22)",
+    glow: "rgba(124,92,191,0.25)",
+    border: "rgba(124,92,191,0.4)",
+    iconBg: "rgba(124,92,191,0.15)",
+    iconBorder: "rgba(124,92,191,0.3)",
   },
   {
     icon: "⚡",
@@ -86,7 +86,7 @@ export default function Features() {
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.borderColor = f.border;
-                el.style.boxShadow = `0 20px 60px ${f.glow}`;
+                el.style.boxShadow = `0 20px 60px ${f.glow.replace('0.14', '0.08').replace('0.12', '0.06')}`;
               }}
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement;

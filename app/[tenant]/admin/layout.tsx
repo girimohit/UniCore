@@ -9,6 +9,7 @@ import Sidebar from "@/components/layout/sidebar";
 import Topbar from "@/components/layout/topbar";
 import { getActiveInstitutionModules } from "@/lib/modules/loader";
 import { getCurrentUser } from "@/lib/auth-server";
+import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
   children,
@@ -28,7 +29,13 @@ export default async function AdminLayout({
   const modules = await getActiveInstitutionModules(institution.id);
 
   const session = await getCurrentUser();
-  if(!session) return notFound();
+  if (!session) {
+    redirect(`/${tenant}/login`);
+  }
+
+  if (session.role !== "ADMIN" && session.role !== "SUPER_ADMIN") {
+    return notFound();
+  }
   const user  =  await prisma.user.findUnique({
     where: {id : session.user_id},
   })

@@ -13,7 +13,7 @@ export default async function FacultyDashboard({ params }: { params: Promise<{ t
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
-      <div className="absolute top-0 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+      <div className="absolute top-0 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none -z-10 opacity-60"></div>
       
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60">
@@ -47,8 +47,8 @@ export default async function FacultyDashboard({ params }: { params: Promise<{ t
         </div>
       </div>
       
-      <div className="glass rounded-3xl border border-border/50 p-8 mt-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent"></div>
+      <div className="glass rounded-3xl border border-white/5 p-8 mt-8 relative overflow-hidden bg-black/40">
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent"></div>
         <h3 className="text-xl font-bold mb-4 relative z-10">Quick Actions</h3>
         <div className="flex space-x-4 relative z-10">
           <button className="px-5 py-2.5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">Take Attendance</button>

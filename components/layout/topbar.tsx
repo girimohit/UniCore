@@ -10,7 +10,7 @@ export default function Topbar({ institution }: { institution: Institution }) {
   const { toggle } = useSidebar();
 
   return (
-    <header className="glass h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 border-b border-border/40 shadow-sm transition-colors duration-300">
+    <header className="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-20 border-b border-border/40 bg-bg-base/80 backdrop-blur-md shadow-sm transition-colors duration-300">
       <div className="flex items-center gap-4">
         <button 
           onClick={toggle}
@@ -42,7 +42,7 @@ export default function Topbar({ institution }: { institution: Institution }) {
 
         <ThemeToggle />
         
-        <div className="flex items-center gap-2 md:gap-4 bg-background/50 backdrop-blur-md border border-border/40 px-2 py-1.5 md:px-3 rounded-full shadow-sm">
+        <div className="flex items-center gap-2 md:gap-4 bg-muted/30 dark:bg-white/5 backdrop-blur-md border border-border/40 dark:border-white/10 px-2 py-1.5 md:px-3 rounded-full shadow-sm">
           <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20 cursor-pointer hover:scale-105 transition-transform duration-300">
             {institution.name[0]}
           </div>

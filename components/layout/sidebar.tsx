@@ -24,60 +24,77 @@ import { LogoutButton } from "@/components/auth/LogoutButton";
 import { ModuleMetadata } from "@/lib/modules/registry";
 import { useSidebar } from "./sidebar-context";
 
+const SIDEBAR_COLORS = [
+  {
+    active: "bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 dark:border dark:border-violet-500/20",
+    hover: "hover:bg-violet-50 hover:text-violet-700 dark:hover:bg-violet-500/5 dark:hover:text-violet-300",
+  },
+  {
+    active: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border dark:border-emerald-500/20",
+    hover: "hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-500/5 dark:hover:text-emerald-300",
+  },
+  {
+    active: "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 dark:border dark:border-blue-500/20",
+    hover: "hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-500/5 dark:hover:text-blue-300",
+  },
+  {
+    active: "bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 dark:border dark:border-purple-500/20",
+    hover: "hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-500/5 dark:hover:text-purple-300",
+  },
+  {
+    active: "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 dark:border dark:border-amber-500/20",
+    hover: "hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-500/5 dark:hover:text-amber-300",
+  },
+  {
+    active: "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 dark:border dark:border-rose-500/20",
+    hover: "hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-500/5 dark:hover:text-rose-300",
+  },
+  {
+    active: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border dark:border-indigo-500/20",
+    hover: "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-500/5 dark:hover:text-indigo-300",
+  },
+];
+
 const studentLinks = [
   {
     name: "Dashboard",
     href: "/student/dashboard",
     icon: LayoutDashboard,
-    activeColor: "bg-violet-100 text-violet-700",
-    hoverColor: "hover:bg-violet-50 hover:text-violet-700",
   },
   {
     name: "My Attendance",
     href: "/student/attendance",
     icon: CalendarCheck,
     moduleId: "attendance",
-    activeColor: "bg-emerald-100 text-emerald-700",
-    hoverColor: "hover:bg-emerald-50 hover:text-emerald-700",
   },
   {
     name: "Timetable",
     href: "/student/timetable",
     icon: CalendarDays,
     moduleId: "timetable",
-    activeColor: "bg-blue-100 text-blue-700",
-    hoverColor: "hover:bg-blue-50 hover:text-blue-700",
   },
   {
     name: "My Subjects",
     href: "/student/subjects",
     icon: BookOpen,
     moduleId: "subjects",
-    activeColor: "bg-purple-100 text-purple-700",
-    hoverColor: "hover:bg-purple-50 hover:text-purple-700",
   },
   {
     name: "Notices",
     href: "/student/notices",
     icon: Bell,
     moduleId: "notices",
-    activeColor: "bg-amber-100 text-amber-700",
-    hoverColor: "hover:bg-amber-50 hover:text-amber-700",
   },
   {
     name: "Fees",
     href: "/student/fees",
     icon: Wallet,
     moduleId: "fees",
-    activeColor: "bg-rose-100 text-rose-700",
-    hoverColor: "hover:bg-rose-50 hover:text-rose-700",
   },
   {
     name: "Profile",
     href: "/student/profile",
     icon: User,
-    activeColor: "bg-slate-200 text-slate-900",
-    hoverColor: "hover:bg-slate-100 hover:text-slate-900",
   },
 ];
 
@@ -86,63 +103,47 @@ const adminLinks = [
     name: "Dashboard",
     href: "/admin/dashboard",
     icon: LayoutDashboard,
-    activeColor: "bg-violet-100 text-violet-700",
-    hoverColor: "hover:bg-violet-50 hover:text-violet-700",
   },
   {
     name: "Students",
     href: "/admin/students",
     icon: Users,
     moduleId: "students",
-    activeColor: "bg-emerald-100 text-emerald-700",
-    hoverColor: "hover:bg-emerald-50 hover:text-emerald-700",
   },
   {
     name: "Faculty",
     href: "/admin/faculty",
     icon: GraduationCap,
     moduleId: "faculty",
-    activeColor: "bg-blue-100 text-blue-700",
-    hoverColor: "hover:bg-blue-50 hover:text-blue-700",
   },
   {
     name: "Departments",
     href: "/admin/departments",
     icon: Building2,
     moduleId: "departments",
-    activeColor: "bg-purple-100 text-purple-700",
-    hoverColor: "hover:bg-purple-50 hover:text-purple-700",
   },
   {
     name: "Courses",
     href: "/admin/courses",
     icon: BookOpen,
     moduleId: "courses",
-    activeColor: "bg-amber-100 text-amber-700",
-    hoverColor: "hover:bg-amber-50 hover:text-amber-700",
   },
   {
     name: "Subjects",
     href: "/admin/subjects",
     icon: Box,
     moduleId: "subjects",
-    activeColor: "bg-rose-100 text-rose-700",
-    hoverColor: "hover:bg-rose-50 hover:text-rose-700",
   },
   {
     name: "Exams",
     href: "/admin/exams",
     icon: Icons.ClipboardCheck,
     moduleId: "exams",
-    activeColor: "bg-indigo-100 text-indigo-700",
-    hoverColor: "hover:bg-indigo-50 hover:text-indigo-700",
   },
   {
     name: "Settings",
     href: "/admin/settings",
     icon: Settings,
-    activeColor: "bg-slate-200 text-slate-900",
-    hoverColor: "hover:bg-slate-100 hover:text-slate-900",
   },
 ];
 
@@ -177,7 +178,7 @@ export default function Sidebar({
       />
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border/40 bg-card/80 backdrop-blur-xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl dark:shadow-none",
+          "fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border/40 bg-bg-base backdrop-blur-2xl transition-all duration-300 lg:static lg:translate-x-0 pt-4 pb-4 flex flex-col shadow-xl",
           isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -214,9 +215,11 @@ export default function Sidebar({
                   !item.moduleId ||
                   initialModules.some((m) => m.id === item.moduleId),
               )
-              .map((item) => {
+              .map((item, i) => {
                 const fullPathLabels = `/${urlSlug}${item.href}`;
                 const isActive = pathname.startsWith(fullPathLabels);
+                const colors = SIDEBAR_COLORS[i % SIDEBAR_COLORS.length];
+                
                 return (
                   <Link
                     key={item.name}
@@ -224,8 +227,8 @@ export default function Sidebar({
                     className={cn(
                       "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
                       isActive
-                        ? item.activeColor
-                        : `text-slate-500 ${item.hoverColor}`,
+                        ? colors.active
+                        : `text-slate-500 ${colors.hover}`,
                     )}
                   >
                     <item.icon
@@ -258,12 +261,13 @@ export default function Sidebar({
                       !adminLinks.some((al) => al.moduleId === m.id) &&
                       !studentLinks.some((sl) => sl.moduleId === m.id),
                   )
-                  .map((moduleItem) => {
+                  .map((moduleItem, i) => {
                     const Icon = moduleItem.icon
                       ? (Icons as any)[moduleItem.icon]
                       : Box;
                     const linkPath = `/${urlSlug}/${role}/${moduleItem.routePath}`;
                     const isActive = pathname.startsWith(linkPath);
+                    const colors = SIDEBAR_COLORS[(i + adminLinks.length) % SIDEBAR_COLORS.length];
 
                     return (
                       <Link
@@ -272,8 +276,8 @@ export default function Sidebar({
                         className={cn(
                           "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
                           isActive
-                            ? "bg-indigo-100 text-indigo-700"
-                            : "text-slate-500 hover:bg-indigo-50 hover:text-indigo-700",
+                            ? colors.active
+                            : `text-slate-500 ${colors.hover}`,
                         )}
                       >
                         <Icon

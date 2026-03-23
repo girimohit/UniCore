@@ -40,10 +40,10 @@ export default function Navbar() {
           className={`
             nav-capsule pointer-events-auto
             flex items-center gap-2 px-4 py-2.5
-            transition-all duration-500 backdrop-blur-sm bg-white/0  dark:bg-black/0
+            transition-all duration-500 backdrop-blur-md bg-white/5 dark:bg-black/40
             ${scrolled
-              ? "w-full max-w-3xl shadow-xl"
-              : "w-full max-w-2xl shadow-md"}
+              ? "w-full max-w-3xl shadow-2xl border-white/10"
+              : "w-full max-w-2xl shadow-lg border-white/5"}
           `}
         >
           {/* Logo */}

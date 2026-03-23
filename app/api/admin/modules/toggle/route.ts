@@ -18,11 +18,11 @@ export async function POST(req: Request) {
 
     const moduleDef = SYSTEM_MODULES[moduleId];
     if (!moduleDef) {
-        return new NextResponse("Module not found", { status: 404 });
+      return new NextResponse("Module not found", { status: 404 });
     }
 
     if (moduleDef.type === 'CORE' && !isEnabled) {
-        return new NextResponse("Cannot disable core modules", { status: 400 });
+      return new NextResponse("Cannot disable core modules", { status: 400 });
     }
 
     // Upsert the institution module record

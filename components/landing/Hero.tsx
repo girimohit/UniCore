@@ -9,21 +9,21 @@ export default function Hero() {
 
       {/* Ambient orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="orb absolute -top-32 -left-24 w-[520px] h-[520px] rounded-full opacity-[0.14]"
-          style={{ background: "radial-gradient(circle, #7c5cbf, transparent 70%)", filter: "blur(60px)" }} />
-        <div className="orb orb-2 absolute top-16 -right-16 w-[420px] h-[420px] rounded-full opacity-[0.12]"
-          style={{ background: "radial-gradient(circle, #0ea5c9, transparent 70%)", filter: "blur(60px)" }} />
-        <div className="orb orb-3 absolute -bottom-16 left-1/3 w-[380px] h-[380px] rounded-full opacity-[0.10]"
-          style={{ background: "radial-gradient(circle, #d4608a, transparent 70%)", filter: "blur(60px)" }} />
+        <div className="orb absolute -top-32 -left-24 w-[600px] h-[600px] rounded-full opacity-[0.2]"
+          style={{ background: "radial-gradient(circle, #7c5cbf, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="orb orb-2 absolute top-16 -right-16 w-[500px] h-[500px] rounded-full opacity-[0.18]"
+          style={{ background: "radial-gradient(circle, #0ea5c9, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="orb orb-3 absolute -bottom-16 left-1/3 w-[450px] h-[450px] rounded-full opacity-[0.16]"
+          style={{ background: "radial-gradient(circle, #d4608a, transparent 70%)", filter: "blur(80px)" }} />
       </div>
 
       {/* Badge */}
       <div className="fade-up inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8
         border text-sm font-medium"
         style={{
-          background: "rgba(124,92,191,0.08)",
-          borderColor: "rgba(124,92,191,0.22)",
-          color: "#7c5cbf"
+          background: "var(--bg-elevated)",
+          borderColor: "var(--border-medium)",
+          color: "var(--uc-purple)"
         }}>
         <span className="pulse-dot w-1.5 h-1.5 rounded-full bg-[#7c5cbf] inline-block" />
         v2.0 — The Next-Gen Education ERP is live
@@ -69,7 +69,7 @@ export default function Hero() {
         style={{
           borderColor: "var(--border-medium)",
           background: "var(--bg-surface)",
-          boxShadow: "0 40px 100px rgba(80,60,140,0.14), 0 0 0 1px var(--border-subtle)"
+          boxShadow: "0 40px 100px rgba(0,0,0,0.3), 0 0 0 1px var(--border-subtle)"
         }}>
         {/* Titlebar */}
         <div className="flex items-center gap-3 px-5 py-3.5 border-b"

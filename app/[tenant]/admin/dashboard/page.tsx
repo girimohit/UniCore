@@ -31,7 +31,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
       {/* Decorative ambient background */}
-      <div className="absolute top-0 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+      <div className="absolute top-0 right-10 w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none -z-10 opacity-60"></div>
 
       <div>
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60">
@@ -68,11 +68,11 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
       <div className="grid gap-8 md:grid-cols-2 mt-8">
         <InviteUser tenantId={tenant} />
 
-        <div className="glass rounded-3xl p-8 border border-border/50 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-transparent"></div>
-          <h3 className="text-xl font-bold text-foreground mb-3 relative z-10 transition-transform group-hover:scale-105">Module Configurations</h3>
-          <p className="text-muted-foreground relative z-10 bg-accent/50 px-4 py-2 rounded-full font-medium">Coming Soon</p>
-        </div>
+          <div className="glass rounded-3xl p-8 border border-white/5 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group bg-black/40">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent"></div>
+            <h3 className="text-xl font-bold text-foreground mb-3 relative z-10 transition-transform group-hover:scale-105">Module Configurations</h3>
+            <p className="text-white/60 relative z-10 bg-white/10 px-4 py-2 rounded-full font-medium border border-white/10 backdrop-blur-sm">Coming Soon</p>
+          </div>
       </div>
     </div>
   );

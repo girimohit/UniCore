@@ -63,7 +63,7 @@ export default function RegisterPage() {
           <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
             Your institution workspace has been successfully provisioned.
           </p>
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
+          <div className="bg-black/5 dark:bg-white/5 border border-border/40 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
             <p className="text-sm uppercase tracking-wider mb-1 opacity-70">Your Admin ID</p>
             <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.identifier}</p>
             <p className="text-sm opacity-80">

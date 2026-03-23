@@ -165,7 +165,7 @@ function LoginForm() {
         {/* Tab switcher */}
         <div
           className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl mb-7"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border-subtle)" }}
+          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
         >
           {TABS.map((tab) => (
             <button
