@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -18,6 +18,7 @@ import {
   Users,
   Building2,
   Settings,
+  BookMarked,
 } from "lucide-react";
 import * as Icons from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -154,6 +155,12 @@ const facultyLinks = [
     icon: LayoutDashboard,
   },
   {
+    name: "Assigned Subjects",
+    href: "/faculty/subjects",
+    icon: BookMarked,
+    moduleId: "attendance", // Link it to attendance module for now
+  },
+  {
     name: "Mark Attendance",
     href: "/faculty/attendance",
     icon: CalendarCheck,
@@ -182,7 +189,9 @@ export default function Sidebar({
   initialModules = [],
 }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { isOpen, setIsOpen } = useSidebar();
+  const currentSubjectId = searchParams.get("subjectId");
 
   return (
     <>

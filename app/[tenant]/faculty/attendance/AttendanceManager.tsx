@@ -1,6 +1,6 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   CheckSquare,
   Calendar,
@@ -33,15 +33,24 @@ interface AttendanceManagerProps {
   students: Student[];
   periods: Period[];
 }
-
 export default function AttendanceManager({
   subjects,
   students,
   periods,
 }: AttendanceManagerProps) {
-  const [subjectId, setSubjectId] = useState(subjects[0]?.id ?? "");
+  const searchParams = useSearchParams();
+  const initialSubjectId =
+    searchParams.get("subjectId") || (subjects[0]?.id ?? "");
+
+  const [subjectId, setSubjectId] = useState(initialSubjectId);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [periodId, setPeriodId] = useState("");
+
+  // Sync with search params if they change
+  useEffect(() => {
+    const sId = searchParams.get("subjectId");
+    if (sId) setSubjectId(sId);
+  }, [searchParams]);
   const [statuses, setStatuses] = useState<
     Record<string, "PRESENT" | "ABSENT">
   >({});
@@ -58,7 +67,7 @@ export default function AttendanceManager({
     setSaved(false);
     setError("");
 
-    const records = students.map((s) => ({
+    const records = students.map((s: Student) => ({
       studentId: s.id,
       status: statuses[s.id] ?? "PRESENT",
     }));
@@ -102,7 +111,7 @@ export default function AttendanceManager({
             onChange={(e) => setSubjectId(e.target.value)}
             className="flex h-12 w-full rounded-xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-sm"
           >
-            {subjects.map((s) => (
+            {subjects.map((s: Subject) => (
               <option key={s.id} value={s.id}>
                 {s.name} ({s.code})
               </option>
@@ -140,7 +149,7 @@ export default function AttendanceManager({
             className="flex h-12 w-full rounded-xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-sm appearance-none cursor-pointer"
           >
             <option value="">All Periods</option>
-            {periods.map((p) => (
+            {periods.map((p: Period) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
@@ -185,7 +194,8 @@ export default function AttendanceManager({
             </h3>
             {periodId && (
               <p className="text-xs text-primary font-semibold mt-0.5">
-                Filtered by: {periods.find((p) => p.id === periodId)?.name}
+                Filtered by:{" "}
+                {periods.find((p: Period) => p.id === periodId)?.name}
               </p>
             )}
           </div>
@@ -193,7 +203,9 @@ export default function AttendanceManager({
             <button
               onClick={() =>
                 setStatuses(
-                  Object.fromEntries(students.map((s) => [s.id, "PRESENT"])),
+                  Object.fromEntries(
+                    students.map((s: Student) => [s.id, "PRESENT"]),
+                  ),
                 )
               }
               className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
@@ -203,7 +215,9 @@ export default function AttendanceManager({
             <button
               onClick={() =>
                 setStatuses(
-                  Object.fromEntries(students.map((s) => [s.id, "ABSENT"])),
+                  Object.fromEntries(
+                    students.map((s: Student) => [s.id, "ABSENT"]),
+                  ),
                 )
               }
               className="text-xs font-bold px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 transition-colors"
@@ -233,7 +247,7 @@ export default function AttendanceManager({
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
-                {students.map((student) => (
+                {students.map((student: Student) => (
                   <tr
                     key={student.id}
                     className="hover:bg-primary/5 transition-colors group"
