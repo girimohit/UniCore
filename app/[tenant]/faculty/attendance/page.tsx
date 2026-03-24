@@ -7,7 +7,7 @@ import AttendanceManager from "./AttendanceManager";
 export default async function FacultyAttendancePage({
   params,
 }: {
-  params: { tenant: string };
+  params: Promise<{ tenant: string }>;
 }) {
   const { tenant } = await params;
   const institution = await resolveTenant(tenant);
@@ -50,8 +50,7 @@ export default async function FacultyAttendancePage({
           Mark Attendance
         </h1>
         <p className="text-lg text-muted-foreground mt-3 font-medium">
-          Select a subject, date, and optionally an academic period to record
-          the daily roster.
+          Select a subject, date, and optionally an academic period to record attendance.
         </p>
       </div>
 

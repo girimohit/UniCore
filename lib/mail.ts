@@ -76,12 +76,15 @@ export function getInviteEmailTemplate(institutionName: string, inviteLink: stri
   `;
 }
 
-export function getStudentActivationEmailTemplate(institutionName: string, activationLink: string, name: string) {
+export function getStudentActivationEmailTemplate(institutionName: string, activationLink: string, name: string, rollNumber: string) {
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
       <h2 style="color: #10b981;">Account Created: ${institutionName}</h2>
       <p>Dear ${name},</p>
       <p>An account has been created for you at <strong>${institutionName} Student Portal</strong>.</p>
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #e2e8f0;">
+        <p style="margin: 5px 0;"><strong>User ID / Roll Number:</strong> <code style="background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">${rollNumber}</code></p>
+      </div>
       <p>Please activate your account and set your login password using the link below:</p>
       <div style="margin: 30px 0;">
         <a href="${activationLink}" style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">

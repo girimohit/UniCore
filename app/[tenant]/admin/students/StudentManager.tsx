@@ -85,6 +85,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
         body: JSON.stringify(form),
       });
       const data = await res.json();
+      console.log(data);
       if (data.errors?.length > 0) setErrors(data.errors);
       if (data.created?.length > 0) {
         setResults(data.created);

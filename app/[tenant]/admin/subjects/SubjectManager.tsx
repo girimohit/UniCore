@@ -1,10 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Bookmark, Plus, Upload, CheckCircle, XCircle, 
-  Loader2, Search, Trash2, Pencil, GraduationCap,
-  Calendar
+import {
+  Bookmark,
+  Plus,
+  Upload,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Search,
+  Trash2,
+  Pencil,
+  GraduationCap,
+  Calendar,
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
 import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
@@ -16,13 +24,17 @@ interface SubjectManagerProps {
   academicSystem: any;
 }
 
-export default function SubjectManager({ initialSubjects, courses, academicSystem }: SubjectManagerProps) {
+export default function SubjectManager({
+  initialSubjects,
+  courses,
+  academicSystem,
+}: SubjectManagerProps) {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "csv">("list");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
+
   const academic = getAcademicLabel(academicSystem);
 
   // Form state
@@ -44,12 +56,14 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
       const method = editingId ? "PATCH" : "POST";
       const body = editingId ? { ...form, id: editingId } : form;
 
-      // Map course code to courseId for PATCH if needed, 
+      // Map course code to courseId for PATCH if needed,
       // but the API currently handles 'course' string for POST.
       // Let's ensure the API or our body handles this correctly.
       // For PATCH, we added 'courseId' support.
       if (editingId) {
-        const courseObj = courses.find(c => c.code === form.course || c.id === form.course);
+        const courseObj = courses.find(
+          (c) => c.code === form.course || c.id === form.course,
+        );
         (body as any).courseId = courseObj?.id;
       }
 
@@ -59,7 +73,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
         body: JSON.stringify(body),
       });
       const data = await res.json();
-      
+
       if (data.error || (data.errors && data.errors.length > 0)) {
         setErrors(data.errors || [{ error: data.error }]);
       } else {
@@ -93,14 +107,14 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this subject?")) return;
-    
+
     setLoading(true);
     try {
       const res = await fetch(`/api/subjects?id=${id}`, { method: "DELETE" });
       if (res.ok) {
-        // Simple way: just clear results or re-fetch. 
+        // Simple way: just clear results or re-fetch.
         // For now, let's just clear the results to show it's gone if it was just added.
-        setResults(prev => prev.filter(s => s.id !== id));
+        setResults((prev) => prev.filter((s) => s.id !== id));
         // Note: initialSubjects won't be updated without a refresh or parent state update.
       }
     } catch (err) {
@@ -145,8 +159,8 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
-              activeTab === tab.id 
-                ? "bg-primary text-white shadow-lg shadow-primary/20" 
+              activeTab === tab.id
+                ? "bg-primary text-white shadow-lg shadow-primary/20"
                 : "text-muted-foreground hover:bg-secondary/20 hover:text-foreground"
             }`}
           >
@@ -161,42 +175,62 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
           <div className="glass rounded-3xl p-8 border border-border/50 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                {editingId ? <Pencil className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                {editingId ? (
+                  <Pencil className="w-5 h-5" />
+                ) : (
+                  <Bookmark className="w-5 h-5" />
+                )}
               </div>
               {editingId ? "Edit Subject" : "Create Subject"}
             </h3>
             <form onSubmit={handleManualSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-muted-foreground ml-1">Subject Name</label>
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">
+                    Subject Name
+                  </label>
                   <input
                     required
                     value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, name: e.target.value }))
+                    }
                     placeholder="e.g. Data Structures & Algorithms"
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-muted-foreground ml-1">Unique Code</label>
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">
+                    Unique Code
+                  </label>
                   <input
                     required
                     value={form.code}
-                    onChange={e => setForm(f => ({ ...f, code: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, code: e.target.value }))
+                    }
                     placeholder="e.g. CS201"
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all font-mono uppercase"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-muted-foreground ml-1">Underlying Course</label>
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">
+                    Underlying Course
+                  </label>
                   <select
                     required
                     value={form.course}
-                    onChange={e => setForm(f => ({ ...f, course: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, course: e.target.value }))
+                    }
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
                   >
                     <option value="">Select Course</option>
-                    {courses.map(c => <option key={c.id} value={c.code}>{c.name} ({c.code})</option>)}
+                    {courses.map((c) => (
+                      <option key={c.id} value={c.code}>
+                        {c.name} ({c.code})
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -206,34 +240,52 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
                   <select
                     required
                     value={form.cycleNumber}
-                    onChange={e => setForm(f => ({ ...f, cycleNumber: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, cycleNumber: e.target.value }))
+                    }
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
                   >
-                    {Array.from({ length: academic.totalCycles }, (_, i) => i + 1).map(num => (
+                    {Array.from(
+                      { length: academic.totalCycles },
+                      (_, i) => i + 1,
+                    ).map((num) => (
                       <option key={num} value={num}>
                         {academic.label} {num}
                       </option>
                     ))}
                   </select>
                   <p className="text-[10px] text-muted-foreground ml-1 italic">
-                    Mapping this subject to a specific {academic.label.toLowerCase()}.
+                    Mapping this subject to a specific{" "}
+                    {academic.label.toLowerCase()}.
                   </p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading}
                   className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4" /> {editingId ? "Save Changes" : "Create Subject"}</>}
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4" />{" "}
+                      {editingId ? "Save Changes" : "Create Subject"}
+                    </>
+                  )}
                 </button>
                 {editingId && (
-                  <button 
+                  <button
                     type="button"
                     onClick={() => {
                       setEditingId(null);
-                      setForm({ name: "", code: "", course: "", cycleNumber: "1" });
+                      setForm({
+                        name: "",
+                        code: "",
+                        course: "",
+                        cycleNumber: "1",
+                      });
                       setActiveTab("list");
                     }}
                     className="px-8 bg-secondary/20 text-foreground font-bold text-sm py-3 rounded-xl hover:bg-secondary/30 transition-all"
@@ -248,7 +300,7 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
 
         {activeTab === "csv" && (
           <div className="glass rounded-3xl p-8 border border-border/50 animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <CSVUpload 
+            <CSVUpload
               title="Bulk Subject Import"
               templateFileName="subject_import_template.csv"
               onUpload={handleCSVImport}
@@ -264,19 +316,23 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
 
         {activeTab === "list" && (
           <div className="space-y-6 animate-in fade-in duration-300">
-             {/* Results Summary */}
-             {(results.length > 0 || errors.length > 0) && (
+            {/* Results Summary */}
+            {(results.length > 0 || errors.length > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {results.length > 0 && (
                   <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-emerald-600" />
-                    <p className="text-sm font-bold text-emerald-700">{results.length} Subjects Created</p>
+                    <p className="text-sm font-bold text-emerald-700">
+                      {results.length} Subjects Created
+                    </p>
                   </div>
                 )}
                 {errors.length > 0 && (
                   <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3">
                     <XCircle className="w-5 h-5 text-destructive" />
-                    <p className="text-sm font-bold text-destructive">{errors.length} Entries Failed</p>
+                    <p className="text-sm font-bold text-destructive">
+                      {errors.length} Entries Failed
+                    </p>
                   </div>
                 )}
               </div>
@@ -295,55 +351,67 @@ export default function SubjectManager({ initialSubjects, courses, academicSyste
 
               {(results.length > 0 ? results : initialSubjects).length > 0 && (
                 <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
-                       <tr>
-                          <th className="px-6 py-4">Code</th>
-                          <th className="px-6 py-4">Subject Name</th>
-                          <th className="px-6 py-4">Course</th>
-                          <th className="px-6 py-4">{academic.label}</th>
-                          <th className="px-6 py-4 text-right">Actions</th>
-                        </tr>
-                     </thead>
-                     <tbody className="divide-y divide-border/20">
-                       {(results.length > 0 ? results : initialSubjects).map((s, i) => (
-                         <tr key={i} className="hover:bg-secondary/5 transition-colors">
-                           <td className="px-6 py-4 font-mono font-bold text-primary">{s.code}</td>
-                           <td className="px-6 py-4 font-medium">{s.name}</td>
-                           <td className="px-6 py-4">
-                             <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600">
-                               {s.course?.code || '-'}
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
+                      <tr>
+                        <th className="px-6 py-4">Code</th>
+                        <th className="px-6 py-4">Subject Name</th>
+                        <th className="px-6 py-4">Course</th>
+                        <th className="px-6 py-4">{academic.label}</th>
+                        <th className="px-6 py-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border/20">
+                      {(results.length > 0 ? results : initialSubjects).map(
+                        (s, i) => (
+                          <tr
+                            key={i}
+                            className="hover:bg-secondary/5 transition-colors"
+                          >
+                            <td className="px-6 py-4 font-mono font-bold text-primary">
+                              {s.code}
+                            </td>
+                            <td className="px-6 py-4 font-medium">{s.name}</td>
+                            <td className="px-6 py-4">
+                              <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600">
+                                {s.course?.code || "-"}
                               </span>
                             </td>
                             <td className="px-6 py-4">
                               {s.cycleNumber ? (
                                 <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-secondary/20 text-foreground/70 uppercase">
-                                  {formatCycleLabel(academic.type, s.cycleNumber)}
+                                  {formatCycleLabel(
+                                    academic.type,
+                                    s.cycleNumber,
+                                  )}
                                 </span>
                               ) : (
-                                <span className="text-[10px] text-muted-foreground italic">Not Mapped</span>
+                                <span className="text-[10px] text-muted-foreground italic">
+                                  Not Mapped
+                                </span>
                               )}
                             </td>
-                             <td className="px-6 py-4 text-right">
-                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
-                                 <button 
-                                   onClick={() => handleEdit(s)}
-                                   className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
-                                 >
-                                   <Pencil className="w-4 h-4" />
-                                 </button>
-                                 <button 
-                                   onClick={() => handleDelete(s.id)}
-                                   className="p-2 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
-                                 >
-                                   <Trash2 className="w-4 h-4" />
-                                 </button>
-                               </div>
+                            <td className="px-6 py-4 text-right">
+                              <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => handleEdit(s)}
+                                  className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(s.id)}
+                                  className="p-2 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
                             </td>
-                         </tr>
-                       ))}
-                     </tbody>
-                   </table>
+                          </tr>
+                        ),
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>

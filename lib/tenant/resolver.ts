@@ -1,21 +1,17 @@
 import { prisma } from '../db';
 
-export async function resolveTenant(subdomain: string) {
-  if (!subdomain) return null;
+export async function resolveTenant(identifier: string) {
+  if (!identifier) return null;
 
   try {
-    // const institution = await prisma.institution.findUnique({
-    //   where: { slug: subdomain }, // subdomain variable name is kept but maps to slug field
-    //   include: {
-    //     institutionModules: {
-    //       include: {
-    //         module: true
-    //       }
-    //     }
-    //   }
-    const institution = await prisma.institution.findUnique({
-      where: { slug: subdomain },
-      select: { id: true, name: true }
+    const institution = await prisma.institution.findFirst({
+      where: {
+        OR: [
+          { slug: identifier },
+          { id: identifier }
+        ]
+      },
+      select: { id: true, name: true, slug: true }
     });
 
     return institution;

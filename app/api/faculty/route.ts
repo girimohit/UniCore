@@ -110,7 +110,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
         // Trigger Faculty Welcome Email
         const institution = await resolveTenant(user.tenant_id);
         // const loginLink = getTenantUrl(user.tenant_id as any, 'login');
-        const loginLink = getTenantUrl(institution?.name as any, 'login');
+        const loginLink = getTenantUrl(institution?.slug as any, 'login');
 
         await sendEmail({
           to: email,

@@ -116,12 +116,12 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
 
         // Trigger Activation Email
         const institution = await resolveTenant(user.tenant_id);
-        const activationLink = getTenantUrl(user.tenant_id as any, 'student/activate') + `?token=${token}`;
+        const activationLink = getTenantUrl(institution?.slug || (user.tenant_id as any), 'student/activate') + `?token=${token}`;
         
         await sendEmail({
           to: email,
           subject: `Activate your student account at ${institution?.name || 'Unicore'}`,
-          html: getStudentActivationEmailTemplate(institution?.name || 'Unicore', activationLink, name)
+          html: getStudentActivationEmailTemplate(institution?.name || 'Unicore', activationLink, name, roll_number)
         });
 
         results.push({ name, roll_number, email, activation_link: activationLink });
