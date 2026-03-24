@@ -62,7 +62,7 @@ const studentLinks = [
     icon: LayoutDashboard,
   },
   {
-    name: "My Attendance",
+    name: "Attendance",
     href: "/student/attendance",
     icon: CalendarCheck,
     moduleId: "attendance",
@@ -74,7 +74,7 @@ const studentLinks = [
     moduleId: "timetable",
   },
   {
-    name: "My Subjects",
+    name: "Subjects",
     href: "/student/subjects",
     icon: BookOpen,
     moduleId: "subjects",

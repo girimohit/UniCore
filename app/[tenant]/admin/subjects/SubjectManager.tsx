@@ -13,6 +13,7 @@ import {
   Pencil,
   GraduationCap,
   Calendar,
+  UserPlus,
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
 import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
@@ -20,6 +21,7 @@ import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 interface SubjectManagerProps {
   initialSubjects: any[];
   courses: { id: string; name: string; code: string }[];
+  faculty: { id: string; name: string; identifier: string }[];
   tenantId: string;
   academicSystem: any;
 }
@@ -27,6 +29,7 @@ interface SubjectManagerProps {
 export default function SubjectManager({
   initialSubjects,
   courses,
+  faculty,
   academicSystem,
 }: SubjectManagerProps) {
   const [activeTab, setActiveTab] = useState<"list" | "add" | "csv">("list");
@@ -34,6 +37,9 @@ export default function SubjectManager({
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [assigningSubject, setAssigningSubject] = useState<any | null>(null);
+  const [assigningLoading, setAssigningLoading] = useState(false);
+  const [subjects, setSubjects] = useState<any[]>(initialSubjects);
 
   const academic = getAcademicLabel(academicSystem);
 
@@ -80,9 +86,12 @@ export default function SubjectManager({
         // Success
         if (editingId) {
           setResults([data.subject]);
+          setSubjects((prev) => prev.map((s) => (s.id === editingId ? data.subject : s)));
           setEditingId(null);
         } else {
-          setResults(data.created || []);
+          const created = data.created || [];
+          setResults(created);
+          setSubjects((prev) => [...created, ...prev]);
         }
         setForm({ name: "", code: "", course: "", cycleNumber: "1" });
         setActiveTab("list");
@@ -143,6 +152,67 @@ export default function SubjectManager({
     } finally {
       // Always switch to list tab to show results/errors summary
       setActiveTab("list");
+      setLoading(false);
+    }
+  };
+
+  const handleAssignFaculty = async (facultyId: string) => {
+    if (!assigningSubject) return;
+    setAssigningLoading(true);
+    try {
+      const res = await fetch("/api/subjects/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subjectId: assigningSubject.id, facultyId }),
+      });
+      if (res.ok) {
+        // Update local state
+        const updatedSubjects = subjects.map((s) => {
+          if (s.id === assigningSubject.id) {
+            const facultyMember = faculty.find((f) => f.id === facultyId);
+            return {
+              ...s,
+              taughtBy: [
+                ...(s.taughtBy || []),
+                { facultyProfile: { user: facultyMember } },
+              ],
+            };
+          }
+          return s;
+        });
+        setSubjects(updatedSubjects);
+        setAssigningSubject(null);
+      }
+    } catch (err) {
+      alert("Assignment failed");
+    } finally {
+      setAssigningLoading(false);
+    }
+  };
+
+  const handleRemoveAssignment = async (subjectId: string, facultyUserId: string) => {
+    if (!confirm("Remove this faculty assignment?")) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/subjects/assign?subjectId=${subjectId}&facultyId=${facultyUserId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setSubjects((prev) =>
+          prev.map((s) => {
+            if (s.id === subjectId) {
+              return {
+                ...s,
+                taughtBy: s.taughtBy.filter((t: any) => t.facultyProfile.user.id !== facultyUserId),
+              };
+            }
+            return s;
+          })
+        );
+      }
+    } catch (err) {
+      alert("Removal failed");
+    } finally {
       setLoading(false);
     }
   };
@@ -349,8 +419,8 @@ export default function SubjectManager({
                 </p>
               </div>
 
-              {(results.length > 0 ? results : initialSubjects).length > 0 && (
-                <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
+              {(results.length > 0 ? results : subjects).length > 0 && (
+                <div className="w-full max-w-6xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
                   <table className="w-full text-sm text-left">
                     <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                       <tr>
@@ -358,11 +428,12 @@ export default function SubjectManager({
                         <th className="px-6 py-4">Subject Name</th>
                         <th className="px-6 py-4">Course</th>
                         <th className="px-6 py-4">{academic.label}</th>
+                        <th className="px-6 py-4">Faculty Assigned</th>
                         <th className="px-6 py-4 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/20">
-                      {(results.length > 0 ? results : initialSubjects).map(
+                      {(results.length > 0 ? results : subjects).map(
                         (s, i) => (
                           <tr
                             key={i}
@@ -377,22 +448,44 @@ export default function SubjectManager({
                                 {s.course?.code || "-"}
                               </span>
                             </td>
+                            <td className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                              {s.cycleNumber ? formatCycleLabel(academic.type, s.cycleNumber) : "-"}
+                            </td>
                             <td className="px-6 py-4">
-                              {s.cycleNumber ? (
-                                <span className="text-[10px] font-black px-2 py-1 rounded-lg bg-secondary/20 text-foreground/70 uppercase">
-                                  {formatCycleLabel(
-                                    academic.type,
-                                    s.cycleNumber,
-                                  )}
-                                </span>
-                              ) : (
-                                <span className="text-[10px] text-muted-foreground italic">
-                                  Not Mapped
-                                </span>
-                              )}
+                              <div className="flex flex-wrap gap-2">
+                                {s.taughtBy?.length > 0 ? (
+                                  s.taughtBy.map((t: any) => (
+                                    <div
+                                      key={t.facultyProfile.user.id}
+                                      className="flex items-center gap-2 group/tag px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
+                                    >
+                                      <span className="text-[10px] font-bold text-primary">
+                                        {t.facultyProfile.user.name}
+                                      </span>
+                                      <button
+                                        onClick={() => handleRemoveAssignment(s.id, t.facultyProfile.user.id)}
+                                        className="opacity-0 group-hover/tag:opacity-100 transition-opacity text-destructive"
+                                      >
+                                        <XCircle className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <span className="text-[10px] text-muted-foreground italic">
+                                    Not assigned
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
+                                <button
+                                  onClick={() => setAssigningSubject(s)}
+                                  title="Assign Faculty"
+                                  className="p-2 hover:bg-emerald-500/10 rounded-lg text-emerald-600 transition-colors"
+                                >
+                                  <UserPlus className="w-4 h-4" />
+                                </button>
                                 <button
                                   onClick={() => handleEdit(s)}
                                   className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
@@ -418,6 +511,74 @@ export default function SubjectManager({
           </div>
         )}
       </div>
+
+      {assigningSubject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="glass w-full max-w-md p-8 border border-border/50 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-xl font-bold">Assign Faculty</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Assigning to <span className="text-primary font-bold">{assigningSubject.name}</span>
+                </p>
+              </div>
+              <button
+                onClick={() => setAssigningSubject(null)}
+                className="p-2 hover:bg-secondary/20 rounded-xl transition-colors"
+              >
+                <XCircle className="w-5 h-5 text-muted-foreground" />
+              </button>
+            </div>
+
+            <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+              {faculty.length === 0 ? (
+                <p className="text-center py-8 text-sm text-muted-foreground italic">
+                  No faculty members found.
+                </p>
+              ) : (
+                faculty.map((f) => {
+                  const isAssigned = assigningSubject.taughtBy?.some(
+                    (t: any) => t.facultyProfile.user.id === f.id
+                  );
+                  return (
+                    <button
+                      key={f.id}
+                      disabled={isAssigned || assigningLoading}
+                      onClick={() => handleAssignFaculty(f.id)}
+                      className={`w-full flex items-center justify-between p-4 rounded-2xl border transition-all ${
+                        isAssigned
+                          ? "bg-emerald-500/5 border-emerald-500/20 opacity-60"
+                          : "bg-secondary/5 border-border/40 hover:border-primary/40 hover:bg-secondary/10"
+                      }`}
+                    >
+                      <div className="flex flex-col items-start">
+                        <span className="text-sm font-bold">{f.name}</span>
+                        <span className="text-[10px] font-mono text-muted-foreground">
+                          {f.identifier}
+                        </span>
+                      </div>
+                      {isAssigned ? (
+                        <CheckCircle className="w-4 h-4 text-emerald-500" />
+                      ) : (
+                        <Plus className="w-4 h-4 text-primary" />
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="mt-8">
+              <button
+                onClick={() => setAssigningSubject(null)}
+                className="w-full py-3 bg-secondary/10 hover:bg-secondary/20 text-foreground font-bold text-sm rounded-xl transition-all"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -81,6 +81,16 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     defaultEnabled: true,
     dependencies: ['subjects']
   },
+  timetable: {
+    id: 'timetable',
+    name: 'Timetable',
+    description: 'Manage timetable and schedules',
+    type: 'CORE',
+    icon: 'CalendarDays',
+    routePath: '/timetable',
+    defaultEnabled: true,
+    dependencies: ['courses']
+  },
   library: {
     id: 'library',
     name: 'Library Management',

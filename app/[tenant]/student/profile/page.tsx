@@ -106,7 +106,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 },
                 {
                   icon: Mail,
-                  label: 'Nexus Email',
+                  label: 'Email',
                   value: student.user.email ?? '—',
                 },
                 {

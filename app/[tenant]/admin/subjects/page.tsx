@@ -20,10 +20,20 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
     orderBy: { name: 'asc' }
   });
 
+  // Fetch faculty for assignment
+  const faculty = await prisma.user.findMany({
+    where: { tenant_id: institution.id, role: 'FACULTY' },
+    select: { id: true, name: true, identifier: true },
+    orderBy: { name: 'asc' }
+  });
+
   // Fetch subjects for the list
   const subjects = await prisma.subject.findMany({
     where: { tenant_id: institution.id },
-    include: { course: true },
+    include: { 
+      course: true,
+      taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+    },
     orderBy: { created_at: 'desc' }
   });
 
@@ -41,6 +51,7 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
       <SubjectManager 
         initialSubjects={subjects} 
         courses={courses} 
+        faculty={faculty}
         tenantId={institution.id} 
         academicSystem={institution.academicStructure as any || institution.academic_system}
       />

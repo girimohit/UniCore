@@ -7,7 +7,10 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACUL
   try {
     const subjects = await prisma.subject.findMany({
       where: { tenant_id: user.tenant_id },
-      include: { course: true },
+      include: { 
+        course: true,
+        taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+      },
       orderBy: { name: 'asc' }
     });
     return NextResponse.json({ subjects });
@@ -59,6 +62,10 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
             tenant_id: user.tenant_id,
             courseId: course.id,
             cycleNumber: cycleNumber,
+          },
+          include: { 
+            course: true,
+            taughtBy: { include: { facultyProfile: { include: { user: true } } } }
           }
         });
         created.push(subject);
@@ -112,7 +119,10 @@ export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asy
         ...(courseId && { courseId }),
         ...(cycleNumber !== undefined && { cycleNumber: parseInt(String(cycleNumber)) }),
       },
-      include: { course: true }
+      include: { 
+        course: true,
+        taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+      }
     });
 
     return NextResponse.json({ subject: updated });
