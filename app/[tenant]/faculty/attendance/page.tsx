@@ -20,13 +20,12 @@ export default async function FacultyAttendancePage({
     prisma.subject.findMany({
       where: { tenant_id: institution.id },
       orderBy: { name: "asc" },
-      select: { id: true, name: true, code: true },
+      select: { id: true, name: true, code: true, courseId: true, cycleNumber: true },
     }),
     prisma.studentProfile.findMany({
       where: { user: { tenant_id: institution.id } },
       include: { user: { select: { identifier: true } } },
       orderBy: { roll_number: "asc" },
-      take: 50,
     }),
     prisma.academicPeriod.findMany({
       where: { tenant_id: institution.id },

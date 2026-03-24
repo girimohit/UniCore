@@ -15,12 +15,16 @@ interface Student {
   id: string;
   roll_number: string;
   user: { identifier: string };
+  course_id: string | null;
+  semester: number | null;
 }
 
 interface Subject {
   id: string;
   name: string;
   code: string;
+  courseId: string;
+  cycleNumber: number;
 }
 
 interface Period {
@@ -62,12 +66,19 @@ export default function AttendanceManager({
     setStatuses((prev) => ({ ...prev, [studentId]: status }));
   };
 
+  const selectedSubject = subjects.find((s) => s.id === subjectId);
+  const filteredStudents = students.filter(
+    (s) =>
+      s.course_id === selectedSubject?.courseId &&
+      s.semester === (selectedSubject?.cycleNumber ?? 1),
+  );
+
   const handleSave = async () => {
     setLoading(true);
     setSaved(false);
     setError("");
 
-    const records = students.map((s: Student) => ({
+    const records = filteredStudents.map((s: Student) => ({
       studentId: s.id,
       status: statuses[s.id] ?? "PRESENT",
     }));
@@ -172,7 +183,7 @@ export default function AttendanceManager({
 
         <button
           onClick={handleSave}
-          disabled={loading || students.length === 0}
+          disabled={loading || filteredStudents.length === 0}
           className="w-full mt-2 flex justify-center items-center gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary hover:to-primary text-primary-foreground px-4 h-12 rounded-xl font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
@@ -201,37 +212,33 @@ export default function AttendanceManager({
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() =>
-                setStatuses(
-                  Object.fromEntries(
-                    students.map((s: Student) => [s.id, "PRESENT"]),
-                  ),
-                )
-              }
-              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
-            >
-              Mark All Present
-            </button>
-            <button
-              onClick={() =>
-                setStatuses(
-                  Object.fromEntries(
-                    students.map((s: Student) => [s.id, "ABSENT"]),
-                  ),
-                )
-              }
-              className="text-xs font-bold px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 transition-colors"
-            >
-              Mark All Absent
-            </button>
+               onClick={() =>
+                 setStatuses(
+                   Object.fromEntries(filteredStudents.map((s: Student) => [s.id, "PRESENT"])),
+                 )
+               }
+               className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-colors"
+             >
+               Mark All Present
+             </button>
+             <button
+               onClick={() =>
+                 setStatuses(
+                   Object.fromEntries(filteredStudents.map((s: Student) => [s.id, "ABSENT"])),
+                 )
+               }
+               className="text-xs font-bold px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 transition-colors"
+             >
+               Mark All Absent
+             </button>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-2">
-          {students.length === 0 ? (
+          {filteredStudents.length === 0 ? (
             <div className="p-12 text-center text-muted-foreground font-medium">
               <Users className="w-10 h-10 mx-auto opacity-30 mb-3" />
-              No students found. Enroll a student to view the roster.
+              No students found for this subject and cycle/semester.
             </div>
           ) : (
             <table className="w-full text-left text-sm text-foreground">
@@ -247,7 +254,7 @@ export default function AttendanceManager({
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/30">
-                {students.map((student: Student) => (
+                {filteredStudents.map((student: Student) => (
                   <tr
                     key={student.id}
                     className="hover:bg-primary/5 transition-colors group"
