@@ -5,7 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, User, GraduationCap, ChevronRight } from "lucide-react";
 import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 
-export default async function StudentSubjectsPage({ params }: { params: Promise<{ tenant: string }> }) {
+export default async function StudentSubjectsPage({
+  params,
+}: {
+  params: Promise<{ tenant: string }>;
+}) {
   const { tenant } = await params;
   const session = await getCurrentUser();
 
@@ -15,7 +19,12 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true },
+    select: {
+      id: true,
+      name: true,
+      academic_system: true,
+      academicStructure: true,
+    },
   });
 
   if (!institution) notFound();
@@ -27,16 +36,25 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
 
   if (!student) notFound();
 
-  const academic = getAcademicLabel((institution.academicStructure as any) || institution.academic_system);
+  const academic = getAcademicLabel(
+    (institution.academicStructure as any) || institution.academic_system,
+  );
 
   const subjects = student.course_id
     ? await prisma.subject.findMany({
-        where: { courseId: student.course_id },
+        where: {
+          courseId: student.course_id,
+          cycleNumber: student.semester ?? undefined, // match semester
+        },
         include: {
           taughtBy: {
             include: {
               facultyProfile: {
-                include: { user: { select: { identifier: true } } },
+                include: {
+                  user: {
+                    select: { identifier: true },
+                  },
+                },
               },
             },
             take: 1,
@@ -53,22 +71,54 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
       text: "text-emerald-700",
       border: "border-emerald-200",
     },
-    { color: "bg-blue-500", light: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-    { color: "bg-amber-500", light: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
-    { color: "bg-purple-500", light: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-    { color: "bg-rose-500", light: "bg-rose-50", text: "text-rose-700", border: "border-rose-200" },
-    { color: "bg-indigo-500", light: "bg-indigo-50", text: "text-indigo-700", border: "border-indigo-200" },
+    {
+      color: "bg-blue-500",
+      light: "bg-blue-50",
+      text: "text-blue-700",
+      border: "border-blue-200",
+    },
+    {
+      color: "bg-amber-500",
+      light: "bg-amber-50",
+      text: "text-amber-700",
+      border: "border-amber-200",
+    },
+    {
+      color: "bg-purple-500",
+      light: "bg-purple-50",
+      text: "text-purple-700",
+      border: "border-purple-200",
+    },
+    {
+      color: "bg-rose-500",
+      light: "bg-rose-50",
+      text: "text-rose-700",
+      border: "border-rose-200",
+    },
+    {
+      color: "bg-indigo-500",
+      light: "bg-indigo-50",
+      text: "text-indigo-700",
+      border: "border-indigo-200",
+    },
   ];
 
   return (
     <div className="space-y-10 pb-10">
       <div className="px-2">
-        <h1 className="text-3xl font-display font-black text-foreground tracking-tight">My Subjects 📚</h1>
+        <h1 className="text-3xl font-display font-black text-foreground tracking-tight">
+          My Subjects 📚
+        </h1>
         <p className="text-muted-foreground font-medium mt-1">
           {student.course ? (
             <>
-              <span className="text-foreground tracking-tight">{student.course.name}</span>
-              {student.semester ? ` · ${formatCycleLabel(academic.type, student.semester)}` : ""} ·{" "}
+              <span className="text-foreground tracking-tight">
+                {student.course.name}
+              </span>
+              {student.semester
+                ? ` · ${formatCycleLabel(academic.type, student.semester)}`
+                : ""}{" "}
+              ·{" "}
             </>
           ) : null}
           {institution.name}
@@ -79,15 +129,19 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
         {subjects.length === 0 ? (
           <Card className="col-span-full border-dashed border-border p-20 text-center bg-card/10 backdrop-blur-md rounded-[2.5rem]">
             <BookOpen className="w-16 h-16 mx-auto text-muted-foreground opacity-20 mb-6" />
-            <h3 className="text-xl font-display font-black text-foreground">No subjects found</h3>
+            <h3 className="text-xl font-display font-black text-foreground">
+              No subjects found
+            </h3>
             <p className="text-muted-foreground font-medium mt-2 max-w-sm mx-auto">
-              Your course subjects have not been assigned for this academic period yet.
+              Your course subjects have not been assigned for this academic
+              period yet.
             </p>
           </Card>
         ) : (
           subjects.map((sub, i) => {
             const style = subjectStyles[i % subjectStyles.length];
-            const facultyName = sub.taughtBy[0]?.facultyProfile?.user?.identifier ?? null;
+            const facultyName =
+              sub.taughtBy[0]?.facultyProfile?.user?.identifier ?? null;
             return (
               <Card
                 key={sub.id}
@@ -103,7 +157,9 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
                     >
                       {sub.code}
                     </span>
-                    <div className={`p-2.5 rounded-2xl ${style.light} ${style.text} shadow-inner`}>
+                    <div
+                      className={`p-2.5 rounded-2xl ${style.light} ${style.text} shadow-inner`}
+                    >
                       <BookOpen className="h-4 w-4" />
                     </div>
                   </div>
@@ -123,7 +179,9 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
                         </p>
                         <p className="text-sm font-bold text-foreground truncate">
                           {facultyName ?? (
-                            <span className="text-muted-foreground italic font-normal">Not assigned</span>
+                            <span className="text-muted-foreground italic font-normal">
+                              Not assigned
+                            </span>
                           )}
                         </p>
                       </div>
@@ -133,7 +191,9 @@ export default async function StudentSubjectsPage({ params }: { params: Promise<
                       <div className="flex items-center gap-2">
                         <GraduationCap className="h-4 w-4 text-primary opacity-60" />
                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                          {sub.cycleNumber ? formatCycleLabel(academic.type, sub.cycleNumber) : "—"}
+                          {sub.cycleNumber
+                            ? formatCycleLabel(academic.type, sub.cycleNumber)
+                            : "—"}
                         </span>
                       </div>
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary scale-0 group-hover:scale-100 transition-transform duration-300">

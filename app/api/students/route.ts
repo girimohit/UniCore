@@ -116,7 +116,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
 
         // Trigger Activation Email
         const institution = await resolveTenant(user.tenant_id);
-        const activationLink = getTenantUrl(institution?.slug || (user.tenant_id as any), 'student/activate') + `?token=${token}`;
+        const activationLink = getTenantUrl(institution?.slug || (user.tenant_id as any), 'accept-invite') + `?token=${token}`;
         
         await sendEmail({
           to: email,

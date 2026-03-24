@@ -60,6 +60,27 @@ export default async function AcceptInvitePage({
     },
   });
 
+  if (!invitation) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+        <ErrorCard
+          icon={<ShieldAlert className="w-12 h-12 text-destructive" />}
+          title="Invalid Invitation"
+          message="This invitation link is invalid. Please contact your administrator."
+        />
+      </div>
+    );
+  }
+
+  // 2.1 Check for Existing User (Pre-created by admin)
+  const existingUser = await prisma.user.findFirst({
+    where: { 
+      email: invitation.email,
+      tenant_id: institution.id
+    },
+    select: { identifier: true, name: true }
+  });
+
   // Security check: Ensure the token belongs to this tenant
   if (!invitation || invitation.tenant_id !== institution.id) {
     return (
@@ -121,6 +142,8 @@ export default async function AcceptInvitePage({
             institutionName={institution.name}
             role={invitation.role}
             email={invitation.email}
+            initialIdentifier={existingUser?.identifier}
+            initialName={existingUser?.name}
           />
         </div>
 

@@ -19,6 +19,8 @@ interface AcceptInviteFormProps {
   institutionName: string;
   role: string;
   email: string;
+  initialIdentifier?: string;
+  initialName?: string;
 }
 
 export default function AcceptInviteForm({ 
@@ -26,20 +28,22 @@ export default function AcceptInviteForm({
   tenantSlug, 
   institutionName, 
   role,
-  email 
+  email,
+  initialIdentifier,
+  initialName
 }: AcceptInviteFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    identifier: '',
+    firstName: initialName ? initialName.split(' ')[0] : '',
+    lastName: initialName ? initialName.split(' ').slice(1).join(' ') : '',
+    identifier: initialIdentifier || '',
     password: '',
     confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [identifier, setIdentifier] = useState('');
+  const [identifier, setIdentifier] = useState(initialIdentifier || '');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -177,8 +181,11 @@ export default function AcceptInviteForm({
               name="identifier"
               value={formData.identifier}
               onChange={handleChange}
+              readOnly={!!initialIdentifier}
               placeholder={role === 'STUDENT' ? 'e.g. STU123' : 'e.g. FAC456'}
-              className="w-full bg-background/50 border border-border/60 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all shadow-inner"
+              className={`w-full border border-border/60 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all shadow-inner ${
+                initialIdentifier ? 'bg-muted cursor-not-allowed text-muted-foreground' : 'bg-background/50'
+              }`}
             />
           </div>
         </div>

@@ -111,6 +111,7 @@ export function getFacultyWelcomeEmailTemplate(institutionName: string, identifi
       </div>
       <p>Please log in and reset your password immediately at:</p>
       <p><a href="${loginLink}" style="color: #3b82f6; font-weight: bold;">${loginLink}</a></p>
+      <p>You can also reset password at : </p>
       <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
       <p style="font-size: 12px; color: #999;">If you did not expect this email, please contact your IT department.</p>
     </div>

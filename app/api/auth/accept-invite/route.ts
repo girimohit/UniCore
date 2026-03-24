@@ -28,33 +28,74 @@ export async function POST(req: Request) {
       // Hash incoming password
       const hashedPassword = await hashPassword(password);
 
-      // Create the root User entity
-      const newUser = await tx.user.create({
-        data: {
+      // Check if user already exists (pre-created by admin)
+      const existingUser = await tx.user.findFirst({
+        where: { 
           email: invitation.email,
-          password_hash: hashedPassword,
-          role: invitation.role,
-          tenant_id: invitation.tenant_id,
-          identifier: identifier, // Login identifier
-          status: 'ACTIVE'
+          tenant_id: invitation.tenant_id
         }
       });
 
-      // Create specific sub-profile based on Role
+      let userId = '';
+      if (existingUser) {
+        // Update existing user
+        await tx.user.update({
+          where: { id: existingUser.id },
+          data: {
+            password_hash: hashedPassword,
+            status: 'ACTIVE',
+            name: `${firstName} ${lastName}`,
+            identifier: identifier // Students might be able to confirm/set this
+          }
+        });
+        userId = existingUser.id;
+      } else {
+        // Create the root User entity
+        const newUser = await tx.user.create({
+          data: {
+            email: invitation.email,
+            password_hash: hashedPassword,
+            role: invitation.role,
+            tenant_id: invitation.tenant_id,
+            identifier: identifier, // Login identifier
+            name: `${firstName} ${lastName}`,
+            status: 'ACTIVE'
+          }
+        });
+        userId = newUser.id;
+      }
+
+      // Create or Update specific sub-profile based on Role
       if (invitation.role === 'STUDENT') {
-        await tx.studentProfile.create({
-          data: {
-            user_id: newUser.id,
-            roll_number: identifier,
-          }
-        });
+        const existingProfile = await tx.studentProfile.findUnique({ where: { user_id: userId } });
+        if (existingProfile) {
+          await tx.studentProfile.update({
+            where: { user_id: userId },
+            data: { roll_number: identifier }
+          });
+        } else {
+          await tx.studentProfile.create({
+            data: {
+              user_id: userId,
+              roll_number: identifier,
+            }
+          });
+        }
       } else if (invitation.role === 'FACULTY') {
-        await tx.facultyProfile.create({
-          data: {
-            user_id: newUser.id,
-            employee_number: identifier,
-          }
-        });
+        const existingProfile = await tx.facultyProfile.findUnique({ where: { user_id: userId } });
+        if (existingProfile) {
+          await tx.facultyProfile.update({
+            where: { user_id: userId },
+            data: { employee_number: identifier }
+          });
+        } else {
+          await tx.facultyProfile.create({
+            data: {
+              user_id: userId,
+              employee_number: identifier,
+            }
+          });
+        }
       }
 
       // Mark token as consumed
