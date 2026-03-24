@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Bookmark,
   Plus,
@@ -21,7 +22,12 @@ import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
 interface SubjectManagerProps {
   initialSubjects: any[];
   courses: { id: string; name: string; code: string }[];
-  faculty: { id: string; name: string; identifier: string }[];
+  faculty: {
+    id: string;
+    name: string;
+    identifier: string;
+    facultyProfile: { department_id: string | null } | null;
+  }[];
   tenantId: string;
   academicSystem: any;
 }
@@ -40,6 +46,11 @@ export default function SubjectManager({
   const [assigningSubject, setAssigningSubject] = useState<any | null>(null);
   const [assigningLoading, setAssigningLoading] = useState(false);
   const [subjects, setSubjects] = useState<any[]>(initialSubjects);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const academic = getAcademicLabel(academicSystem);
 
@@ -512,8 +523,8 @@ export default function SubjectManager({
         )}
       </div>
 
-      {assigningSubject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
+      {assigningSubject && mounted && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="glass w-full max-w-md p-8 border border-border/50 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -531,12 +542,29 @@ export default function SubjectManager({
             </div>
 
             <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-              {faculty.length === 0 ? (
-                <p className="text-center py-8 text-sm text-muted-foreground italic">
-                  No faculty members found.
-                </p>
-              ) : (
-                faculty.map((f) => {
+              {(() => {
+                const filteredFaculty = faculty.filter(
+                  (f) =>
+                    f.facultyProfile?.department_id ===
+                    assigningSubject.course?.departmentId
+                );
+
+                if (filteredFaculty.length === 0) {
+                  return (
+                    <div className="p-8 text-center bg-secondary/5 rounded-2xl border border-dashed border-border/60">
+                      <p className="text-sm text-muted-foreground italic">
+                        No faculty found in the same department (
+                        <span className="font-bold text-foreground">
+                          {assigningSubject.course?.department?.name ||
+                            "this department"}
+                        </span>
+                        ).
+                      </p>
+                    </div>
+                  );
+                }
+
+                return filteredFaculty.map((f) => {
                   const isAssigned = assigningSubject.taughtBy?.some(
                     (t: any) => t.facultyProfile.user.id === f.id
                   );
@@ -551,7 +579,7 @@ export default function SubjectManager({
                           : "bg-secondary/5 border-border/40 hover:border-primary/40 hover:bg-secondary/10"
                       }`}
                     >
-                      <div className="flex flex-col items-start">
+                      <div className="flex flex-col items-start text-left">
                         <span className="text-sm font-bold">{f.name}</span>
                         <span className="text-[10px] font-mono text-muted-foreground">
                           {f.identifier}
@@ -564,8 +592,8 @@ export default function SubjectManager({
                       )}
                     </button>
                   );
-                })
-              )}
+                });
+              })()}
             </div>
 
             <div className="mt-8">
@@ -577,7 +605,8 @@ export default function SubjectManager({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
