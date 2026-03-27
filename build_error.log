@@ -1,0 +1,93 @@
+
+> unicore_g@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\mohit\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\mohit\Desktop\I\unicore_g\package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 23.3s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/33) ...
+  Generating static pages using 11 workers (8/33) 
+  Generating static pages using 11 workers (16/33) 
+  Generating static pages using 11 workers (24/33) 
+✓ Generating static pages using 11 workers (33/33) in 771.2ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /[tenant]
+├ ƒ /[tenant]/[...catchAll]
+├ ƒ /[tenant]/accept-invite
+├ ƒ /[tenant]/admin/academic-periods
+├ ƒ /[tenant]/admin/courses
+├ ƒ /[tenant]/admin/dashboard
+├ ƒ /[tenant]/admin/departments
+├ ƒ /[tenant]/admin/exams
+├ ƒ /[tenant]/admin/faculty
+├ ƒ /[tenant]/admin/settings
+├ ƒ /[tenant]/admin/students
+├ ƒ /[tenant]/admin/subjects
+├ ƒ /[tenant]/faculty/attendance
+├ ƒ /[tenant]/faculty/dashboard
+├ ƒ /[tenant]/faculty/profile
+├ ƒ /[tenant]/faculty/subjects
+├ ƒ /[tenant]/login
+├ ƒ /[tenant]/setup-password
+├ ƒ /[tenant]/student
+├ ƒ /[tenant]/student/activate
+├ ƒ /[tenant]/student/attendance
+├ ƒ /[tenant]/student/dashboard
+├ ƒ /[tenant]/student/fees
+├ ƒ /[tenant]/student/notices
+├ ƒ /[tenant]/student/profile
+├ ƒ /[tenant]/student/subjects
+├ ƒ /[tenant]/student/timetable
+├ ƒ /api/academic-periods
+├ ƒ /api/academic-periods/[id]
+├ ƒ /api/admin/modules/toggle
+├ ƒ /api/auth/accept-invite
+├ ƒ /api/auth/activate
+├ ƒ /api/auth/invite
+├ ƒ /api/auth/login
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/register
+├ ƒ /api/auth/setup-password
+├ ƒ /api/courses
+├ ƒ /api/departments
+├ ƒ /api/exams
+├ ƒ /api/exams/[id]/eligible-students
+├ ƒ /api/faculty
+├ ƒ /api/institutions/register
+├ ƒ /api/institutions/settings
+├ ƒ /api/modules/attendance
+├ ƒ /api/modules/attendance/mark
+├ ƒ /api/modules/attendance/report
+├ ƒ /api/modules/courses
+├ ƒ /api/modules/departments
+├ ƒ /api/modules/subjects
+├ ƒ /api/students
+├ ƒ /api/students/enroll
+├ ƒ /api/subjects
+├ ƒ /api/subjects/assign
+├ ƒ /api/test
+├ ○ /login
+├ ○ /register
+└ ○ /student/activate
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
