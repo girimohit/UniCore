@@ -40,7 +40,7 @@ export default function RegisterPage() {
       const data = await res.json();
       // Show success screen with credentials instead of auto-redirect
       setSuccessData({
-        tenantSlug: data.tenant_slug,
+        tenantSlug: data.tenantSlug,
         username: data.credentials.username
       });
     } catch (err: any) {

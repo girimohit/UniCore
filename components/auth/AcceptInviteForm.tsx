@@ -19,7 +19,7 @@ interface AcceptInviteFormProps {
   institutionName: string;
   role: string;
   email: string;
-  initialIdentifier?: string;
+  initialUsername?: string;
   initialName?: string;
 }
 
@@ -29,21 +29,21 @@ export default function AcceptInviteForm({
   institutionName, 
   role,
   email,
-  initialIdentifier,
+  initialUsername,
   initialName
 }: AcceptInviteFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: initialName ? initialName.split(' ')[0] : '',
     lastName: initialName ? initialName.split(' ').slice(1).join(' ') : '',
-    identifier: initialIdentifier || '',
+    username: initialUsername || '',
     password: '',
     confirmPassword: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [identifier, setIdentifier] = useState(initialIdentifier || '');
+  const [username, setUsername] = useState(initialUsername || '');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -69,7 +69,7 @@ export default function AcceptInviteForm({
           password: formData.password,
           firstName: formData.firstName,
           lastName: formData.lastName,
-          identifier: formData.identifier
+          username: formData.username
         }),
       });
 
@@ -79,7 +79,7 @@ export default function AcceptInviteForm({
         throw new Error(data.error || 'Something went wrong');
       }
 
-      setIdentifier(data.identifier);
+      setUsername(data.username);
       setSuccess(true);
     } catch (err: any) {
       setError(err.message);
@@ -107,7 +107,7 @@ export default function AcceptInviteForm({
         <div className="glass rounded-3xl p-6 border border-emerald-500/20 bg-emerald-500/5 text-left space-y-4">
           <div>
             <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Your Login ID</p>
-            <p className="text-3xl font-mono font-black text-emerald-700 tracking-tighter">{identifier}</p>
+            <p className="text-3xl font-mono font-black text-emerald-700 tracking-tighter">{username}</p>
           </div>
           <p className="text-sm text-emerald-600/80 font-medium">
             Please use this ID along with your password to log in.
@@ -178,13 +178,13 @@ export default function AcceptInviteForm({
             <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             <input
               required
-              name="identifier"
-              value={formData.identifier}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
-              readOnly={!!initialIdentifier}
+              readOnly={!!initialUsername}
               placeholder={role === 'STUDENT' ? 'e.g. STU123' : 'e.g. FAC456'}
               className={`w-full border border-border/60 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all shadow-inner ${
-                initialIdentifier ? 'bg-muted cursor-not-allowed text-muted-foreground' : 'bg-background/50'
+                initialUsername ? 'bg-muted cursor-not-allowed text-muted-foreground' : 'bg-background/50'
               }`}
             />
           </div>

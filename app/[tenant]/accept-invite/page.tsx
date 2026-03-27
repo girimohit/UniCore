@@ -142,7 +142,7 @@ export default async function AcceptInvitePage({
             institutionName={institution.name}
             role={invitation.role}
             email={invitation.email}
-            initialIdentifier={existingUser?.username}
+            initialUsername={existingUser?.username}
             initialName={existingUser?.name}
           />
         </div>

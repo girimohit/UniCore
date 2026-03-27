@@ -5,11 +5,12 @@ import { comparePassword, signToken } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const { username, password, subdomain } = await req.json();
+    const body = await req.json();
+    const { username, password, subdomain } = body;
 
     if (!username || !password || !subdomain) {
       return NextResponse.json(
-        { error: "Identifier, password, and subdomain are required" },
+        { error: "Username, password, and subdomain are required" },
         { status: 400 },
       );
     }

@@ -95,7 +95,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          identifier: identifier.trim(),
+          username: identifier.trim(),
           password,
           subdomain: tenantSlug, // Always pre-filled — user doesn't type this
         }),
