@@ -4,22 +4,22 @@ import { hashPassword } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
-    const { token, password, firstName, lastName, identifier } = await req.json();
+    const { token, password, firstName, lastName, username } = await req.json();
 
-    if (!token || !password || !firstName || !lastName || !identifier) {
+    if (!token || !password || !firstName || !lastName || !username) {
       return NextResponse.json({ error: 'Missing required profile fields' }, { status: 400 });
     }
 
     // 1. Validate the Token
-    const invitation = await prisma.invitationToken.findUnique({
+    const invitation = await prisma.userInvitation.findUnique({
       where: { token }
     });
 
-    if (!invitation || invitation.used) {
+    if (!invitation || invitation.isUsed) {
       return NextResponse.json({ error: 'Invalid or already used invitation token' }, { status: 400 });
     }
 
-    if (new Date() > invitation.expires_at) {
+    if (new Date() > invitation.expiresAt) {
       return NextResponse.json({ error: 'Invitation token has expired' }, { status: 400 });
     }
 
@@ -30,9 +30,9 @@ export async function POST(req: Request) {
 
       // Check if user already exists (pre-created by admin)
       const existingUser = await tx.user.findFirst({
-        where: { 
+        where: {
           email: invitation.email,
-          tenant_id: invitation.tenant_id
+          institutionId: invitation.institutionId
         }
       });
 
@@ -42,10 +42,10 @@ export async function POST(req: Request) {
         await tx.user.update({
           where: { id: existingUser.id },
           data: {
-            password_hash: hashedPassword,
-            status: 'ACTIVE',
+            passwordHash: hashedPassword,
+            accountStatus: 'ACTIVE',
             name: `${firstName} ${lastName}`,
-            identifier: identifier // Students might be able to confirm/set this
+            username: username // Students might be able to confirm/set this
           }
         });
         userId = existingUser.id;
@@ -54,12 +54,12 @@ export async function POST(req: Request) {
         const newUser = await tx.user.create({
           data: {
             email: invitation.email,
-            password_hash: hashedPassword,
+            passwordHash: hashedPassword,
             role: invitation.role,
-            tenant_id: invitation.tenant_id,
-            identifier: identifier, // Login identifier
+            institutionId: invitation.institutionId,
+            username: username, // Login username
             name: `${firstName} ${lastName}`,
-            status: 'ACTIVE'
+            accountStatus: 'ACTIVE'
           }
         });
         userId = newUser.id;
@@ -67,54 +67,54 @@ export async function POST(req: Request) {
 
       // Create or Update specific sub-profile based on Role
       if (invitation.role === 'STUDENT') {
-        const existingProfile = await tx.studentProfile.findUnique({ where: { user_id: userId } });
+        const existingProfile = await tx.student.findUnique({ where: { userId: userId } });
         if (existingProfile) {
-          await tx.studentProfile.update({
-            where: { user_id: userId },
-            data: { roll_number: identifier }
+          await tx.student.update({
+            where: { userId: userId },
+            data: { rollNumber: username }
           });
         } else {
-          await tx.studentProfile.create({
+          await tx.student.create({
             data: {
-              user_id: userId,
-              roll_number: identifier,
+              userId: userId,
+              rollNumber: username,
             }
           });
         }
       } else if (invitation.role === 'FACULTY') {
-        const existingProfile = await tx.facultyProfile.findUnique({ where: { user_id: userId } });
+        const existingProfile = await tx.faculty.findUnique({ where: { userId: userId } });
         if (existingProfile) {
-          await tx.facultyProfile.update({
-            where: { user_id: userId },
-            data: { employee_number: identifier }
+          await tx.faculty.update({
+            where: { userId: userId },
+            data: { employeeNumber: username }
           });
         } else {
-          await tx.facultyProfile.create({
+          await tx.faculty.create({
             data: {
-              user_id: userId,
-              employee_number: identifier,
+              userId: userId,
+              employeeNumber: username,
             }
           });
         }
       }
 
       // Mark token as consumed
-      await tx.invitationToken.update({
+      await tx.userInvitation.update({
         where: { id: invitation.id },
-        data: { used: true }
+        data: { isUsed: true }
       });
 
-      return { identifier };
+      return { username };
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'User registered successfully!',
-      identifier: result.identifier
+      username: result.username
     }, { status: 201 });
 
   } catch (error: any) {
     if (error.code === 'P2002') {
-      return NextResponse.json({ error: 'This identifier (Roll/Employee No) is already registered in this institution' }, { status: 409 });
+      return NextResponse.json({ error: 'This username (Roll/Employee No) is already registered in this institution' }, { status: 409 });
     }
     console.error('Accept Invite Error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

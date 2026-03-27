@@ -5,7 +5,7 @@ import { Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
 interface SettingsManagerProps {
   initialSettings: {
-    academic_system: 'SEMESTER' | 'ANNUAL' | 'YEARLY';
+    academicSystem: 'SEMESTER' | 'ANNUAL' | 'YEARLY';
     academicStructure: {
       type: 'SEMESTER' | 'YEARLY';
       totalCycles: number;
@@ -15,8 +15,8 @@ interface SettingsManagerProps {
 
 export default function InstitutionSettingsManager({ initialSettings }: SettingsManagerProps) {
   const [structure, setStructure] = useState(initialSettings.academicStructure || {
-    type: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
-    totalCycles: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 4 : 8
+    type: initialSettings.academicSystem === 'ANNUAL' || initialSettings.academicSystem === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
+    totalCycles: initialSettings.academicSystem === 'ANNUAL' || initialSettings.academicSystem === 'YEARLY' ? 4 : 8
   });
   
   const [loading, setLoading] = useState(false);
@@ -49,8 +49,8 @@ export default function InstitutionSettingsManager({ initialSettings }: Settings
   };
 
   const isChanged = JSON.stringify(structure) !== JSON.stringify(initialSettings.academicStructure || {
-    type: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
-    totalCycles: initialSettings.academic_system === 'ANNUAL' || initialSettings.academic_system === 'YEARLY' ? 4 : 8
+    type: initialSettings.academicSystem === 'ANNUAL' || initialSettings.academicSystem === 'YEARLY' ? 'YEARLY' : 'SEMESTER',
+    totalCycles: initialSettings.academicSystem === 'ANNUAL' || initialSettings.academicSystem === 'YEARLY' ? 4 : 8
   });
 
   return (

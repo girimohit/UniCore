@@ -10,9 +10,9 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { moduleId, isEnabled } = await req.json();
+    const { moduleId, isActive } = await req.json();
 
-    if (!moduleId || typeof isEnabled !== "boolean") {
+    if (!moduleId || typeof isActive !== "boolean") {
       return new NextResponse("Invalid request", { status: 400 });
     }
 
@@ -21,25 +21,25 @@ export async function POST(req: Request) {
       return new NextResponse("Module not found", { status: 404 });
     }
 
-    if (moduleDef.type === 'CORE' && !isEnabled) {
+    if (moduleDef.type === 'CORE' && !isActive) {
       return new NextResponse("Cannot disable core modules", { status: 400 });
     }
 
-    // Upsert the institution module record
-    const updated = await prisma.institutionModule.upsert({
+    // Upsert the subscription record
+    const updated = await prisma.moduleSubscription.upsert({
       where: {
-        tenant_id_moduleId: {
-          tenant_id: user.tenant_id,
+        institutionId_moduleId: {
+          institutionId: user.institutionId,
           moduleId: moduleId,
         },
       },
       update: {
-        isEnabled: isEnabled,
+        isActive: isActive,
       },
       create: {
-        tenant_id: user.tenant_id,
+        institutionId: user.institutionId,
         moduleId: moduleId,
-        isEnabled: isEnabled,
+        isActive: isActive,
       },
     });
 

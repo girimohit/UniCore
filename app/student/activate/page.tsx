@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { KeyRound, Phone, Hash, ShieldCheck, Loader2, ArrowRight, AlertTriangle, CheckCircle } from "lucide-react";
 
-export default function StudentActivatePage() {
+function ActivateContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -15,10 +17,10 @@ export default function StudentActivatePage() {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    roll_number: "",
+    rollNumber: "",
     password: "",
     confirm_password: "",
-    phone_number: "",
+    phoneNumber: "",
   });
   const [formError, setFormError] = useState("");
 
@@ -165,8 +167,8 @@ export default function StudentActivatePage() {
               <input
                 type="text"
                 required
-                value={form.roll_number}
-                onChange={(e) => setForm((p) => ({ ...p, roll_number: e.target.value }))}
+                value={form.rollNumber}
+                onChange={(e) => setForm((p) => ({ ...p, rollNumber: e.target.value }))}
                 placeholder="e.g. CS2023001"
                 className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none transition-shadow"
                 style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
@@ -222,8 +224,8 @@ export default function StudentActivatePage() {
               <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
               <input
                 type="tel"
-                value={form.phone_number}
-                onChange={(e) => setForm((p) => ({ ...p, phone_number: e.target.value }))}
+                value={form.phoneNumber}
+                onChange={(e) => setForm((p) => ({ ...p, phoneNumber: e.target.value }))}
                 placeholder="+91 9876543210"
                 className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none transition-shadow"
                 style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
@@ -243,5 +245,13 @@ export default function StudentActivatePage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function StudentActivatePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin opacity-20" /></div>}>
+      <ActivateContent />
+    </Suspense>
   );
 }

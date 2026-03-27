@@ -15,8 +15,8 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ te
 
   // Fetch departments for the list
   const departments = await prisma.department.findMany({
-    where: { tenant_id: institution.id },
-    orderBy: { created_at: 'desc' }
+    where: { institutionId: institution.id },
+    orderBy: { createdAt: 'desc' }
   });
 
   return (
@@ -30,7 +30,7 @@ export default async function DepartmentsPage({ params }: { params: Promise<{ te
         </p>
       </div>
 
-      <DepartmentManager initialDepartments={departments} tenantId={institution.id} />
+      <DepartmentManager initialDepartments={departments} institutionId={institution.id} />
     </div>
   );
 }

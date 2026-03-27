@@ -1,14 +1,14 @@
 import { prisma } from '../db';
 
-export async function resolveTenant(identifier: string) {
-  if (!identifier) return null;
+export async function resolveTenant(username: string) {
+  if (!username) return null;
 
   try {
     const institution = await prisma.institution.findFirst({
       where: {
         OR: [
-          { slug: identifier },
-          { id: identifier }
+          { slug: username },
+          { id: username }
         ]
       },
       select: { id: true, name: true, slug: true }

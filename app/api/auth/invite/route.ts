@@ -13,8 +13,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Explicitly validate role assignment bounds (only Admins can do this, to be protected by middleware later)
-    if (!['FACULTY', 'STUDENT', 'INSTITUTION_ADMIN'].includes(role)) {
+    // Explicitly validate role assignment bounds
+    if (!['FACULTY', 'STUDENT', 'ADMIN'].includes(role)) {
       return NextResponse.json({ error: 'Invalid role assignment' }, { status: 400 });
     }
 
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     // if user already exists
     const existingUser = await prisma.user.findFirst({
-      where: { email, tenant_id: institution.id }
+      where: { email, institutionId: institution.id }
     });
 
     if (existingUser) {
@@ -35,16 +35,15 @@ export async function POST(req: Request) {
     // Generate random token
     const token = crypto.randomBytes(32).toString('hex');
 
-    // Set expiration (e.g., 48 hours from now)
-    const expires_at = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
-    const invitation = await prisma.invitationToken.create({
+    const invitation = await prisma.userInvitation.create({
       data: {
         email,
         role: role as any,
         token,
-        tenant_id: institution.id,
-        expires_at
+        institutionId: institution.id,
+        expiresAt
       }
     });
 

@@ -9,14 +9,14 @@ export default async function AdminStudentsPage({ params }: { params: Promise<{ 
   // Resolve institution
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true },
+    select: { id: true, name: true, academicSystem: true, academicStructure: true },
   });
 
   if (!institution) return notFound();
 
   // Fetch courses for the dropdown
   const courses = await prisma.course.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     select: { id: true, name: true },
     orderBy: { name: 'asc' }
   });
@@ -35,8 +35,8 @@ export default async function AdminStudentsPage({ params }: { params: Promise<{ 
 
       <StudentManager 
         courses={courses} 
-        tenantId={institution.id} 
-        academicSystem={institution.academicStructure as any || institution.academic_system} 
+        institutionId={institution.id} 
+        academicSystem={institution.academicStructure as any || institution.academicSystem} 
       />
     </div>
   );

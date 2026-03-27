@@ -18,11 +18,11 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
     }
 
     const student = await prisma.user.findFirst({
-      where: { id: studentId, tenant_id: user.tenant_id, role: 'STUDENT' },
-      include: { studentProfile: true }
+      where: { id: studentId, institutionId: user.institutionId, role: 'STUDENT' },
+      include: { student: true }
     });
 
-    if (!student || !student.studentProfile) {
+    if (!student || !student.student) {
       return NextResponse.json(
         { error: 'Student not found in this tenant' },
         { status: 404 }
@@ -31,7 +31,7 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
 
     // Ensure course belongs to this tenant
     const course = await prisma.course.findFirst({
-      where: { id: courseId, tenant_id: user.tenant_id }
+      where: { id: courseId, institutionId: user.institutionId }
     });
 
     if (!course) {
@@ -41,18 +41,18 @@ export const POST = withAuth(['ADMIN', 'SUPER_ADMIN', 'INSTITUTION_ADMIN'], asyn
       );
     }
 
-    // Validate semester/cycleNumber
+    // Validate semester/academicCycle
     try {
-      await SubjectService.validateCycleNumber(user.tenant_id, parseInt(String(semester)));
+      await SubjectService.validateCycleNumber(user.institutionId, parseInt(String(semester)));
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
 
-    // Update student profile
-    const updated = await prisma.studentProfile.update({
-      where: { id: student.studentProfile.id },
+    // Update student
+    const updated = await prisma.student.update({
+      where: { id: student.student.id },
       data: {
-        course_id: courseId,
+        courseId: courseId,
         semester: parseInt(String(semester)),
       },
       include: { course: true }

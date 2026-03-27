@@ -99,14 +99,14 @@ export function getStudentActivationEmailTemplate(institutionName: string, activ
   `;
 }
 
-export function getFacultyWelcomeEmailTemplate(institutionName: string, identifier: string, tempPass: string, loginLink: string) {
+export function getFacultyWelcomeEmailTemplate(institutionName: string, username: string, tempPass: string, loginLink: string) {
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
       <h2 style="color: #3b82f6;">Welcome to the Faculty Portal</h2>
       <p>You have been registered as a Faculty member at <strong>${institutionName}</strong>.</p>
       <p>Your temporary login credentials are as follows:</p>
       <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #e2e8f0;">
-        <p style="margin: 5px 0;"><strong>Identifier:</strong> ${identifier}</p>
+        <p style="margin: 5px 0;"><strong>Identifier:</strong> ${username}</p>
         <p style="margin: 5px 0;"><strong>Temporary Password:</strong> <code style="background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">${tempPass}</code></p>
       </div>
       <p>Please log in and reset your password immediately at:</p>

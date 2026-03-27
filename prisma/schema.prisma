@@ -5,327 +5,342 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  // url      = env("DATABASE_URL")
 }
 
-model AcademicPeriod {
+model AcademicTerm {
   id          String       @id @default(cuid())
-  tenant_id   String
+  institutionId    String       @map("tenant_id")
   name        String
   type        String
-  start_date  DateTime
-  end_date    DateTime
-  created_at  DateTime     @default(now())
-  institution Institution  @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "AcademicPeriod_tenant_id_fkey")
-  attendances Attendance[]
+  startDate   DateTime     @map("start_date")
+  endDate     DateTime     @map("end_date")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  institution Institution  @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  attendances AttendanceRecord[]
   exams       Exam[]
 
-  @@index([tenant_id], map: "AcademicPeriod_tenant_id_idx")
-  @@map("academicperiod")
+  @@index([institutionId])
+  @@map("terms")
 }
 
-model Attendance {
-  id             String            @id @default(cuid())
-  tenant_id      String
-  studentId      String
-  subjectId      String
-  date           DateTime
-  status         attendance_status
-  created_at     DateTime          @default(now())
-  updated_at     DateTime          @updatedAt
-  periodId       String?
-  academicPeriod AcademicPeriod?   @relation(fields: [periodId], references: [id], map: "Attendance_periodId_fkey")
-  studentProfile StudentProfile    @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "Attendance_studentId_fkey")
-  subject        Subject           @relation(fields: [subjectId], references: [id], onDelete: Cascade, map: "Attendance_subjectId_fkey")
-  institution    Institution       @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Attendance_tenant_id_fkey")
+model AttendanceRecord {
+  id          String           @id @default(cuid())
+  institutionId    String           @map("tenant_id")
+  studentId   String           @map("student_id")
+  subjectId   String           @map("subject_id")
+  termId      String?          @map("term_id")
+  attendanceDate DateTime @map("date")
+  status      AttendanceStatus
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  
+  term        AcademicTerm?    @relation(fields: [termId], references: [id])
+  student     Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject     Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  institution Institution      @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
-  @@unique([studentId, subjectId, date], map: "Attendance_studentId_subjectId_date_key")
-  @@index([periodId], map: "Attendance_periodId_fkey")
-  @@index([subjectId], map: "Attendance_subjectId_fkey")
-  @@index([tenant_id], map: "Attendance_tenant_id_idx")
-  @@index([tenant_id, studentId], map: "Attendance_tenant_id_studentId_idx")
-  @@index([tenant_id, subjectId], map: "Attendance_tenant_id_subjectId_idx")
-  @@map("attendance")
+  @@unique([studentId, subjectId, attendanceDate])
+  @@index([termId])
+  @@index([subjectId])
+  @@index([institutionId])
+  @@index([institutionId, studentId])
+  @@index([institutionId, subjectId])
+  @@map("attendances")
 }
 
 model Course {
-  id              String           @id @default(cuid())
-  tenant_id       String
-  name            String
-  code            String
-  departmentId    String
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @updatedAt
-  department      Department       @relation(fields: [departmentId], references: [id], onDelete: Cascade, map: "Course_departmentId_fkey")
-  institution     Institution      @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Course_tenant_id_fkey")
-  enrolledCourses EnrolledCourse[]
-  exams           Exam[]
-  studentProfiles StudentProfile[]
-  subjects        Subject[]
+  id           String       @id @default(cuid())
+  institutionId     String       @map("tenant_id")
+  name         String
+  code         String
+  departmentId String       @map("department_id")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+  
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  institution  Institution  @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  courseEnrollments CourseEnrollment[]
+  exams             Exam[]
+  students          Student[]
+  subjects          Subject[]
 
-  @@unique([tenant_id, code], map: "Course_tenant_id_code_key")
-  @@index([departmentId], map: "Course_departmentId_fkey")
-  @@index([tenant_id, departmentId], map: "Course_tenant_id_departmentId_idx")
-  @@index([tenant_id], map: "Course_tenant_id_idx")
-  @@map("course")
+  @@unique([institutionId, code])
+  @@index([departmentId])
+  @@index([institutionId, departmentId])
+  @@index([institutionId])
+  @@map("courses")
 }
 
 model Department {
-  id              String           @id @default(cuid())
-  tenant_id       String
-  name            String
-  code            String
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @updatedAt
-  courses         Course[]
-  institution     Institution      @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Department_tenant_id_fkey")
-  faculties       FacultyProfile[]
+  id          String    @id @default(cuid())
+  institutionId    String    @map("tenant_id")
+  name        String
+  code        String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  
+  courses     Course[]
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  faculties   Faculty[]
 
-  @@unique([tenant_id, code], map: "Department_tenant_id_code_key")
-  @@index([tenant_id], map: "Department_tenant_id_idx")
-  @@map("department")
+  @@unique([institutionId, code])
+  @@index([institutionId])
+  @@map("departments")
 }
 
-model EnrolledCourse {
-  id             String         @id @default(cuid())
-  studentId      String
-  courseId       String
-  course         Course         @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "EnrolledCourse_courseId_fkey")
-  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "EnrolledCourse_studentId_fkey")
+model CourseEnrollment {
+  id        String  @id @default(cuid())
+  studentId String  @map("student_id")
+  courseId  String  @map("course_id")
+  
+  course    Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  @@unique([studentId, courseId], map: "EnrolledCourse_studentId_courseId_key")
-  @@index([courseId], map: "EnrolledCourse_courseId_idx")
-  @@index([studentId], map: "EnrolledCourse_studentId_idx")
-  @@map("enrolledcourse")
+  @@unique([studentId, courseId])
+  @@index([courseId])
+  @@index([studentId])
+  @@map("enrollments")
 }
 
 model Exam {
-  id             String         @id @default(cuid())
-  tenant_id      String
-  name           String
-  date           DateTime
-  courseId       String
-  subjectId      String
-  created_at     DateTime       @default(now())
-  updated_at     DateTime       @updatedAt
-  periodId       String
-  course         Course         @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "Exam_courseId_fkey")
-  academicPeriod AcademicPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade, map: "Exam_periodId_fkey")
-  subject        Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade, map: "Exam_subjectId_fkey")
-  institution    Institution    @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Exam_tenant_id_fkey")
-  grades         Grade[]
+  id          String      @id @default(cuid())
+  institutionId    String      @map("tenant_id")
+  name        String
+  examDate    DateTime    @map("date")
+  courseId    String      @map("course_id")
+  subjectId   String      @map("subject_id")
+  termId      String      @map("term_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  
+  course      Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  term        AcademicTerm @relation(fields: [termId], references: [id], onDelete: Cascade)
+  subject     Subject     @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  examResults ExamResult[]
 
-  @@index([courseId], map: "Exam_courseId_fkey")
-  @@index([periodId], map: "Exam_periodId_fkey")
-  @@index([subjectId], map: "Exam_subjectId_fkey")
-  @@index([tenant_id, courseId], map: "Exam_tenant_id_courseId_idx")
-  @@index([tenant_id], map: "Exam_tenant_id_idx")
-  @@index([tenant_id, periodId], map: "Exam_tenant_id_periodId_idx")
-  @@index([tenant_id, subjectId], map: "Exam_tenant_id_subjectId_idx")
-  @@map("exam")
+  @@index([courseId])
+  @@index([termId])
+  @@index([subjectId])
+  @@index([institutionId, courseId])
+  @@index([institutionId])
+  @@index([institutionId, termId])
+  @@index([institutionId, subjectId])
+  @@map("exams")
 }
 
-model FacultyProfile {
-  id              String          @id @default(cuid())
-  user_id         String          @unique(map: "FacultyProfile_user_id_key")
-  employee_number String
-  department_id   String?
-  designation     String?
-  department      Department?     @relation(fields: [department_id], references: [id], map: "FacultyProfile_department_id_fkey")
-  user            User            @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "FacultyProfile_user_id_fkey")
-  taughtSubjects  TaughtSubject[]
+model Faculty {
+  id             String           @id @default(cuid())
+  userId         String           @unique @map("user_id")
+  employeeNumber String           @map("employee_number")
+  departmentId   String?          @map("department_id")
+  designation    String?
+  
+  department     Department?      @relation(fields: [departmentId], references: [id])
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  facultyAssignments FacultyAssignment[]
 
-  @@index([department_id], map: "FacultyProfile_department_id_fkey")
-  @@map("facultyprofile")
+  @@index([departmentId])
+  @@map("faculties")
 }
 
-model Grade {
-  id             String         @id @default(cuid())
-  tenant_id      String
-  examId         String
-  studentId      String
-  score          Float
-  remarks        String?
-  created_at     DateTime       @default(now())
-  updated_at     DateTime       @updatedAt
-  exam           Exam           @relation(fields: [examId], references: [id], onDelete: Cascade, map: "Grade_examId_fkey")
-  studentProfile StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade, map: "Grade_studentId_fkey")
-  institution    Institution    @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Grade_tenant_id_fkey")
+model ExamResult {
+  id          String      @id @default(cuid())
+  institutionId    String      @map("tenant_id")
+  examId      String      @map("exam_id")
+  studentId   String      @map("student_id")
+  obtainedMarks Float       @map("score")
+  teacherRemarks String?    @map("remarks")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  
+  exam        Exam        @relation(fields: [examId], references: [id], onDelete: Cascade)
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
-  @@unique([examId, studentId], map: "Grade_examId_studentId_key")
-  @@index([studentId], map: "Grade_studentId_fkey")
-  @@index([tenant_id, examId], map: "Grade_tenant_id_examId_idx")
-  @@index([tenant_id], map: "Grade_tenant_id_idx")
-  @@index([tenant_id, studentId], map: "Grade_tenant_id_studentId_idx")
-  @@map("grade")
+  @@unique([examId, studentId])
+  @@index([studentId])
+  @@index([institutionId, examId])
+  @@index([institutionId])
+  @@index([institutionId, studentId])
+  @@map("grades")
 }
 
 model Institution {
-  id                 String                      @id @default(cuid())
-  name               String
-  slug               String                      @unique(map: "Institution_slug_key")
-  status             String                      @default("ACTIVE")
-  created_at         DateTime                    @default(now())
-  updated_at         DateTime                    @updatedAt
-  academic_system    institution_academic_system @default(SEMESTER)
-  academicStructure  Json?                       @default("{\"type\":\"SEMESTER\", \"totalCycles\":8}")
-  academicPeriods    AcademicPeriod[]
-  attendances        Attendance[]
-  courses            Course[]
-  departments        Department[]
-  exams              Exam[]
-  grades             Grade[]
-  institutionModules InstitutionModule[]
-  invitationTokens   InvitationToken[]
-  subjects           Subject[]
-  users              User[]
+  id                String          @id @default(cuid())
+  name              String
+  slug              String          @unique
+  status            String          @default("ACTIVE")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  academicSystem    AcademicSystem  @default(SEMESTER) @map("academic_system")
+  academicStructure Json?           @default("{\"type\":\"SEMESTER\", \"totalCycles\":8}") @map("academic_structure")
+  
+  academicTerms        AcademicTerm[]
+  attendanceRecords    AttendanceRecord[]
+  courses              Course[]
+  departments          Department[]
+  exams                Exam[]
+  examResults          ExamResult[]
+  moduleSubscriptions  ModuleSubscription[]
+  userInvitations      UserInvitation[]
+  subjects             Subject[]
+  users                User[]
 
-  @@index([slug], map: "Institution_slug_idx")
-  @@map("institution")
+  @@index([slug])
+  @@map("institutions")
 }
 
-model InstitutionModule {
+model ModuleSubscription {
   id          String      @id @default(cuid())
-  tenant_id   String
-  moduleId    String
-  isEnabled   Boolean     @default(true)
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
-  module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade, map: "InstitutionModule_moduleId_fkey")
-  institution Institution @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "InstitutionModule_tenant_id_fkey")
+  institutionId    String      @map("tenant_id")
+  moduleId    String      @map("module_id")
+  isActive    Boolean     @default(true) @map("is_enabled")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  
+  module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  institution Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
-  @@unique([tenant_id, moduleId], map: "InstitutionModule_tenant_id_moduleId_key")
-  @@index([moduleId], map: "InstitutionModule_moduleId_fkey")
-  @@index([tenant_id], map: "InstitutionModule_tenant_id_idx")
-  @@map("institutionmodule")
+  @@unique([institutionId, moduleId])
+  @@index([moduleId])
+  @@index([institutionId])
+  @@map("subscriptions")
 }
 
-model InvitationToken {
-  id          String               @id @default(cuid())
-  tenant_id   String
+model UserInvitation {
+  id          String         @id @default(cuid())
+  institutionId    String         @map("tenant_id")
   email       String
-  role        invitationtoken_role
-  token       String               @unique(map: "InvitationToken_token_key")
-  expires_at  DateTime
-  used        Boolean              @default(false)
-  created_at  DateTime             @default(now())
-  institution Institution          @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "InvitationToken_tenant_id_fkey")
+  role        InvitationRole
+  token       String         @unique
+  expiresAt   DateTime       @map("expires_at")
+  isUsed      Boolean        @default(false) @map("used")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  
+  institution Institution    @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
-  @@index([tenant_id, email], map: "InvitationToken_tenant_id_email_idx")
-  @@index([tenant_id], map: "InvitationToken_tenant_id_idx")
-  @@index([token], map: "InvitationToken_token_idx")
-  @@map("invitationtoken")
+  @@index([institutionId, email])
+  @@index([institutionId])
+  @@index([token])
+  @@map("invitations")
 }
 
 model Module {
-  id                 String              @id @default(cuid())
-  name               String              @unique(map: "Module_name_key")
-  description        String?
-  created_at         DateTime            @default(now())
-  updated_at         DateTime            @updatedAt
-  institutionModules InstitutionModule[]
+  id            String         @id @default(cuid())
+  name          String         @unique
+  description   String?
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  subscriptions ModuleSubscription[]
 
-  @@map("module")
+  @@map("modules")
 }
 
-model StudentProfile {
-  id              String           @id @default(cuid())
-  user_id         String           @unique(map: "StudentProfile_user_id_key")
-  roll_number     String
-  course_id       String?
-  semester        Int?
-  date_of_birth   DateTime?
-  gender          String?
-  attendances     Attendance[]
-  enrolledCourses EnrolledCourse[]
-  grades          Grade[]
-  course          Course?          @relation(fields: [course_id], references: [id], map: "StudentProfile_course_id_fkey")
-  user            User             @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "StudentProfile_user_id_fkey")
+model Student {
+  id            String       @id @default(cuid())
+  userId        String       @unique @map("user_id")
+  rollNumber    String       @map("roll_number")
+  courseId      String?      @map("course_id")
+  semester      Int?
+  dateOfBirth   DateTime?    @map("date_of_birth")
+  gender        String?
+  
+  attendanceRecords AttendanceRecord[]
+  courseEnrollments CourseEnrollment[]
+  examResults       ExamResult[]
+  course        Course?      @relation(fields: [courseId], references: [id])
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([user_id, roll_number], map: "StudentProfile_user_id_roll_number_key")
-  @@index([course_id], map: "StudentProfile_course_id_fkey")
-  @@map("studentprofile")
+  @@unique([userId, rollNumber])
+  @@index([courseId])
+  @@map("students")
 }
 
 model Subject {
-  id             String          @id @default(cuid())
-  tenant_id      String
-  name           String
-  code           String
-  courseId       String
-  cycleNumber    Int             @default(1)
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  attendances    Attendance[]
-  exams          Exam[]
-  course         Course          @relation(fields: [courseId], references: [id], onDelete: Cascade, map: "Subject_courseId_fkey")
-  institution    Institution     @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "Subject_tenant_id_fkey")
-  taughtBy       TaughtSubject[]
+  id              String           @id @default(cuid())
+  institutionId        String           @map("tenant_id")
+  name            String
+  code            String
+  courseId        String           @map("course_id")
+  academicCycle   Int              @default(1) @map("cycle_number")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  
+  attendances     AttendanceRecord[]
+  exams           Exam[]
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  institution     Institution      @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  facultyAssignments FacultyAssignment[]
 
-  @@unique([tenant_id, code], map: "Subject_tenant_id_code_key")
-  @@index([courseId], map: "Subject_courseId_fkey")
-  @@index([tenant_id, courseId], map: "Subject_tenant_id_courseId_idx")
-  @@index([tenant_id], map: "Subject_tenant_id_idx")
-  @@map("subject")
+  @@unique([institutionId, code])
+  @@index([courseId])
+  @@index([institutionId, courseId])
+  @@index([institutionId])
+  @@map("subjects")
 }
 
-model TaughtSubject {
-  id             String         @id @default(cuid())
-  subjectId      String
-  facultyId      String
-  facultyProfile FacultyProfile @relation(fields: [facultyId], references: [id], onDelete: Cascade, map: "TaughtSubject_facultyId_fkey")
-  subject        Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade, map: "TaughtSubject_subjectId_fkey")
+model FacultyAssignment {
+  id        String  @id @default(cuid())
+  subjectId String  @map("subject_id")
+  facultyId String  @map("faculty_id")
+  
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 
-  @@unique([subjectId, facultyId], map: "TaughtSubject_subjectId_facultyId_key")
-  @@index([facultyId], map: "TaughtSubject_facultyId_idx")
-  @@index([subjectId], map: "TaughtSubject_subjectId_idx")
-  @@map("taughtsubject")
+  @@unique([subjectId, facultyId])
+  @@index([facultyId])
+  @@index([subjectId])
+  @@map("faculty_subjects")
 }
 
 model User {
-  id             String          @id @default(cuid())
-  tenant_id      String
-  identifier     String
-  password_hash  String
-  name           String          @default("New User")
-  email          String?
-  phone          String?
-  avatar_url     String?
-  role           user_role
-  status         String          @default("ACTIVE")
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  facultyProfile FacultyProfile?
-  studentProfile StudentProfile?
-  institution    Institution     @relation(fields: [tenant_id], references: [id], onDelete: Cascade, map: "User_tenant_id_fkey")
+  id           String    @id @default(cuid())
+  institutionId     String    @map("tenant_id")
+  username     String    @map("identifier")
+  passwordHash String    @map("password_hash")
+  name         String    @default("New User")
+  email        String?
+  phone        String?
+  avatarUrl    String?   @map("avatar_url")
+  role         UserRole
+  accountStatus String    @default("ACTIVE") @map("status")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  
+  faculty      Faculty?
+  student      Student?
+  institution  Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
-  @@unique([tenant_id, identifier], map: "User_tenant_id_identifier_key")
-  @@index([identifier], map: "User_identifier_idx")
-  @@index([tenant_id], map: "User_tenant_id_idx")
-  @@map("user")
+  @@unique([institutionId, username])
+  @@index([username])
+  @@index([institutionId])
+  @@map("users")
 }
 
-enum invitationtoken_role {
+enum InvitationRole {
   SUPER_ADMIN
   ADMIN
   FACULTY
   STUDENT
 }
 
-enum user_role {
+enum UserRole {
   SUPER_ADMIN
   ADMIN
   FACULTY
   STUDENT
 }
 
-enum attendance_status {
+enum AttendanceStatus {
   PRESENT
   ABSENT
   LATE
   EXCUSED
 }
 
-enum institution_academic_system {
+enum AcademicSystem {
   SEMESTER
   ANNUAL
   YEARLY

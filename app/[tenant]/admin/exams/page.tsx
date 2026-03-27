@@ -14,8 +14,8 @@ export default async function ExamsPage({ params }: { params: Promise<{ tenant: 
       subjects: {
         select: { id: true, name: true, code: true }
       },
-      academicPeriods: {
-        orderBy: { start_date: 'desc' },
+      academicTerms: {
+        orderBy: { startDate: 'desc' },
         select: { id: true, name: true }
       }
     }
@@ -24,13 +24,13 @@ export default async function ExamsPage({ params }: { params: Promise<{ tenant: 
   if (!institution) return notFound();
 
   const exams = await prisma.exam.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     include: {
       course: true,
       subject: true,
-      period: true
+      term: true
     },
-    orderBy: { date: 'desc' }
+    orderBy: { examDate: 'desc' }
   });
 
   return (
@@ -46,8 +46,8 @@ export default async function ExamsPage({ params }: { params: Promise<{ tenant: 
         initialExams={exams}
         courses={institution.courses}
         subjects={institution.subjects}
-        periods={institution.academicPeriods}
-        tenantId={institution.id}
+        periods={institution.academicTerms}
+        institutionId={institution.id}
       />
     </div>
   );

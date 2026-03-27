@@ -12,15 +12,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Token is required' }, { status: 400 });
   }
 
-  const invitation = await prisma.invitationToken.findUnique({ where: { token } });
+  const invitation = await prisma.userInvitation.findUnique({ where: { token } });
 
   if (!invitation) {
     return NextResponse.json({ error: 'Invalid activation link' }, { status: 404 });
   }
-  if (invitation.used) {
+  if (invitation.isUsed) {
     return NextResponse.json({ error: 'This link has already been used' }, { status: 410 });
   }
-  if (invitation.expires_at < new Date()) {
+  if (invitation.expiresAt < new Date()) {
     return NextResponse.json({ error: 'Activation link has expired' }, { status: 410 });
   }
 
@@ -28,16 +28,16 @@ export async function GET(req: NextRequest) {
     valid: true,
     email: invitation.email,
     role: invitation.role,
-    tenant_id: invitation.tenant_id,
+    institutionId: invitation.institutionId,
   });
 }
 
 // POST /api/auth/activate — activates the student account
 export async function POST(req: NextRequest) {
   try {
-    const { token, roll_number, password, confirm_password, phone_number } = await req.json();
+    const { token, rollNumber, password, confirm_password, phoneNumber } = await req.json();
 
-    if (!token || !roll_number || !password || !confirm_password) {
+    if (!token || !rollNumber || !password || !confirm_password) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
     if (password !== confirm_password) {
@@ -47,12 +47,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
     }
 
-    const invitation = await prisma.invitationToken.findUnique({ where: { token } });
+    const invitation = await prisma.userInvitation.findUnique({ where: { token } });
 
-    if (!invitation || invitation.used) {
+    if (!invitation || invitation.isUsed) {
       return NextResponse.json({ error: 'Invalid or already used activation link' }, { status: 410 });
     }
-    if (invitation.expires_at < new Date()) {
+    if (invitation.expiresAt < new Date()) {
       return NextResponse.json({ error: 'Activation link has expired' }, { status: 410 });
     }
 
@@ -60,18 +60,18 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findFirst({
       where: {
         email: invitation.email,
-        tenant_id: invitation.tenant_id,
+        institutionId: invitation.institutionId,
         role: 'STUDENT',
       },
-      include: { studentProfile: true }
+      include: { student: true }
     });
 
     if (!user) {
       return NextResponse.json({ error: 'Student account not found' }, { status: 404 });
     }
 
-    // Verify roll_number matches what admin registered
-    if (user.studentProfile?.roll_number !== roll_number) {
+    // Verify rollNumber matches what admin registered
+    if (user.student?.rollNumber !== rollNumber) {
       return NextResponse.json({ error: 'Roll number does not match our records' }, { status: 401 });
     }
 
@@ -79,33 +79,32 @@ export async function POST(req: NextRequest) {
 
     // Transactionally activate the account
     await prisma.$transaction([
-      // 1. Set password and mark active
+      // 1. Set password, phone, and mark active
       prisma.user.update({
         where: { id: user.id },
-        data: { password_hash: hashedPassword, status: 'ACTIVE' }
+        data: {
+          passwordHash: hashedPassword,
+          accountStatus: 'ACTIVE',
+          phone: phoneNumber ?? null
+        }
       }),
-      // 2. Update phone on student profile
-      prisma.studentProfile.update({
-        where: { user_id: user.id },
-        data: { phone: phone_number ?? null }
-      }),
-      // 3. Mark invitation token as used
-      prisma.invitationToken.update({
+      // 3. Mark invitation as used
+      prisma.userInvitation.update({
         where: { token },
-        data: { used: true }
+        data: { isUsed: true }
       }),
     ]);
 
     // Issue JWT for auto-login after activation
     const jwtToken = signToken({
-      user_id: user.id,
-      tenant_id: user.tenant_id,
+      userId: user.id,
+      institutionId: user.institutionId,
       role: 'STUDENT',
     });
 
     const response = NextResponse.json({
       message: 'Account activated successfully',
-      redirect: `/${user.tenant_id}/student/dashboard`
+      redirect: `/${user.institutionId}/student/dashboard`
     });
 
     response.cookies.set({

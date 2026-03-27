@@ -11,7 +11,7 @@ interface ExamManagerProps {
   courses: { id: string; name: string; code: string }[];
   subjects: { id: string; name: string; code: string }[];
   periods: { id: string; name: string }[];
-  tenantId: string;
+  institutionId: string;
 }
 
 export default function ExamManager({ initialExams, courses, subjects, periods }: ExamManagerProps) {
@@ -23,10 +23,10 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
   // Form state
   const [form, setForm] = useState({
     name: "",
-    date: "",
+    examDate: "",
     courseId: "",
     subjectId: "",
-    periodId: "",
+    termId: "",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -45,7 +45,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
       
       if (res.ok) {
         setResults([data]);
-        setForm({ name: "", date: "", courseId: "", subjectId: "", periodId: "" });
+        setForm({ name: "", examDate: "", courseId: "", subjectId: "", termId: "" });
         setActiveTab("list");
       } else {
         setErrors([data.error || "Failed to create exam"]);
@@ -105,8 +105,8 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                   <input
                     required
                     type="date"
-                    value={form.date}
-                    onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                    value={form.examDate}
+                    onChange={e => setForm(f => ({ ...f, examDate: e.target.value }))}
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
                   />
                 </div>
@@ -135,14 +135,14 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-muted-foreground ml-1">Academic Period</label>
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Academic Term</label>
                   <select
                     required
-                    value={form.periodId}
-                    onChange={e => setForm(f => ({ ...f, periodId: e.target.value }))}
+                    value={form.termId}
+                    onChange={e => setForm(f => ({ ...f, termId: e.target.value }))}
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
                   >
-                    <option value="">Select Academic Period</option>
+                    <option value="">Select Academic Term</option>
                     {periods.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                 </div>
@@ -206,7 +206,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                            <td className="px-6 py-4 font-bold text-primary">{e.name}</td>
                            <td className="px-6 py-4 font-medium flex items-center gap-2">
                              <Calendar className="w-3 h-3 text-muted-foreground" />
-                             {new Date(e.date).toLocaleDateString()}
+                             {new Date(e.examDate).toLocaleDateString()}
                            </td>
                            <td className="px-6 py-4">
                              <div className="flex flex-col gap-1">
@@ -217,10 +217,10 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                                  <Layers className="w-3 h-3" /> {e.subject?.name}
                                </span>
                              </div>
-                           </td>
+                           </td>  
                            <td className="px-6 py-4">
                              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                               {e.period?.name || '-'}
+                               {e.term?.name || '-'}
                              </span>
                            </td>
                            <td className="px-6 py-4 text-right">

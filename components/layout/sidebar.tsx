@@ -174,7 +174,7 @@ const facultyLinks = [
 ];
 
 interface SidebarProps {
-  tenantId: string;
+  institutionId: string;
   urlSlug: string;
   role: string;
   username: string;
@@ -182,7 +182,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  tenantId,
+  institutionId,
   urlSlug,
   role,
   username,

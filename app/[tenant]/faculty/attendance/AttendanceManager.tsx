@@ -13,9 +13,9 @@ import {
 
 interface Student {
   id: string;
-  roll_number: string;
-  user: { identifier: string };
-  course_id: string | null;
+  rollNumber: string;
+  user: { name: string; username: string };
+  courseId: string | null;
   semester: number | null;
 }
 
@@ -24,7 +24,7 @@ interface Subject {
   name: string;
   code: string;
   courseId: string;
-  cycleNumber: number;
+  academicCycle: number;
 }
 
 interface Period {
@@ -48,7 +48,7 @@ export default function AttendanceManager({
 
   const [subjectId, setSubjectId] = useState(initialSubjectId);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [periodId, setPeriodId] = useState("");
+  const [termId, setTermId] = useState("");
 
   // Sync with search params if they change
   useEffect(() => {
@@ -69,8 +69,8 @@ export default function AttendanceManager({
   const selectedSubject = subjects.find((s) => s.id === subjectId);
   const filteredStudents = students.filter(
     (s) =>
-      s.course_id === selectedSubject?.courseId &&
-      s.semester === (selectedSubject?.cycleNumber ?? 1),
+      s.courseId === selectedSubject?.courseId &&
+      s.semester === (selectedSubject?.academicCycle ?? 1),
   );
 
   const handleSave = async () => {
@@ -91,7 +91,7 @@ export default function AttendanceManager({
           subjectId,
           date,
           records,
-          ...(periodId ? { periodId } : {}),
+          ...(termId ? { termId } : {}),
         }),
       });
 
@@ -145,21 +145,21 @@ export default function AttendanceManager({
           </div>
         </div>
 
-        {/* Academic Period Filter */}
+        {/* Academic Term Filter */}
         <div className="space-y-2">
           <label className="text-sm font-bold text-foreground tracking-wide uppercase flex items-center gap-2">
             <Filter className="w-4 h-4 text-primary" />
-            Academic Period
+            Academic Term
             <span className="text-[10px] font-normal text-muted-foreground normal-case ml-1">
               (optional)
             </span>
           </label>
           <select
-            value={periodId}
-            onChange={(e) => setPeriodId(e.target.value)}
+            value={termId}
+            onChange={(e) => setTermId(e.target.value)}
             className="flex h-12 w-full rounded-xl border border-border/50 bg-background/50 px-4 py-2 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-sm appearance-none cursor-pointer"
           >
-            <option value="">All Periods</option>
+            <option value="">All Terms</option>
             {periods.map((p: Period) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -203,10 +203,10 @@ export default function AttendanceManager({
             <h3 className="font-extrabold text-xl text-foreground tracking-tight">
               Status
             </h3>
-            {periodId && (
+            {termId && (
               <p className="text-xs text-primary font-semibold mt-0.5">
                 Filtered by:{" "}
-                {periods.find((p: Period) => p.id === periodId)?.name}
+                {periods.find((p: Period) => p.id === termId)?.name}
               </p>
             )}
           </div>
@@ -260,10 +260,13 @@ export default function AttendanceManager({
                     className="hover:bg-primary/5 transition-colors group"
                   >
                     <td className="px-6 py-4 whitespace-nowrap font-bold text-muted-foreground group-hover:text-primary transition-colors">
-                      {student.roll_number}
+                      {student.rollNumber}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap font-bold text-foreground">
-                      {student.user.identifier}
+                     <td className="px-6 py-4 whitespace-nowrap font-bold text-foreground">
+                      <div className="flex flex-col">
+                        <span>{student.user.name}</span>
+                        <span className="text-[10px] text-muted-foreground uppercase">{student.user.username}</span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex justify-center gap-3">

@@ -9,12 +9,12 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], asy
   try {
     const subjects = await prisma.subject.findMany({
       where: {
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       },
       include: {
         course: true // Include nested Course info
       },
-      orderBy: { created_at: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
 
     return NextResponse.json({ subjects });
@@ -34,7 +34,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, c
 
     // Strict Tenant Validation: Does this Course belong to the current Tenant?
     const course = await prisma.course.findFirst({
-        where: { id: courseId, tenant_id: user.tenant_id }
+        where: { id: courseId, institutionId: user.institutionId }
     });
 
     if (!course) {
@@ -46,7 +46,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, c
         name,
         code,
         courseId,
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       }
     });
 

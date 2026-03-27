@@ -11,27 +11,27 @@ import { isModuleEnabled } from '@/lib/modules/loader';
 export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY', 'STUDENT'], async (req, context, user) => {
   try {
     // 1. Feature Flag Validation
-    const moduleActive = await isModuleEnabled(user.tenant_id, 'attendance');
+    const moduleActive = await isModuleEnabled(user.institutionId, 'attendance');
     if (!moduleActive) {
-      return NextResponse.json({ 
-        error: 'Forbidden: The Attendance module is currently disabled for this institution.' 
+      return NextResponse.json({
+        error: 'Forbidden: The Attendance module is currently disabled for this institution.'
       }, { status: 403 });
     }
 
     // 2. Safely Process Module Logic (e.g. Fetch recent logs)
     // We filter by tenant_id aggressively
-    const attendanceLogs = await prisma.attendance.findMany({
+    const attendanceLogs = await prisma.attendanceRecord.findMany({
       where: {
-        tenant_id: user.tenant_id,
+        institutionId: user.institutionId,
       },
       take: 50,
-      orderBy: { date: 'desc' }
+      orderBy: { attendanceDate: 'desc' }
     });
 
-    return NextResponse.json({ 
-      module: 'Attendance', 
+    return NextResponse.json({
+      module: 'Attendance',
       status: 'Active',
-      data: attendanceLogs 
+      data: attendanceLogs
     });
 
   } catch (error) {

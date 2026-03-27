@@ -28,34 +28,34 @@ export async function POST(req: Request) {
         }
       });
 
-      // 3. Generate unique admin identifier (ADM + count + 1)
+      // 3. Generate unique admin username (ADM + count + 1)
       const adminCount = await tx.user.count({
-        where: { role: 'ADMIN', tenant_id: institution.id }
+        where: { role: 'ADMIN', institutionId: institution.id }
       });
-      const identifier = `ADM${String(adminCount + 1).padStart(3, '0')}`;
+      const username = `ADM${String(adminCount + 1).padStart(3, '0')}`;
 
       // 4. Create Admin User
       const hashedPassword = await hashPassword(password);
       
       const adminUser = await tx.user.create({
         data: {
-          tenant_id: institution.id,
-          identifier,
-          password_hash: hashedPassword,
+          institutionId: institution.id,
+          username,
+          passwordHash: hashedPassword,
           role: 'ADMIN',
           email: admin_email,
-          status: 'ACTIVE'
+          accountStatus: 'ACTIVE'
         }
       });
 
-      return { institution, adminUser, identifier };
+      return { institution, adminUser, username };
     });
 
     return NextResponse.json({ 
       message: 'Institution registered successfully',
-      tenant_slug: result.institution.slug,
+      tenantSlug: result.institution.slug,
       credentials: {
-        identifier: result.identifier,
+        username: result.username,
         email: admin_email
       }
     }, { status: 201 });

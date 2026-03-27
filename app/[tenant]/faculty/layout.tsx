@@ -37,8 +37,8 @@ export default async function FacultyLayout({
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user_id },
-    select: { name: true, identifier: true, avatar_url: true }
+    where: { id: session.userId },
+    select: { name: true, username: true, avatarUrl: true }
   });
 
   return (
@@ -63,10 +63,10 @@ export default async function FacultyLayout({
         </div>
 
         <Sidebar
-          tenantId={institution.id}
+          institutionId={institution.id}
           urlSlug={institution.slug}
           role="faculty"
-          username={user?.name || user?.identifier || "Faculty"}
+          username={user?.name || user?.username || "Faculty"}
           initialModules={modules}
         />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">

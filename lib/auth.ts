@@ -4,8 +4,8 @@ import bcrypt from 'bcryptjs';
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-for-dev-only';
 
 export interface JwtPayload {
-  user_id: string;
-  tenant_id: string;
+  userId: string;
+  institutionId: string;
   role: string;
 }
 

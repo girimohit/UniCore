@@ -26,11 +26,11 @@ export async function syncSystemModules() {
  * 
  * Usage: Server Components layout.tsx evaluating what side-bar links to render.
  */
-export async function getActiveInstitutionModules(tenant_id: string): Promise<ModuleMetadata[]> {
-  const overrides = await prisma.institutionModule.findMany({
+export async function getActiveInstitutionModules(institutionId: string): Promise<ModuleMetadata[]> {
+  const overrides = await prisma.moduleSubscription.findMany({
     where: {
-      tenant_id,
-      isEnabled: true,
+      institutionId,
+      isActive: true,
     },
     include: { module: true }
   });
@@ -39,18 +39,18 @@ export async function getActiveInstitutionModules(tenant_id: string): Promise<Mo
 
   // Merge database states with hardcoded core default requirements
   const renderedModules: ModuleMetadata[] = [];
-  
+
   for (const [, metadata] of Object.entries(SYSTEM_MODULES)) {
     // If it's explicitly enabled in the DB, or if it's a CORE module (which defaults to on unless strictly disabled usually, though here we rely on the override specifically)
     // Actually, usually tenants start with InstitutionModule records generated upon tenant creation.
     if (activeModuleIds.has(metadata.id) || (metadata.type === 'CORE' && metadata.defaultEnabled)) {
-        // Enforce basic dependencies checks
-        if (metadata.dependencies) {
-            const hasDependencies = metadata.dependencies.every(dep => activeModuleIds.has(dep) || SYSTEM_MODULES[dep]?.defaultEnabled);
-            if (!hasDependencies) continue; // Drop module if missing strict dependencies
-        }
+      // Enforce basic dependencies checks
+      if (metadata.dependencies) {
+        const hasDependencies = metadata.dependencies.every(dep => activeModuleIds.has(dep) || SYSTEM_MODULES[dep]?.defaultEnabled);
+        if (!hasDependencies) continue; // Drop module if missing strict dependencies
+      }
 
-        renderedModules.push(metadata);
+      renderedModules.push(metadata);
     }
   }
 
@@ -61,7 +61,7 @@ export async function getActiveInstitutionModules(tenant_id: string): Promise<Mo
  * Feature Flag API Validator
  * Quickly asserts whether the active tenant execution context has access to an API Module.
  */
-export async function isModuleEnabled(tenant_id: string, moduleId: string): Promise<boolean> {
-  const activeModules = await getActiveInstitutionModules(tenant_id);
+export async function isModuleEnabled(institutionId: string, moduleId: string): Promise<boolean> {
+  const activeModules = await getActiveInstitutionModules(institutionId);
   return activeModules.some(m => m.id === moduleId);
 }

@@ -16,9 +16,8 @@ export const POST = withAuth(['STUDENT', 'FACULTY', 'ADMIN'], async (req: NextRe
         return NextResponse.json({ error: 'New password must be at least 8 characters long' }, { status: 400 });
     }
 
-    // Fetch full user record to check current password and status
     const user = await prisma.user.findUnique({
-      where: { id: userAuth.user_id }
+      where: { id: userAuth.userId }
     });
 
     if (!user) {
@@ -26,7 +25,7 @@ export const POST = withAuth(['STUDENT', 'FACULTY', 'ADMIN'], async (req: NextRe
     }
 
     // Verify current (temp) password
-    const isMatch = await comparePassword(currentPassword, user.password_hash);
+    const isMatch = await comparePassword(currentPassword, user.passwordHash);
     if (!isMatch) {
       return NextResponse.json({ error: 'Invalid current password' }, { status: 401 });
     }
@@ -38,8 +37,8 @@ export const POST = withAuth(['STUDENT', 'FACULTY', 'ADMIN'], async (req: NextRe
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        password_hash: hashed,
-        status: 'ACTIVE'
+        passwordHash: hashed,
+        accountStatus: 'ACTIVE'
       }
     });
 

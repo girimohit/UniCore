@@ -1,8 +1,11 @@
+export const dynamic = 'force-dynamic';
+
 import { resolveTenant } from "@/lib/tenant/resolver";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { CheckSquare } from "lucide-react";
 import AttendanceManager from "./AttendanceManager";
+import { Suspense } from "react";
 
 export default async function FacultyAttendancePage({
   params,
@@ -18,18 +21,24 @@ export default async function FacultyAttendancePage({
 
   const [subjects, students, periods] = await Promise.all([
     prisma.subject.findMany({
-      where: { tenant_id: institution.id },
+      where: { institutionId: institution.id },
       orderBy: { name: "asc" },
-      select: { id: true, name: true, code: true, courseId: true, cycleNumber: true },
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        courseId: true,
+        academicCycle: true,
+      },
     }),
-    prisma.studentProfile.findMany({
-      where: { user: { tenant_id: institution.id } },
-      include: { user: { select: { identifier: true } } },
-      orderBy: { roll_number: "asc" },
+    prisma.student.findMany({
+      where: { user: { institutionId: institution.id } },
+      include: { user: { select: { name: true, username: true } } },
+      orderBy: { rollNumber: "asc" },
     }),
-    prisma.academicPeriod.findMany({
-      where: { tenant_id: institution.id },
-      orderBy: { start_date: "desc" },
+    prisma.academicTerm.findMany({
+      where: { institutionId: institution.id },
+      orderBy: { startDate: "desc" },
       select: { id: true, name: true },
     }),
   ]);
@@ -49,15 +58,18 @@ export default async function FacultyAttendancePage({
           Mark Attendance
         </h1>
         <p className="text-lg text-muted-foreground mt-3 font-medium">
-          Select a subject, date, and optionally an academic period to record attendance.
+          Select a subject, date, and optionally an academic period to record
+          attendance.
         </p>
       </div>
 
-      <AttendanceManager
-        subjects={subjects}
-        students={students}
-        periods={periods}
-      />
+      <Suspense fallback={<div className="glass p-12 rounded-3xl animate-pulse flex flex-col items-center gap-4"><div className="w-12 h-12 bg-secondary/20 rounded-full" /><div className="h-4 w-48 bg-secondary/20 rounded-full" /></div>}>
+        <AttendanceManager
+          subjects={subjects}
+          students={students}
+          periods={periods}
+        />
+      </Suspense>
     </div>
   );
 }

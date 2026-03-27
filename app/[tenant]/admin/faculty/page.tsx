@@ -15,7 +15,7 @@ export default async function AdminFacultyPage({ params }: { params: Promise<{ t
 
   // Fetch departments for the dropdown
   const departments = await prisma.department.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     select: { id: true, name: true },
     orderBy: { name: 'asc' }
   });
@@ -31,7 +31,7 @@ export default async function AdminFacultyPage({ params }: { params: Promise<{ t
         </p>
       </div>
 
-      <FacultyManager departments={departments} tenantId={institution.id} />
+      <FacultyManager departments={departments} institutionId={institution.id} />
     </div>
   );
 }

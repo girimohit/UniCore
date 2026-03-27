@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -8,8 +10,8 @@ import { ShieldCheck, Lock, ArrowRight, Loader2, CheckCircle2, AlertCircle } fro
 function SetupPasswordForm({ tenant }: { tenant: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const identifier = searchParams.get("identifier") || "User";
-  
+  const username = searchParams.get("username") || "User";
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,9 +23,18 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
     e.preventDefault();
     setError("");
 
-    if (!currentPassword) { setError("Current temporary password is required."); return; }
-    if (newPassword.length < 8) { setError("New password must be at least 8 characters."); return; }
-    if (newPassword !== confirmPassword) { setError("Passwords do not match."); return; }
+    if (!currentPassword) {
+      setError("Current temporary password is required.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      setError("New password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -73,8 +84,11 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
           <div className="inline-flex p-3 rounded-2xl bg-primary/10 text-primary mb-4">
             <ShieldCheck className="w-6 h-6" />
           </div>
-          <h1 className="font-display font-black text-2xl tracking-tight" style={{ color: "var(--text-primary)" }}>
-            Welcome, {identifier}
+          <h1
+            className="font-display font-black text-2xl tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Welcome, {username}
           </h1>
           <p className="text-sm mt-2 opacity-70" style={{ color: "var(--text-secondary)" }}>
             For your security, please update your temporary password to continue.
@@ -82,7 +96,14 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 rounded-xl flex items-start gap-3 text-sm animate-in shake-in duration-300" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
+          <div
+            className="mb-6 p-4 rounded-xl flex items-start gap-3 text-sm animate-in shake-in duration-300"
+            style={{
+              background: "rgba(239,68,68,0.08)",
+              border: "1px solid rgba(239,68,68,0.2)",
+              color: "#f87171",
+            }}
+          >
             <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
             <p>{error}</p>
           </div>
@@ -90,7 +111,10 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1" style={{ color: "var(--text-primary)" }}>
+            <label
+              className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1"
+              style={{ color: "var(--text-primary)" }}
+            >
               Current Temporary Password
             </label>
             <div className="relative">
@@ -110,7 +134,10 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
           <div className="h-px w-full bg-border/40 my-2"></div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1" style={{ color: "var(--text-primary)" }}>
+            <label
+              className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1"
+              style={{ color: "var(--text-primary)" }}
+            >
               New Password
             </label>
             <div className="relative">
@@ -128,7 +155,10 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1" style={{ color: "var(--text-primary)" }}>
+            <label
+              className="block text-xs font-semibold uppercase tracking-wider mb-1.5 opacity-60 ml-1"
+              style={{ color: "var(--text-primary)" }}
+            >
               Confirm New Password
             </label>
             <div className="relative">
@@ -150,7 +180,13 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm text-white mt-4 bg-primary shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all disabled:opacity-60"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Update & Secure Account <ArrowRight className="w-4 h-4" /></>}
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                Update & Secure Account <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
@@ -162,14 +198,20 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
   );
 }
 
-export default function SetupPasswordPage({ params }: { params: any }) {
-  const tenant = params.tenant;
+export default async function SetupPasswordPage({ params }: { params: Promise<{ tenant: string }> }) {
+  const { tenant } = await params;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-bg-base">
-      <div className="absolute top-[-15%] left-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none" style={{ background: "var(--uc-purple)", filter: "blur(120px)" }} />
-      <div className="absolute bottom-[-15%] right-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none" style={{ background: "var(--uc-cyan)", filter: "blur(120px)" }} />
-      
+      <div
+        className="absolute top-[-15%] left-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none"
+        style={{ background: "var(--uc-purple)", filter: "blur(120px)" }}
+      />
+      <div
+        className="absolute bottom-[-15%] right-[-10%] w-[45%] h-[45%] rounded-full opacity-25 pointer-events-none"
+        style={{ background: "var(--uc-cyan)", filter: "blur(120px)" }}
+      />
+
       <Suspense fallback={<div className="glass p-10 rounded-2xl animate-pulse w-[400px] h-[400px]" />}>
         <SetupPasswordForm tenant={tenant} />
       </Suspense>

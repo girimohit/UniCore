@@ -11,7 +11,7 @@ export default async function AdminSettingsPage({ params }: { params: Promise<{ 
   // Resolve institution
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true },
+    select: { id: true, name: true, academicSystem: true, academicStructure: true },
   });
 
   if (!institution) return notFound();
@@ -32,7 +32,7 @@ export default async function AdminSettingsPage({ params }: { params: Promise<{ 
 
       <InstitutionSettingsManager 
         initialSettings={{ 
-          academic_system: institution.academic_system,
+          academicSystem: institution.academicSystem,
           academicStructure: institution.academicStructure as any 
         }} 
       />

@@ -22,37 +22,37 @@ export default async function StudentSubjectsPage({
     select: {
       id: true,
       name: true,
-      academic_system: true,
+      academicSystem: true,
       academicStructure: true,
     },
   });
 
   if (!institution) notFound();
 
-  const student = await prisma.studentProfile.findUnique({
-    where: { user_id: session.user_id },
+  const student = await prisma.student.findUnique({
+    where: { userId: session.userId },
     include: { course: true },
   });
 
   if (!student) notFound();
 
   const academic = getAcademicLabel(
-    (institution.academicStructure as any) || institution.academic_system,
+    (institution.academicStructure as any) || institution.academicSystem,
   );
 
-  const subjects = student.course_id
+  const subjects = student.courseId
     ? await prisma.subject.findMany({
         where: {
-          courseId: student.course_id,
-          cycleNumber: student.semester ?? undefined, // match semester
+          courseId: student.courseId,
+          academicCycle: student.semester ?? undefined, // match semester
         },
         include: {
-          taughtBy: {
+          facultyAssignments: {
             include: {
-              facultyProfile: {
+              faculty: {
                 include: {
                   user: {
-                    select: { identifier: true },
+                    select: { name: true, username: true },
                   },
                 },
               },
@@ -141,7 +141,7 @@ export default async function StudentSubjectsPage({
           subjects.map((sub, i) => {
             const style = subjectStyles[i % subjectStyles.length];
             const facultyName =
-              sub.taughtBy[0]?.facultyProfile?.user?.identifier ?? null;
+              sub.facultyAssignments[0]?.faculty?.user?.name ?? sub.facultyAssignments[0]?.faculty?.user?.username ?? null;
             return (
               <Card
                 key={sub.id}
@@ -191,8 +191,8 @@ export default async function StudentSubjectsPage({
                       <div className="flex items-center gap-2">
                         <GraduationCap className="h-4 w-4 text-primary opacity-60" />
                         <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-                          {sub.cycleNumber
-                            ? formatCycleLabel(academic.type, sub.cycleNumber)
+                          {sub.academicCycle
+                            ? formatCycleLabel(academic.type, sub.academicCycle)
                             : "—"}
                         </span>
                       </div>

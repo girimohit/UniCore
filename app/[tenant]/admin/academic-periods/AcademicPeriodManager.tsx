@@ -27,8 +27,8 @@ interface AcademicPeriod {
   id: string;
   name: string;
   type: string;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface ManagerProps {
@@ -47,8 +47,8 @@ export default function AcademicPeriodManager({ initialPeriods, academicSystem }
   const [formData, setFormData] = useState({
     name: '',
     type: 'SEMESTER',
-    start_date: '',
-    end_date: ''
+    startDate: '',
+    endDate: ''
   });
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -70,7 +70,7 @@ export default function AcademicPeriodManager({ initialPeriods, academicSystem }
 
       const newPeriod = await res.json();
       setPeriods([newPeriod, ...periods]);
-      setFormData({ name: '', type: 'SEMESTER', start_date: '', end_date: '' });
+      setFormData({ name: '', type: 'SEMESTER', startDate: '', endDate: '' });
       setShowForm(false);
       setMessage({ type: 'success', text: "Academic period created successfully!" });
     } catch (err: any) {
@@ -130,8 +130,8 @@ export default function AcademicPeriodManager({ initialPeriods, academicSystem }
               <label className="text-sm font-semibold">Start Date</label>
               <Input 
                 type="date"
-                value={formData.start_date}
-                onChange={(e) => setFormData({...formData, start_date: e.target.value})}
+                value={formData.startDate}
+                onChange={(e) => setFormData({...formData, startDate: e.target.value})}
                 required
               />
             </div>
@@ -139,8 +139,8 @@ export default function AcademicPeriodManager({ initialPeriods, academicSystem }
               <label className="text-sm font-semibold">End Date</label>
               <Input 
                 type="date"
-                value={formData.end_date}
-                onChange={(e) => setFormData({...formData, end_date: e.target.value})}
+                value={formData.endDate}
+                onChange={(e) => setFormData({...formData, endDate: e.target.value})}
                 required
               />
             </div>
@@ -182,10 +182,10 @@ export default function AcademicPeriodManager({ initialPeriods, academicSystem }
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground font-medium">
-                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date(period.start_date))}
+                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date(period.startDate))}
                   </TableCell>
                   <TableCell className="text-muted-foreground font-medium">
-                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date(period.end_date))}
+                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date(period.endDate))}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-rose-600">

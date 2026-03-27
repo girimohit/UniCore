@@ -5,9 +5,9 @@ import { comparePassword, signToken } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const { identifier, password, subdomain } = await req.json();
+    const { username, password, subdomain } = await req.json();
 
-    if (!identifier || !password || !subdomain) {
+    if (!username || !password || !subdomain) {
       return NextResponse.json(
         { error: "Identifier, password, and subdomain are required" },
         { status: 400 },
@@ -27,11 +27,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Institution context invalid" }, { status: 404 });
     }
 
-    // Lookup user scoped explicitly to that tenant using their unique identifier
+    // Lookup user scoped explicitly to that tenant using their unique username
     const user = await prisma.user.findFirst({
       where: {
-        identifier,
-        tenant_id: institution.id, // Ensure we use the institution ID or tenant_id correctly based on the schema
+        username,
+        institutionId: institution.id,
       },
     });
 
@@ -40,20 +40,20 @@ export async function POST(req: Request) {
     }
 
     // Verify bcrypt hash
-    const isValid = await comparePassword(password, user.password_hash);
+    const isValid = await comparePassword(password, user.passwordHash);
     if (!isValid) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
     // Allow login for both ACTIVE and TEMP (first-time) users
-    if (user.status !== "ACTIVE" && user.status !== "TEMP") {
+    if (user.accountStatus !== "ACTIVE" && user.accountStatus !== "TEMP") {
       return NextResponse.json({ error: "User is not active" }, { status: 403 });
     }
 
     // Generate JWT tied structurally to the specific tenant and role
     const token = signToken({
-      user_id: user.id,
-      tenant_id: user.tenant_id,
+      userId: user.id,
+      institutionId: user.institutionId,
       role: user.role,
     });
 
@@ -61,12 +61,12 @@ export async function POST(req: Request) {
       message: "Login successful",
       user: {
         id: user.id,
-        identifier: user.identifier,
+        username: user.username,
         name: user.name,
         role: user.role,
-        tenant_id: user.tenant_id,
-        status: user.status,
-        avatar_url: user.avatar_url,
+        institutionId: user.institutionId,
+        status: user.accountStatus,
+        avatarUrl: user.avatarUrl,
       },
     });
 

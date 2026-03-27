@@ -5,7 +5,7 @@ import { withAuth } from '@/lib/auth-middleware';
 export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], async (req, context, user) => {
   try {
     const courses = await prisma.course.findMany({
-      where: { tenant_id: user.tenant_id },
+      where: { institutionId: user.institutionId },
       include: { department: true },
       orderBy: { name: 'asc' }
     });
@@ -33,7 +33,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
         // Find department by name or code
         const dept = await prisma.department.findFirst({
           where: {
-            tenant_id: user.tenant_id,
+            institutionId: user.institutionId,
             OR: [
               { name: item.department },
               { code: item.department }
@@ -50,7 +50,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
           data: {
             name: item.name,
             code: item.code.toUpperCase(),
-            tenant_id: user.tenant_id,
+            institutionId: user.institutionId,
             departmentId: dept.id,
           }
         });

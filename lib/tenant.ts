@@ -7,7 +7,7 @@ export interface TenantContext {
   slug: string;
   status: string;
   // Included relations can be typed properly based on Prisma generated types
-  institutionModules?: any[];
+  moduleSubscriptions?: any[];
 }
 
 /**
@@ -49,7 +49,7 @@ export async function getTenantContext(tenantSlug: string | null): Promise<Tenan
     const institution = await prisma.institution.findUnique({
       where: { slug: tenantSlug },
       include: {
-        institutionModules: {
+        moduleSubscriptions: {
           include: {
             module: true
           }

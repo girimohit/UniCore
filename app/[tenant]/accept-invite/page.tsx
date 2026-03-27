@@ -48,15 +48,15 @@ export default async function AcceptInvitePage({
   }
 
   // 2. Validate the Invitation Token
-  const invitation = await prisma.invitationToken.findUnique({
+  const invitation = await prisma.userInvitation.findUnique({
     where: { token },
     select: {
       id: true,
       email: true,
       role: true,
-      used: true,
-      expires_at: true,
-      tenant_id: true,
+      isUsed: true,
+      expiresAt: true,
+      institutionId: true,
     },
   });
 
@@ -74,15 +74,15 @@ export default async function AcceptInvitePage({
 
   // 2.1 Check for Existing User (Pre-created by admin)
   const existingUser = await prisma.user.findFirst({
-    where: { 
+    where: {
       email: invitation.email,
-      tenant_id: institution.id
+      institutionId: institution.id,
     },
-    select: { identifier: true, name: true }
+    select: { username: true, name: true },
   });
 
   // Security check: Ensure the token belongs to this tenant
-  if (!invitation || invitation.tenant_id !== institution.id) {
+  if (!invitation || invitation.institutionId !== institution.id) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <ErrorCard
@@ -95,7 +95,7 @@ export default async function AcceptInvitePage({
   }
 
   // Check if already used
-  if (invitation.used) {
+  if (invitation.isUsed) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <ErrorCard
@@ -116,7 +116,7 @@ export default async function AcceptInvitePage({
   }
 
   // Check if expired
-  if (new Date() > invitation.expires_at) {
+  if (new Date() > invitation.expiresAt) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background">
         <ErrorCard
@@ -142,7 +142,7 @@ export default async function AcceptInvitePage({
             institutionName={institution.name}
             role={invitation.role}
             email={invitation.email}
-            initialIdentifier={existingUser?.identifier}
+            initialIdentifier={existingUser?.username}
             initialName={existingUser?.name}
           />
         </div>

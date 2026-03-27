@@ -34,8 +34,8 @@ export default async function StudentLayout({
   // No need to fetch studentProfile separately if not used for name
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user_id },
-    select: { name: true, identifier: true, avatar_url: true }
+    where: { id: session.userId },
+    select: { name: true, username: true, avatarUrl: true }
   });
 
   return (
@@ -60,10 +60,10 @@ export default async function StudentLayout({
         </div>
 
         <Sidebar
-          tenantId={institution.id}
+          institutionId={institution.id}
           urlSlug={tenant}
           role="student"
-          username={user?.name || user?.identifier || "Student"}
+          username={user?.name || user?.username || "Student"}
           initialModules={modules}
         />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">

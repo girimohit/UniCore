@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Mail, UserPlus, Link, AlertCircle, Copy, CheckCircle2 } from 'lucide-react';
 
-export default function InviteUser({ tenantId }: { tenantId: string }) {
+export default function InviteUser({ institutionId }: { institutionId: string }) {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('STUDENT');
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function InviteUser({ tenantId }: { tenantId: string }) {
       const res = await fetch('/api/auth/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, role, subdomain: tenantId }),
+        body: JSON.stringify({ email, role, subdomain: institutionId }),
       });
 
       const data = await res.json();

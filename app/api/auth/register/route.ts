@@ -19,8 +19,7 @@ export async function POST(req: Request) {
       const institution = await tx.institution.create({
         data: {
           name: institutionName,
-          subdomain,
-          tenant_id: subdomain, // Utilizing subdomain directly as the internal partition key format
+          slug: subdomain,
         }
       });
 
@@ -31,9 +30,10 @@ export async function POST(req: Request) {
       const adminUser = await tx.user.create({
         data: {
           email: adminEmail,
-          password: hashedPassword,
-          role: 'INSTITUTION_ADMIN',
-          tenant_id: institution.tenant_id,
+          passwordHash: hashedPassword,
+          role: 'ADMIN',
+          institutionId: institution.id,
+          username: 'admin', // default admin username
         }
       });
 
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       message: 'Institution and Admin registered successfully',
-      tenantId: result.institution.tenant_id
+      institutionId: result.institution.id
     }, { status: 201 });
 
   } catch (error: any) {

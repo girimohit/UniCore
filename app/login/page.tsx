@@ -50,7 +50,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<LoginTab>("student");
-  const [identifier, setIdentifier] = useState("");
+  const [username, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -100,7 +100,7 @@ function LoginForm() {
     e.preventDefault();
     setError("");
 
-    if (!identifier.trim()) { setError(`${currentTab.identifierLabel} is required.`); return; }
+    if (!username.trim()) { setError(`${currentTab.identifierLabel} is required.`); return; }
     if (!password) { setError("Password is required."); return; }
     if (!subdomain) {
       setError("Could not detect your institution workspace. Please use your institution's subdomain URL.");
@@ -112,14 +112,14 @@ function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: identifier.trim(), password, subdomain }),
+        body: JSON.stringify({ username: username.trim(), password, subdomain }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Invalid credentials.");
 
-      if (data.user.status === "TEMP") {
-        router.push(`/${subdomain}/setup-password?identifier=${encodeURIComponent(identifier.trim())}`);
+      if (data.user.accountStatus === "TEMP") {
+        router.push(`/${subdomain}/setup-password?username=${encodeURIComponent(username.trim())}`);
         return;
       }
 
@@ -221,7 +221,7 @@ function LoginForm() {
                 type="text"
                 required
                 autoComplete="username"
-                value={identifier}
+                value={username}
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder={currentTab.identifierPlaceholder}
                 className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5cbf]/40 transition-shadow"

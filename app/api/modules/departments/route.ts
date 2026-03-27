@@ -5,16 +5,16 @@ import { isModuleEnabled } from '@/lib/modules/loader';
 
 export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
-    const active = await isModuleEnabled(user.tenant_id, 'departments');
+    const active = await isModuleEnabled(user.institutionId, 'departments');
     if (!active) {
        return NextResponse.json({ error: 'Departments module disabled' }, { status: 403 });
     }
 
     const departments = await prisma.department.findMany({
       where: {
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       },
-      orderBy: { created_at: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
 
     return NextResponse.json({ departments });
@@ -26,7 +26,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, co
 
 export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
-    const active = await isModuleEnabled(user.tenant_id, 'departments');
+    const active = await isModuleEnabled(user.institutionId, 'departments');
     if (!active) {
        return NextResponse.json({ error: 'Departments module disabled' }, { status: 403 });
     }
@@ -41,7 +41,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, c
       data: {
         name,
         code,
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       }
     });
 

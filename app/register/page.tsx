@@ -10,7 +10,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [successData, setSuccessData] = useState<{ tenantSlug: string, identifier: string } | null>(null);
+  const [successData, setSuccessData] = useState<{ tenantSlug: string, username: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ export default function RegisterPage() {
       // Show success screen with credentials instead of auto-redirect
       setSuccessData({
         tenantSlug: data.tenant_slug,
-        identifier: data.credentials.identifier
+        username: data.credentials.username
       });
     } catch (err: any) {
       setError(err.message);
@@ -65,7 +65,7 @@ export default function RegisterPage() {
           </p>
           <div className="bg-black/5 dark:bg-white/5 border border-border/40 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
             <p className="text-sm uppercase tracking-wider mb-1 opacity-70">Your Admin ID</p>
-            <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.identifier}</p>
+            <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.username}</p>
             <p className="text-sm opacity-80">
               Please save this Admin ID securely. You will use it to log in to your workspace at <strong className="text-white">{APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/{successData.tenantSlug}</strong>
             </p>

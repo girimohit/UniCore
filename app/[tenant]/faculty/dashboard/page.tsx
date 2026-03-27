@@ -19,11 +19,11 @@ export default async function FacultyDashboard({ params }: { params: Promise<{ t
 
   if (!institution) notFound();
 
-  // Fetch faculty profile and assigned subjects
-  const faculty = await prisma.facultyProfile.findUnique({
-    where: { user_id: session.user_id },
+  // Fetch faculty and assigned subjects
+  const faculty = await prisma.faculty.findUnique({
+    where: { userId: session.userId },
     include: {
-      taughtSubjects: {
+      facultyAssignments: {
         include: {
           subject: {
             include: { course: true }
@@ -33,7 +33,7 @@ export default async function FacultyDashboard({ params }: { params: Promise<{ t
     }
   });
 
-  const assignedSubjects = faculty?.taughtSubjects.map(ts => ts.subject) || [];
+  const assignedSubjects = faculty?.facultyAssignments.map(fs => fs.subject) || [];
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">

@@ -25,10 +25,10 @@ interface SubjectManagerProps {
   faculty: {
     id: string;
     name: string;
-    identifier: string;
-    facultyProfile: { department_id: string | null } | null;
+    username: string;
+    faculty: { departmentId: string | null } | null;
   }[];
-  tenantId: string;
+  institutionId: string;
   academicSystem: any;
 }
 
@@ -59,7 +59,7 @@ export default function SubjectManager({
     name: "",
     code: "",
     course: "", // Uses name or code for the API
-    cycleNumber: "1",
+    academicCycle: "1",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -104,7 +104,7 @@ export default function SubjectManager({
           setResults(created);
           setSubjects((prev) => [...created, ...prev]);
         }
-        setForm({ name: "", code: "", course: "", cycleNumber: "1" });
+        setForm({ name: "", code: "", course: "", academicCycle: "1" });
         setActiveTab("list");
       }
     } catch (err) {
@@ -120,7 +120,7 @@ export default function SubjectManager({
       name: subject.name,
       code: subject.code,
       course: subject.course?.code || subject.courseId,
-      cycleNumber: String(subject.cycleNumber || 1),
+      academicCycle: String(subject.academicCycle || 1),
     });
     setActiveTab("add");
   };
@@ -183,9 +183,9 @@ export default function SubjectManager({
             const facultyMember = faculty.find((f) => f.id === facultyId);
             return {
               ...s,
-              taughtBy: [
-                ...(s.taughtBy || []),
-                { facultyProfile: { user: facultyMember } },
+              facultyAssignments: [
+                ...(s.facultyAssignments || []),
+                { faculty: { ...facultyMember, user: facultyMember } },
               ],
             };
           }
@@ -214,7 +214,7 @@ export default function SubjectManager({
             if (s.id === subjectId) {
               return {
                 ...s,
-                taughtBy: s.taughtBy.filter((t: any) => t.facultyProfile.user.id !== facultyUserId),
+                facultyAssignments: s.facultyAssignments.filter((t: any) => t.faculty.user.id !== facultyUserId),
               };
             }
             return s;
@@ -320,9 +320,9 @@ export default function SubjectManager({
                   </label>
                   <select
                     required
-                    value={form.cycleNumber}
+                    value={form.academicCycle}
                     onChange={(e) =>
-                      setForm((f) => ({ ...f, cycleNumber: e.target.value }))
+                      setForm((f) => ({ ...f, academicCycle: e.target.value }))
                     }
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
                   >
@@ -365,7 +365,7 @@ export default function SubjectManager({
                         name: "",
                         code: "",
                         course: "",
-                        cycleNumber: "1",
+                        academicCycle: "1",
                       });
                       setActiveTab("list");
                     }}
@@ -389,7 +389,7 @@ export default function SubjectManager({
                 { key: "name", label: "Name", required: true },
                 { key: "code", label: "Code", required: true },
                 { key: "course", label: "Course", required: true },
-                { key: "cycleNumber", label: academic.label, required: true },
+                { key: "academicCycle", label: academic.label, required: true },
               ]}
             />
           </div>
@@ -460,21 +460,21 @@ export default function SubjectManager({
                               </span>
                             </td>
                             <td className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {s.cycleNumber ? formatCycleLabel(academic.type, s.cycleNumber) : "-"}
+                              {s.academicCycle ? formatCycleLabel(academic.type, s.academicCycle) : "-"}
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex flex-wrap gap-2">
-                                {s.taughtBy?.length > 0 ? (
-                                  s.taughtBy.map((t: any) => (
+                                {s.facultyAssignments?.length > 0 ? (
+                                  s.facultyAssignments.map((t: any) => (
                                     <div
-                                      key={t.facultyProfile.user.id}
+                                      key={t.faculty.user.id}
                                       className="flex items-center gap-2 group/tag px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
                                     >
                                       <span className="text-[10px] font-bold text-primary">
-                                        {t.facultyProfile.user.name}
+                                        {t.faculty.user.name}
                                       </span>
                                       <button
-                                        onClick={() => handleRemoveAssignment(s.id, t.facultyProfile.user.id)}
+                                        onClick={() => handleRemoveAssignment(s.id, t.faculty.user.id)}
                                         className="opacity-0 group-hover/tag:opacity-100 transition-opacity text-destructive"
                                       >
                                         <XCircle className="w-3 h-3" />
@@ -545,7 +545,7 @@ export default function SubjectManager({
               {(() => {
                 const filteredFaculty = faculty.filter(
                   (f) =>
-                    f.facultyProfile?.department_id ===
+                    f.faculty?.departmentId ===
                     assigningSubject.course?.departmentId
                 );
 
@@ -565,8 +565,8 @@ export default function SubjectManager({
                 }
 
                 return filteredFaculty.map((f) => {
-                  const isAssigned = assigningSubject.taughtBy?.some(
-                    (t: any) => t.facultyProfile.user.id === f.id
+                  const isAssigned = assigningSubject.facultyAssignments?.some(
+                    (t: any) => t.faculty.user.id === f.id
                   );
                   return (
                     <button
@@ -582,7 +582,7 @@ export default function SubjectManager({
                       <div className="flex flex-col items-start text-left">
                         <span className="text-sm font-bold">{f.name}</span>
                         <span className="text-[10px] font-mono text-muted-foreground">
-                          {f.identifier}
+                          {f.username}
                         </span>
                       </div>
                       {isAssigned ? (

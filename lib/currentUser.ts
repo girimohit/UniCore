@@ -8,14 +8,19 @@ export async function getCurrentUser() {
   if (!token) return null;
 
   const payload = verifyToken(token) as {
-    user_id: string;
-    tenant_id: string;
+    userId: string;
+    institutionId: string;
     role: string;
   } | null;
 
   if (!payload) return null;
 
   return prisma.user.findUnique({
-    where: { id: payload.user_id, tenant_id: payload.tenant_id },
+    where: { 
+      institutionId_username: {
+        institutionId: payload.institutionId,
+        username: (await prisma.user.findUnique({ where: { id: payload.userId } }))?.username || ""
+      }
+    },
   });
 }

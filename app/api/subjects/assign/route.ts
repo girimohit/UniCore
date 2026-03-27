@@ -14,30 +14,30 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
 
     // Validate ownership/tenant
     const subject = await prisma.subject.findFirst({
-      where: { id: subjectId, tenant_id: user.tenant_id }
+      where: { id: subjectId, institutionId: user.institutionId }
     });
 
     const faculty = await prisma.user.findFirst({
-      where: { id: facultyId, tenant_id: user.tenant_id, role: 'FACULTY' },
-      include: { facultyProfile: true }
+      where: { id: facultyId, institutionId: user.institutionId, role: 'FACULTY' },
+      include: { faculty: true }
     });
 
-    if (!subject || !faculty || !faculty.facultyProfile) {
+    if (!subject || !faculty || !faculty.faculty) {
       return NextResponse.json({ error: 'Subject or Faculty not found' }, { status: 404 });
     }
 
     // Create assignment
-    const assignment = await prisma.taughtSubject.upsert({
+    const assignment = await prisma.facultyAssignment.upsert({
       where: {
         subjectId_facultyId: {
           subjectId,
-          facultyId: faculty.facultyProfile.id
+          facultyId: faculty.faculty.id
         }
       },
       update: {},
       create: {
         subjectId,
-        facultyId: faculty.facultyProfile.id
+        facultyId: faculty.faculty.id
       }
     });
 
@@ -60,15 +60,15 @@ export const DELETE = withAuth(['ADMIN'], async (req: NextRequest) => {
       return NextResponse.json({ error: 'Subject ID and Faculty ID are required' }, { status: 400 });
     }
 
-    const faculty = await prisma.facultyProfile.findFirst({
-        where: { user_id: facultyId }
+    const faculty = await prisma.faculty.findFirst({
+      where: { userId: facultyId }
     });
 
     if (!faculty) {
-        return NextResponse.json({ error: 'Faculty profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Faculty profile not found' }, { status: 404 });
     }
 
-    await prisma.taughtSubject.delete({
+    await prisma.facultyAssignment.delete({
       where: {
         subjectId_facultyId: {
           subjectId,

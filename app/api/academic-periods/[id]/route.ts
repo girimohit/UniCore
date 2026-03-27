@@ -6,10 +6,10 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN'], async (req, context, user)
   try {
     const { id } = await context.params;
 
-    const period = await prisma.academicPeriod.findFirst({
+    const period = await prisma.academicTerm.findFirst({
       where: {
         id,
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       }
     });
 

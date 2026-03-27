@@ -6,9 +6,9 @@ import { withAuth } from '@/lib/auth-middleware';
 export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
     const url = new URL(req.url);
-    const subdomain = url.searchParams.get('subdomain') || user.tenant_id;
+    const subdomain = url.searchParams.get('subdomain') || user.institutionId;
     
-    // Auth middleware already verified the user.tenant_id matches the request subdomain if provided.
+    // Auth middleware already verified the user.institutionId matches the request subdomain if provided.
     const institution = await resolveTenant(subdomain);
     if (!institution) {
       return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
@@ -16,7 +16,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async
 
     const departments = await prisma.department.findMany({
       where: {
-        tenant_id: institution.id
+        institutionId: institution.id
       }
     });
 
@@ -31,9 +31,9 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
     const body = await req.json();
     const items = Array.isArray(body) ? body : [body];
     
-    // Auth middleware already verified the user.tenant_id
+    // Auth middleware already verified the user.institutionId
     const institution = await prisma.institution.findUnique({
-      where: { id: user.tenant_id },
+      where: { id: user.institutionId },
     });
 
     if (!institution) {
@@ -54,7 +54,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
           data: {
             name: item.name,
             code: item.code.toUpperCase(),
-            tenant_id: institution.id,
+            institutionId: institution.id,
           }
         });
         created.push(dept);

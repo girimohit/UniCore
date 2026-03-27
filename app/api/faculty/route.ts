@@ -20,46 +20,48 @@ function generateTempPassword(): string {
 // GET /api/faculty – list all faculty for admin's tenant
 export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
   const faculty = await prisma.user.findMany({
-    where: { tenant_id: user.tenant_id, role: 'FACULTY' },
-    include: { facultyProfile: { include: { department: true } } },
-    orderBy: { created_at: 'desc' }
+    where: { institutionId: user.institutionId, role: 'FACULTY' },
+    include: { faculty: { include: { department: true } } },
+    orderBy: { createdAt: 'desc' }
   });
 
   const result = faculty.map((f) => ({
     id: f.id,
-    identifier: f.identifier,
+    username: f.username,
     email: f.email,
-    status: f.status,
+    status: f.accountStatus,
     name: f.name,
-    employee_number: f.facultyProfile?.employee_number ?? null,
-    department: f.facultyProfile?.department?.name ?? null,
-    designation: f.facultyProfile?.designation ?? null,
-    avatar_url: f.avatar_url,
+    employeeNumber: f.faculty?.employeeNumber ?? null,
+    department: f.faculty?.department?.name ?? null,
+    designation: f.faculty?.designation ?? null,
+    avatarUrl: f.avatarUrl,
   }));
 
   return NextResponse.json({ faculty: result });
 });
+
+
 
 // POST /api/faculty – create one or multiple faculty (JSON or CSV parsed array)
 export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
   const body = await req.json();
 
   // Accept either a single object or an array (bulk CSV upload)
-  const entries: Array<{ name: string; employee_number: string; email: string; department: string }> =
+  const entries: Array<{ name: string; employeeNumber: string; email: string; department: string }> =
     Array.isArray(body) ? body : [body];
 
   if (entries.length === 0) {
     return NextResponse.json({ error: 'No entries provided' }, { status: 400 });
   }
 
-  const results: Array<{ name: string; employee_number: string; identifier: string; temp_password: string }> = [];
-  const errors: Array<{ employee_number: string; error: string }> = [];
+  const results: Array<{ name: string; employeeNumber: string; username: string; temp_password: string }> = [];
+  const errors: Array<{ employeeNumber: string; error: string }> = [];
 
   for (const entry of entries) {
-    const { name, employee_number, email, department } = entry;
+    const { name, employeeNumber, email, department } = entry;
 
-    if (!name || !employee_number || !email) {
-      errors.push({ employee_number: employee_number ?? '?', error: 'Missing required fields' });
+    if (!name || !employeeNumber || !email) {
+      errors.push({ employeeNumber: employeeNumber ?? '?', error: 'Missing required fields' });
       continue;
     }
 
@@ -69,16 +71,15 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
         let departmentRecord = null;
         if (department) {
           departmentRecord = await tx.department.findFirst({
-            where: { tenant_id: user.tenant_id, name: { equals: department } }
-            // where: { tenant_id: user.tenant_id, name: { equals: department, mode: 'insensitive' } }
+            where: { institutionId: user.institutionId, name: { equals: department } }
           });
         }
 
-        // Count existing faculty to generate FAC identifier
+        // Count existing faculty to generate FAC username
         const facCount = await tx.user.count({
-          where: { tenant_id: user.tenant_id, role: 'FACULTY' }
+          where: { institutionId: user.institutionId, role: 'FACULTY' }
         });
-        const identifier = `FAC${String(facCount + 1).padStart(3, '0')}`;
+        const username = `FAC${String(facCount + 1).padStart(3, '0')}`;
 
         // Generate and hash temp password
         const tempPassword = generateTempPassword();
@@ -87,42 +88,42 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
         // Create User record
         const newUser = await tx.user.create({
           data: {
-            tenant_id: user.tenant_id,
-            identifier,
+            institutionId: user.institutionId,
+            username,
             name, // Save to User table
-            password_hash: hashed,
+            passwordHash: hashed,
             role: 'FACULTY',
             email,
-            status: 'TEMP', // signals must-reset
+            accountStatus: 'TEMP', // signals must-reset
           }
         });
 
-        // Create FacultyProfile
-        await tx.facultyProfile.create({
+        // Create Faculty
+        await tx.faculty.create({
           data: {
-            user_id: newUser.id,
-            employee_number,
+            userId: newUser.id,
+            employeeNumber,
             designation: 'Faculty', // default designation
-            department_id: departmentRecord?.id ?? null,
+            departmentId: departmentRecord?.id ?? null,
           }
         });
 
         // Trigger Faculty Welcome Email
-        const institution = await resolveTenant(user.tenant_id);
-        // const loginLink = getTenantUrl(user.tenant_id as any, 'login');
+        const institution = await resolveTenant(user.institutionId);
+        // const loginLink = getTenantUrl(user.institutionId as any, 'login');
         const loginLink = getTenantUrl(institution?.slug as any, 'login');
 
         await sendEmail({
           to: email,
           subject: `Welcome to ${institution?.name || 'Unicore'} Faculty Portal`,
-          html: getFacultyWelcomeEmailTemplate(institution?.name || 'Unicore', identifier, tempPassword, loginLink)
+          html: getFacultyWelcomeEmailTemplate(institution?.name || 'Unicore', username, tempPassword, loginLink)
         });
 
-        results.push({ name, employee_number, identifier, temp_password: tempPassword });
+        results.push({ name, employeeNumber, username, temp_password: tempPassword });
       });
     } catch (err: any) {
       errors.push({
-        employee_number,
+        employeeNumber,
         error: err.code === 'P2002' ? 'Employee number or email already exists' : err.message,
       });
     }

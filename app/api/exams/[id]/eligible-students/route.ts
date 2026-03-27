@@ -13,7 +13,7 @@ export const GET = withAuth(
 
       // 1. Resolve exam and ensure it belongs to this tenant
       const exam = await prisma.exam.findFirst({
-        where: { id: examId, tenant_id: user.tenant_id },
+        where: { id: examId, institutionId: user.institutionId },
         select: { id: true, courseId: true }
       });
 
@@ -27,16 +27,16 @@ export const GET = withAuth(
       const semester = semesterParam ? parseInt(semesterParam) : undefined;
 
       // 3. Fetch students enrolled in the exam's course (+ optional semester)
-      const students = await prisma.studentProfile.findMany({
+      const students = await prisma.student.findMany({
         where: {
-          course_id: exam.courseId,
-          user: { tenant_id: user.tenant_id },
+          courseId: exam.courseId,
+          user: { institutionId: user.institutionId },
           ...(semester != null ? { semester } : {}),
         },
         include: {
-          user: { select: { id: true, identifier: true, email: true } }
+          user: { select: { id: true, username: true, email: true } }
         },
-        orderBy: { roll_number: 'asc' }
+        orderBy: { rollNumber: 'asc' }
       });
 
       return NextResponse.json({
@@ -44,11 +44,11 @@ export const GET = withAuth(
         courseId: exam.courseId,
         semester: semester ?? null,
         students: students.map(s => ({
-          studentProfileId: s.id,
+          studentId: s.id,
           userId: s.user.id,
-          identifier: s.user.identifier,
+          username: s.user.username,
           email: s.user.email,
-          roll_number: s.roll_number,
+          rollNumber: s.rollNumber,
           semester: s.semester,
         }))
       });

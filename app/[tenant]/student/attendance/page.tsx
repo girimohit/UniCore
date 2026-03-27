@@ -19,12 +19,12 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   const institution = await resolveTenant(tenant);
   if (!institution) notFound();
 
-  const academic = getAcademicLabel((institution as any).academicStructure || institution.academic_system);
+  const academic = getAcademicLabel((institution as any).academicStructure || (institution as any).academicSystem);
 
-  const student = await prisma.studentProfile.findUnique({
-    where: { user_id: session.user_id },
+  const student = await prisma.student.findUnique({
+    where: { userId: session.userId },
     include: {
-      attendances: {
+      attendanceRecords: {
         include: {
           subject: true
         }
@@ -38,8 +38,8 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   const subjectsMap: Record<string, any> = {};
   
   // Get all subjects for the student's current course assignment
-  const courseSubjects = student.course_id ? await prisma.subject.findMany({
-    where: { courseId: student.course_id }
+  const courseSubjects = student.courseId ? await prisma.subject.findMany({
+    where: { courseId: student.courseId }
   }) : [];
 
   // Color palette for charts
@@ -64,7 +64,7 @@ export default async function StudentAttendancePage({ params }: { params: Promis
   });
 
   // Calculate attended/total counts
-  student.attendances.forEach(a => {
+  student.attendanceRecords.forEach(a => {
     if (subjectsMap[a.subjectId]) {
       subjectsMap[a.subjectId].total++;
       if (a.status === 'PRESENT') {

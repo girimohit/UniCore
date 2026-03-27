@@ -5,15 +5,15 @@ import { isModuleEnabled } from '@/lib/modules/loader';
 
 export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
-    const active = await isModuleEnabled(user.tenant_id, 'courses');
+    const active = await isModuleEnabled(user.institutionId, 'courses');
     if (!active) {
        return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
     }
 
     const courses = await prisma.course.findMany({
-      where: { tenant_id: user.tenant_id },
+      where: { institutionId: user.institutionId },
       include: { department: true }, // Include related Department data
-      orderBy: { created_at: 'desc' }
+      orderBy: { createdAt: 'desc' }
     });
 
     return NextResponse.json({ courses });
@@ -25,7 +25,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, co
 
 export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
-    const active = await isModuleEnabled(user.tenant_id, 'courses');
+    const active = await isModuleEnabled(user.institutionId, 'courses');
     if (!active) {
        return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
     }
@@ -38,7 +38,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, c
 
     // Verify department belongs to the same tenant before linking
     const department = await prisma.department.findFirst({
-        where: { id: departmentId, tenant_id: user.tenant_id }
+        where: { id: departmentId, institutionId: user.institutionId }
     });
 
     if (!department) {
@@ -50,7 +50,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, c
         name,
         code,
         departmentId,
-        tenant_id: user.tenant_id
+        institutionId: user.institutionId
       }
     });
 

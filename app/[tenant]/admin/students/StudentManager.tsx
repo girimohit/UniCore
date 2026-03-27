@@ -10,20 +10,20 @@ import { getAcademicLabel, formatCycleLabel, AcademicSystem } from "@/lib/utils/
 
 interface StudentManagerProps {
   courses: { id: string; name: string }[];
-  tenantId: string;
+  institutionId: string;
   academicSystem: AcademicSystem;
 }
 
 interface Student {
   id: string;
-  identifier: string;
+  username: string;
   name: string;
   email: string | null;
   status: string;
-  roll_number: string;
+  rollNumber: string;
   semester: number | null;
   course: string | null;
-  date_of_birth: string | null;
+  dateOfBirth: string | null;
   gender: string | null;
 }
 
@@ -48,11 +48,11 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
   // Form state
   const [form, setForm] = useState({
     name: "",
-    roll_number: "",
+    rollNumber: "",
     email: "",
     course: "",
     semester: "",
-    date_of_birth: "",
+    dateOfBirth: "",
     gender: ""
   });
 
@@ -89,11 +89,11 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
       if (data.errors?.length > 0) setErrors(data.errors);
       if (data.created?.length > 0) {
         setResults(data.created);
-        setForm({ name: "", roll_number: "", email: "", course: "", semester: "", date_of_birth: "", gender: "" });
+        setForm({ name: "", rollNumber: "", email: "", course: "", semester: "", dateOfBirth: "", gender: "" });
         setActiveTab("list");
       }
     } catch {
-      setErrors([{ roll_number: form.roll_number, error: "Network error" }]);
+      setErrors([{ rollNumber: form.rollNumber, error: "Network error" }]);
     } finally {
       setLoading(false);
     }
@@ -115,7 +115,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
       // Always switch to list tab to show results/errors summary
       setActiveTab("list");
     } catch {
-      setErrors([{ roll_number: "CSV", error: "Upload failed" }]);
+      setErrors([{ rollNumber: "CSV", error: "Upload failed" }]);
     } finally {
       setLoading(false);
     }
@@ -208,7 +208,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Roll Number / Identifier</label>
-                  <input required value={form.roll_number} onChange={e => setForm(f => ({ ...f, roll_number: e.target.value }))} placeholder="e.g. 2023CS001" className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all font-mono" />
+                  <input required value={form.rollNumber} onChange={e => setForm(f => ({ ...f, rollNumber: e.target.value }))} placeholder="e.g. 2023CS001" className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all font-mono" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Email Address</label>
@@ -216,7 +216,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Date of Birth</label>
-                  <input type="date" value={form.date_of_birth} onChange={e => setForm(f => ({ ...f, date_of_birth: e.target.value }))} className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all" />
+                  <input type="date" value={form.dateOfBirth} onChange={e => setForm(f => ({ ...f, dateOfBirth: e.target.value }))} className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Gender</label>
@@ -266,11 +266,11 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
               onUpload={handleCSVImport}
               schema={[
                 { key: "name", label: "Name", required: true },
-                { key: "roll_number", label: "Roll Number", required: true },
+                { key: "rollNumber", label: "Roll Number", required: true },
                 { key: "email", label: "Email", required: true },
                 { key: "course", label: "Course", required: true },
                 { key: "semester", label: academic.label },
-                { key: "date_of_birth", label: "Date of Birth (YYYY-MM-DD)" },
+                { key: "dateOfBirth", label: "Date of Birth (YYYY-MM-DD)" },
                 { key: "gender", label: "Gender" },
               ]}
             />
@@ -342,7 +342,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 font-mono font-bold text-primary">{s.roll_number ?? '—'}</td>
+                          <td className="px-6 py-4 font-mono font-bold text-primary">{s.rollNumber ?? '—'}</td>
                           <td className="px-6 py-4">
                             {s.course ? (
                               <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-amber-500/10 text-amber-700">
@@ -386,7 +386,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
               <div>
                 <h3 className="text-lg font-extrabold text-foreground">Assign Enrollment</h3>
                 <p className="text-sm text-muted-foreground mt-0.5">
-                  <span className="font-bold text-primary">{enrollTarget.name}</span> · {enrollTarget.roll_number}
+                  <span className="font-bold text-primary">{enrollTarget.name}</span> · {enrollTarget.rollNumber}
                 </p>
               </div>
               <button

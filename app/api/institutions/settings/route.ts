@@ -4,15 +4,15 @@ import { withAuth } from '@/lib/auth-middleware';
 
 export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
-    const { academic_system, academicStructure } = await req.json();
+    const { academicSystem, academicStructure } = await req.json();
 
     const data: any = {};
     
-    if (academic_system) {
-      if (!['SEMESTER', 'ANNUAL', 'YEARLY'].includes(academic_system)) {
+    if (academicSystem) {
+      if (!['SEMESTER', 'ANNUAL', 'YEARLY'].includes(academicSystem)) {
         return NextResponse.json({ error: 'Invalid academic system value' }, { status: 400 });
       }
-      data.academic_system = academic_system;
+      data.academicSystem = academicSystem;
     }
 
     if (academicStructure) {
@@ -24,12 +24,12 @@ export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asy
         return NextResponse.json({ error: 'Total cycles must be a positive integer' }, { status: 400 });
       }
       data.academicStructure = academicStructure;
-      // Also sync legacy academic_system for compatibility
-      data.academic_system = type === 'YEARLY' ? 'YEARLY' : 'SEMESTER';
+      // Also sync academicSystem for consistency
+      data.academicSystem = type === 'YEARLY' ? 'YEARLY' : 'SEMESTER';
     }
 
     const updatedInstitution = await prisma.institution.update({
-      where: { id: user.tenant_id },
+      where: { id: user.institutionId },
       data
     });
 

@@ -15,7 +15,7 @@ async function verify() {
       select: {
         id: true,
         name: true,
-        cycleNumber: true
+        academicCycle: true
       }
     });
     console.log('Subject findFirst result:', JSON.stringify(subject, null, 2));

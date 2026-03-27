@@ -16,23 +16,23 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true }
+    select: { id: true, name: true, academicSystem: true, academicStructure: true }
   });
 
   if (!institution) notFound();
 
-  const student = await prisma.studentProfile.findUnique({
-    where: { user_id: session.user_id },
+  const student = await prisma.student.findUnique({
+    where: { userId: session.userId },
     include: {
-      user: { select: { name: true, identifier: true, email: true, status: true, avatar_url: true } },
+      user: { select: { name: true, username: true, email: true, accountStatus: true, avatarUrl: true } },
       course: { select: { name: true, code: true } }
     }
   });
 
   if (!student) notFound();
 
-  const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
-  const initials = (student.user.name || student.user.identifier).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const academic = getAcademicLabel(institution.academicStructure as any || institution.academicSystem);
+  const initials = (student.user.name || student.user.username).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-10">
@@ -52,21 +52,21 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
             <div className="px-8 pb-8 relative">
               <div className="w-28 h-28 rounded-3xl bg-card p-1.5 mx-auto -mt-14 relative shadow-2xl border border-border/40 rotate-1 group-hover:rotate-0 transition-transform">
                 <div className="w-full h-full rounded-2xl bg-muted overflow-hidden flex items-center justify-center text-primary font-black text-3xl shadow-inner">
-                  {student.user.avatar_url ? (
-                    <img src={student.user.avatar_url} alt={student.user.name} className="w-full h-full object-cover" />
+                  {student.user.avatarUrl ? (
+                    <img src={student.user.avatarUrl} alt={student.user.name} className="w-full h-full object-cover" />
                   ) : initials}
                 </div>
               </div>
               <div className="mt-6 space-y-2">
                 <h3 className="text-2xl font-display font-black text-foreground tracking-tight">{student.user.name}</h3>
-                <p className="text-xs font-mono text-muted-foreground opacity-60">@{student.user.identifier}</p>
+                <p className="text-xs font-mono text-muted-foreground opacity-60">@{student.user.username}</p>
                 <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest opacity-70">
                   {student.course?.name ?? 'No course assigned'}
                   {student.semester ? ` · ${academic.label} ${student.semester}` : ''}
                 </p>
                 <div className="pt-4">
                   <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 py-1.5 px-4 rounded-full inline-block uppercase tracking-[0.2em] shadow-sm">
-                    {student.roll_number}
+                    {student.rollNumber}
                   </span>
                 </div>
               </div>
@@ -79,12 +79,12 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black text-muted-foreground uppercase tracking-widest opacity-60">Status</span>
                 <span className={`text-[10px] font-black px-3 py-1 rounded-full border tracking-widest uppercase flex items-center gap-1.5 ${
-                  student.user.status === 'ACTIVE'
+                  student.user.accountStatus === 'ACTIVE'
                     ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
                     : 'text-amber-500 bg-amber-500/10 border-amber-500/20'
                 }`}>
-                  <div className={`h-1.5 w-1.5 rounded-full ${student.user.status === 'ACTIVE' ? 'bg-emerald-500 pulse-dot' : 'bg-amber-500'}`} />
-                  {student.user.status}
+                  <div className={`h-1.5 w-1.5 rounded-full ${student.user.accountStatus === 'ACTIVE' ? 'bg-emerald-500 pulse-dot' : 'bg-amber-500'}`} />
+                  {student.user.accountStatus}
                 </span>
               </div>
             </CardContent>
@@ -117,12 +117,12 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
                 {
                    icon: CalendarDays,
                    label: 'Date of Birth',
-                   value: student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Not specified',
+                   value: student.dateOfBirth ? new Date(student.dateOfBirth).toLocaleDateString(undefined, { dateStyle: 'long' }) : 'Not specified',
                 },
                 {
                   icon: Shield,
                   label: 'Universal Roll No.',
-                  value: student.roll_number,
+                  value: student.rollNumber,
                   mono: true,
                 },
                 {

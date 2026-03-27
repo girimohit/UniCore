@@ -15,10 +15,10 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
 
   // Fetch quick stats for the tenant using the correct User model
   const [studentCount, facultyCount, departmentCount, courseCount] = await Promise.all([
-    prisma.user.count({ where: { tenant_id: institution.id, role: 'STUDENT' } }),
-    prisma.user.count({ where: { tenant_id: institution.id, role: 'FACULTY' } }),
-    prisma.department.count({ where: { tenant_id: institution.id } }),
-    prisma.course.count({ where: { tenant_id: institution.id } }),
+    prisma.user.count({ where: { institutionId: institution.id, role: 'STUDENT' } }),
+    prisma.user.count({ where: { institutionId: institution.id, role: 'FACULTY' } }),
+    prisma.department.count({ where: { institutionId: institution.id } }),
+    prisma.course.count({ where: { institutionId: institution.id } }),
   ]);
 
   const stats = [
@@ -66,7 +66,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 mt-8">
-        <InviteUser tenantId={tenant} />
+        <InviteUser institutionId={tenant} />
 
           <div className="glass rounded-3xl p-8 border border-white/5 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group bg-black/40">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent"></div>

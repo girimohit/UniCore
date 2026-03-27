@@ -20,17 +20,17 @@ export default async function FacultyProfilePage({ params }: { params: Promise<{
 
   if (!institution) notFound();
 
-  const faculty = await prisma.facultyProfile.findUnique({
-    where: { user_id: session.user_id },
+  const faculty = await prisma.faculty.findUnique({
+    where: { userId: session.userId },
     include: {
-      user: { select: { name: true, identifier: true, email: true, status: true, avatar_url: true } },
+      user: { select: { name: true, username: true, email: true, accountStatus: true, avatarUrl: true } },
       department: { select: { name: true, code: true } }
     }
   });
 
   if (!faculty) notFound();
 
-  const initials = (faculty.user.name || faculty.user.identifier).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const initials = (faculty.user.name || faculty.user.username).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-10">
@@ -48,20 +48,20 @@ export default async function FacultyProfilePage({ params }: { params: Promise<{
             <div className="px-8 pb-8 relative">
               <div className="w-28 h-28 rounded-3xl bg-card p-1.5 mx-auto -mt-14 relative shadow-2xl border border-border/40 rotate-1 group-hover:rotate-0 transition-transform">
                 <div className="w-full h-full rounded-2xl bg-muted overflow-hidden flex items-center justify-center text-primary font-black text-3xl shadow-inner">
-                  {faculty.user.avatar_url ? (
-                    <img src={faculty.user.avatar_url} alt={faculty.user.name} className="w-full h-full object-cover" />
+                  {faculty.user.avatarUrl ? (
+                    <img src={faculty.user.avatarUrl} alt={faculty.user.name || ""} className="w-full h-full object-cover" />
                   ) : initials}
                 </div>
               </div>
               <div className="mt-6 space-y-2">
                 <h3 className="text-2xl font-display font-black text-foreground tracking-tight">{faculty.user.name}</h3>
-                <p className="text-xs font-mono text-muted-foreground opacity-60">@{faculty.user.identifier}</p>
+                <p className="text-xs font-mono text-muted-foreground opacity-60">@{faculty.user.username}</p>
                 <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest opacity-70">
                   {faculty.designation || 'Faculty Member'}
                 </p>
                 <div className="pt-4">
                   <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 py-1.5 px-4 rounded-full inline-block uppercase tracking-[0.2em] shadow-sm">
-                    {faculty.employee_number}
+                    {faculty.employeeNumber}
                   </span>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export default async function FacultyProfilePage({ params }: { params: Promise<{
                 {
                   icon: Shield,
                   label: 'Employee ID',
-                  value: faculty.employee_number,
+                  value: faculty.employeeNumber,
                   mono: true,
                 },
                 {

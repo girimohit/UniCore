@@ -42,7 +42,7 @@ export function withAuth(
       const requestTenant = getTenantFromRequest(req);
 
       // If the request has a subdomain context, enforce tenant isolation
-      if (requestTenant && decodedUser.tenant_id !== requestTenant) {
+      if (requestTenant && decodedUser.institutionId !== requestTenant) {
         return NextResponse.json({ error: 'Forbidden: Cross-tenant access denied' }, { status: 403 });
       }
 

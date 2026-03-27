@@ -10,7 +10,7 @@ import CSVUpload from "@/components/admin/CSVUpload";
 
 interface FacultyManagerProps {
   departments: { id: string; name: string }[];
-  tenantId: string;
+  institutionId: string;
 }
 
 export default function FacultyManager({ departments }: FacultyManagerProps) {
@@ -26,7 +26,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
   // Form state
   const [form, setForm] = useState({
     name: "",
-    employee_number: "",
+    employeeNumber: "",
     email: "",
     department: "",
   });
@@ -58,8 +58,8 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
 
   const filteredFaculty = facultyList.filter(f => 
     f.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.identifier?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    f.employee_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    f.employeeNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     f.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     f.department?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -83,11 +83,11 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
       }
       if (data.created && data.created.length > 0) {
         setResults(data.created);
-        setForm({ name: "", employee_number: "", email: "", department: "" });
+        setForm({ name: "", employeeNumber: "", email: "", department: "" });
         setActiveTab("list");
       }
     } catch (err) {
-      setErrors([{ employee_number: form.employee_number, error: "Network error" }]);
+      setErrors([{ employeeNumber: form.employeeNumber, error: "Network error" }]);
     } finally {
       setLoading(false);
     }
@@ -110,7 +110,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
       // Always switch to list tab to show results/errors summary
       setActiveTab("list");
     } catch (err) {
-      setErrors([{ employee_number: "CSV", error: "Upload failed" }]);
+      setErrors([{ employeeNumber: "CSV", error: "Upload failed" }]);
     } finally {
       setLoading(false);
     }
@@ -118,7 +118,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
 
   const downloadCredentials = () => {
     const header = "Name,Employee Number,Faculty ID,Temp Password";
-    const rows = results.map(r => `${r.name},${r.employee_number},${r.identifier},${r.temp_password}`);
+    const rows = results.map(r => `${r.name},${r.employeeNumber},${r.username},${r.temp_password}`);
     const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -174,8 +174,8 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Employee Number</label>
                   <input
                     required
-                    value={form.employee_number}
-                    onChange={e => setForm(f => ({ ...f, employee_number: e.target.value }))}
+                    value={form.employeeNumber}
+                    onChange={e => setForm(f => ({ ...f, employeeNumber: e.target.value }))}
                     placeholder="e.g. EMP001"
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all font-mono"
                   />
@@ -223,7 +223,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
               onUpload={handleCSVImport}
               schema={[
                 { key: "name", label: "Name", required: true },
-                { key: "employee_number", label: "Employee Number", required: true },
+                { key: "employeeNumber", label: "Employee Number", required: true },
                 { key: "email", label: "Email", required: true },
                 { key: "department", label: "Department", required: true },
               ]}
@@ -259,14 +259,14 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                       </thead>
                       <tbody>
                         {results.map(r => (
-                          <tr key={r.identifier} className="border-b border-emerald-500/10">
-                            <td className="px-3 py-2 font-mono font-bold">{r.identifier}</td>
+                          <tr key={r.username} className="border-b border-emerald-500/10">
+                            <td className="px-3 py-2 font-mono font-bold">{r.username}</td>
                             <td className="px-3 py-2">{r.name}</td>
                             <td className="px-3 py-2">
                               <div className="flex items-center gap-2">
-                                <code className="font-mono">{showPasswords[r.identifier] ? r.temp_password : "••••••••••"}</code>
-                                <button onClick={() => togglePassword(r.identifier)} className="opacity-40 hover:opacity-100">
-                                  {showPasswords[r.identifier] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                                <code className="font-mono">{showPasswords[r.username] ? r.temp_password : "••••••••••"}</code>
+                                <button onClick={() => togglePassword(r.username)} className="opacity-40 hover:opacity-100">
+                                  {showPasswords[r.username] ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                                 </button>
                               </div>
                             </td>
@@ -286,7 +286,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                    <div className="space-y-2">
                       {errors.map((err, i) => (
                         <div key={i} className="text-xs p-3 rounded-lg bg-destructive/10 text-destructive/80 font-medium">
-                          <span className="font-bold">{err.employee_number}</span>: {err.error}
+                          <span className="font-bold">{err.employeeNumber}</span>: {err.error}
                         </div>
                       ))}
                    </div>
@@ -336,8 +336,8 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                           <tr key={f.id} className="hover:bg-secondary/5 transition-colors group">
                             <td className="px-6 py-4">
                               <div className="flex flex-col">
-                                <span className="font-mono font-bold text-primary">{f.identifier}</span>
-                                <span className="text-[10px] text-muted-foreground font-semibold uppercase">{f.employee_number}</span>
+                                <span className="font-mono font-bold text-primary">{f.username}</span>
+                                <span className="text-[10px] text-muted-foreground font-semibold uppercase">{f.employeeNumber}</span>
                               </div>
                             </td>
                             <td className="px-6 py-4">
@@ -363,7 +363,7 @@ export default function FacultyManager({ departments }: FacultyManagerProps) {
                                   : "bg-amber-500/10 text-amber-600"
                               }`}>
                                 <div className={`w-1 h-1 rounded-full ${f.status === "ACTIVE" ? "bg-emerald-500" : "bg-amber-500"}`} />
-                                {f.status}
+                                {f.accountStatus}
                               </span>
                             </td>
                             <td className="px-6 py-4 text-right">

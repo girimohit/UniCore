@@ -9,7 +9,7 @@ import CSVUpload from "@/components/admin/CSVUpload";
 
 interface DepartmentManagerProps {
   initialDepartments: any[];
-  tenantId: string;
+  institutionId: string;
 }
 
 export default function DepartmentManager({ initialDepartments }: DepartmentManagerProps) {

@@ -10,7 +10,7 @@ import CSVUpload from "@/components/admin/CSVUpload";
 interface CourseManagerProps {
   initialCourses: any[];
   departments: { id: string; name: string; code: string }[];
-  tenantId: string;
+  institutionId: string;
 }
 
 export default function CourseManager({ initialCourses, departments }: CourseManagerProps) {

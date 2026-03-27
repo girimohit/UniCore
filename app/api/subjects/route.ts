@@ -6,10 +6,10 @@ import { SubjectService } from '@/lib/services/subject-service';
 export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACULTY', 'STUDENT'], async (req, context, user) => {
   try {
     const subjects = await prisma.subject.findMany({
-      where: { tenant_id: user.tenant_id },
+      where: { institutionId: user.institutionId },
       include: { 
         course: true,
-        taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+        facultyAssignments: { include: { faculty: { include: { user: true } } } }
       },
       orderBy: { name: 'asc' }
     });
@@ -37,7 +37,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
         // Find course by name or code
         const course = await prisma.course.findFirst({
           where: {
-            tenant_id: user.tenant_id,
+            institutionId: user.institutionId,
             OR: [
               { name: item.course },
               { code: item.course }
@@ -50,22 +50,22 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
           continue;
         }
 
-        const cycleNumber = item.cycleNumber ? parseInt(item.cycleNumber) : (item.semester ? parseInt(item.semester) : 1);
+        const academicCycle = item.academicCycle ? parseInt(item.academicCycle) : (item.semester ? parseInt(item.semester) : 1);
         
         // Tenant-based validation
-        await SubjectService.validateCycleNumber(user.tenant_id, cycleNumber);
+        await SubjectService.validateCycleNumber(user.institutionId, academicCycle);
 
         const subject = await prisma.subject.create({
           data: {
             name: item.name,
             code: item.code.toUpperCase(),
-            tenant_id: user.tenant_id,
+            institutionId: user.institutionId,
             courseId: course.id,
-            cycleNumber: cycleNumber,
+            academicCycle: academicCycle,
           },
           include: { 
             course: true,
-            taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+            facultyAssignments: { include: { faculty: { include: { user: true } } } }
           }
         });
         created.push(subject);
@@ -87,7 +87,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
 export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
     const body = await req.json();
-    const { id, name, code, courseId, cycleNumber } = body;
+    const { id, name, code, courseId, academicCycle } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Subject ID is required' }, { status: 400 });
@@ -95,17 +95,17 @@ export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asy
 
     // Validate tenant ownership
     const existing = await prisma.subject.findFirst({
-      where: { id, tenant_id: user.tenant_id }
+      where: { id, institutionId: user.institutionId }
     });
 
     if (!existing) {
       return NextResponse.json({ error: 'Subject not found' }, { status: 404 });
     }
 
-    // Validate cycleNumber if provided
-    if (cycleNumber !== undefined) {
+    // Validate academicCycle if provided
+    if (academicCycle !== undefined) {
       try {
-        await SubjectService.validateCycleNumber(user.tenant_id, parseInt(String(cycleNumber)));
+        await SubjectService.validateCycleNumber(user.institutionId, parseInt(String(academicCycle)));
       } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 400 });
       }
@@ -117,11 +117,11 @@ export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asy
         ...(name && { name }),
         ...(code && { code: code.toUpperCase() }),
         ...(courseId && { courseId }),
-        ...(cycleNumber !== undefined && { cycleNumber: parseInt(String(cycleNumber)) }),
+        ...(academicCycle !== undefined && { academicCycle: parseInt(String(academicCycle)) }),
       },
       include: { 
         course: true,
-        taughtBy: { include: { facultyProfile: { include: { user: true } } } }
+        facultyAssignments: { include: { faculty: { include: { user: true } } } }
       }
     });
 
@@ -143,7 +143,7 @@ export const DELETE = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], as
 
     // Validate tenant ownership
     const existing = await prisma.subject.findFirst({
-      where: { id, tenant_id: user.tenant_id }
+      where: { id, institutionId: user.institutionId }
     });
 
     if (!existing) {

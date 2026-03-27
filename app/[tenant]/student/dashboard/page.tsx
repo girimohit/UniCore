@@ -25,29 +25,29 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
 
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true }
+    select: { id: true, name: true, academicSystem: true, academicStructure: true }
   });
 
   if (!institution) notFound();
 
-  const student = await prisma.studentProfile.findUnique({
-    where: { user_id: session.user_id },
+  const student = await prisma.student.findUnique({
+    where: { userId: session.userId },
     include: {
-      user: { select: { identifier: true, email: true } },
+      user: { select: { username: true, email: true } },
       course: { select: { name: true } },
       _count: {
         select: {
-          attendances: true,
-          enrolledCourses: true,
-          grades: true
+          attendanceRecords: true,
+          courseEnrollments: true,
+          examResults: true
         }
       },
-      attendances: {
+      attendanceRecords: {
         where: { status: 'PRESENT' },
         select: { id: true }
       },
-      grades: {
-        select: { score: true }
+      examResults: {
+        select: { obtainedMarks: true }
       }
     }
   });
@@ -65,23 +65,23 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
   }
 
   // Stats
-  const attendanceCount = student._count.attendances;
-  const presentCount = student.attendances.length;
+  const attendanceCount = student._count.attendanceRecords;
+  const presentCount = student.attendanceRecords.length;
   const attendanceRate = attendanceCount > 0
     ? Math.round((presentCount / attendanceCount) * 100)
     : 0;
   const attendanceStatus = attendanceRate >= 75 ? 'Good' : attendanceRate >= 50 ? 'Average' : 'Low';
   const attendanceColor = attendanceRate >= 75 ? 'text-emerald-700 bg-emerald-50 border-emerald-100' : attendanceRate >= 50 ? 'text-amber-700 bg-amber-50 border-amber-100' : 'text-rose-700 bg-rose-50 border-rose-100';
 
-  const avgGpa = student.grades.length > 0
-    ? (student.grades.reduce((acc, curr) => acc + curr.score, 0) / student.grades.length / 25).toFixed(1)
+  const avgGpa = student.examResults.length > 0
+    ? (student.examResults.reduce((acc, curr) => acc + curr.obtainedMarks, 0) / student.examResults.length / 25).toFixed(1)
     : null;
 
-  const academic = getAcademicLabel(institution.academicStructure as any || institution.academic_system);
+  const academic = getAcademicLabel(institution.academicStructure as any || institution.academicSystem);
 
   // Recent subjects for the student's course
-  const recentSubjects = student.course_id ? await prisma.subject.findMany({
-    where: { courseId: student.course_id },
+  const recentSubjects = student.courseId ? await prisma.subject.findMany({
+    where: { courseId: student.courseId },
     take: 4,
     orderBy: { name: 'asc' }
   }) : [];
@@ -105,7 +105,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
             <div className="space-y-2">
               <h1 className="text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-[1.1]">
                 Welcome back,<br />
-                <span className="grad-all">{student.user.identifier}</span>
+                <span className="grad-all">{student.user.username}</span>
               </h1>
               <p className="text-white/60 font-medium max-w-lg text-lg leading-relaxed">
                 {student.course ? (
@@ -276,7 +276,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
                 {[
                   { label: "Course", value: student.course?.name ?? "N/A", icon: GraduationCap },
                   { label: academic.label, value: student.semester ? formatCycleLabel(academic.type, student.semester) : "N/A", icon: CalendarCheck },
-                  { label: "Enrollment ID", value: student.roll_number, icon: TrendingUp },
+                  { label: "Enrollment ID", value: student.rollNumber, icon: TrendingUp },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground transition-all group-hover:bg-primary/10 group-hover:text-primary">

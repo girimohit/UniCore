@@ -37,8 +37,8 @@ export default async function AdminLayout({
     return notFound();
   }
   const user = await prisma.user.findUnique({
-    where: { id: session.user_id },
-    select: { name: true, identifier: true, avatar_url: true }
+    where: { id: session.userId },
+    select: { name: true, username: true, avatarUrl: true }
   });
 
 
@@ -64,10 +64,10 @@ export default async function AdminLayout({
         </div>
 
         <Sidebar
-          tenantId={institution.id}
+          institutionId={institution.id}
           urlSlug={institution.slug}
           role="admin"
-          username={user?.name || user?.identifier || "Admin"}
+          username={user?.name || user?.username || "Admin"}
           initialModules={modules}
         />
         <div className="flex-1 flex flex-col h-full overflow-hidden relative z-10">

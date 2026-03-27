@@ -38,7 +38,7 @@ export function getAcademicLabel(structure: AcademicStructure | AcademicSystem |
   };
 }
 
-export function formatCycleLabel(type: 'SEMESTER' | 'YEARLY' | string, cycleNumber: number | string) {
+export function formatCycleLabel(type: 'SEMESTER' | 'YEARLY' | string, academicCycle: number | string) {
   const label = type === 'YEARLY' ? 'Year' : 'Semester';
-  return `${label} ${cycleNumber}`;
+  return `${label} ${academicCycle}`;
 }

@@ -15,16 +15,16 @@ export default async function CoursesPage({ params }: { params: Promise<{ tenant
 
   // Fetch departments for the dropdown
   const departments = await prisma.department.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     select: { id: true, name: true, code: true },
     orderBy: { name: 'asc' }
   });
 
   // Fetch courses for the list
   const courses = await prisma.course.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     include: { department: true },
-    orderBy: { created_at: 'desc' }
+    orderBy: { createdAt: 'desc' }
   });
 
   return (
@@ -38,7 +38,7 @@ export default async function CoursesPage({ params }: { params: Promise<{ tenant
         </p>
       </div>
 
-      <CourseManager initialCourses={courses} departments={departments} tenantId={institution.id} />
+      <CourseManager initialCourses={courses} departments={departments} institutionId={institution.id} />
     </div>
   );
 }

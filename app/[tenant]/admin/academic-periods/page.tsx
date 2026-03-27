@@ -3,20 +3,29 @@ import { notFound } from "next/navigation";
 import { Calendar } from "lucide-react";
 import AcademicPeriodManager from "./AcademicPeriodManager";
 
-export default async function AcademicPeriodsPage({ params }: { params: Promise<{ tenant: string }> }) {
+export default async function AcademicPeriodsPage({
+  params,
+}: {
+  params: Promise<{ tenant: string }>;
+}) {
   const { tenant } = await params;
 
   // Resolve institution and fetch periods
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true },
+    select: {
+      id: true,
+      name: true,
+      academicSystem: true,
+      academicStructure: true,
+    },
   });
 
   if (!institution) return notFound();
 
-  const periods = await prisma.academicPeriod.findMany({
-    where: { tenant_id: institution.id },
-    orderBy: { start_date: 'desc' }
+  const periods = await prisma.academicTerm.findMany({
+    where: { institutionId: institution.id },
+    orderBy: { startDate: "desc" },
   });
 
   return (
@@ -27,13 +36,16 @@ export default async function AcademicPeriodsPage({ params }: { params: Promise<
           Academic Periods
         </h1>
         <p className="text-lg text-muted-foreground mt-2 font-medium">
-          Manage academic cycles and terms for <span className="text-primary">{institution.name}</span>
+          Manage academic cycles and terms for{" "}
+          <span className="text-primary">{institution.name}</span>
         </p>
       </div>
 
-      <AcademicPeriodManager 
-        initialPeriods={JSON.parse(JSON.stringify(periods))} 
-        academicSystem={institution.academicStructure as any || institution.academic_system}
+      <AcademicPeriodManager
+        initialPeriods={JSON.parse(JSON.stringify(periods))}
+        academicSystem={
+          (institution.academicStructure as any) || institution.academicSystem
+        }
       />
     </div>
   );

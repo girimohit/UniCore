@@ -8,38 +8,38 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
   // Resolve institution
   const institution = await prisma.institution.findUnique({
     where: { slug: tenant },
-    select: { id: true, name: true, academic_system: true, academicStructure: true },
+    select: { id: true, name: true, academicSystem: true, academicStructure: true },
   });
 
   if (!institution) return notFound();
 
   // Fetch courses for the dropdown
   const courses = await prisma.course.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     select: { id: true, name: true, code: true },
     orderBy: { name: 'asc' }
   });
 
   // Fetch faculty for assignment
   const faculty = await prisma.user.findMany({
-    where: { tenant_id: institution.id, role: "FACULTY" },
+    where: { institutionId: institution.id, role: "FACULTY" },
     select: {
       id: true,
       name: true,
-      identifier: true,
-      facultyProfile: { select: { department_id: true } },
+      username: true,
+      faculty: { select: { departmentId: true } },
     },
     orderBy: { name: "asc" },
   });
 
   // Fetch subjects for the list
   const subjects = await prisma.subject.findMany({
-    where: { tenant_id: institution.id },
+    where: { institutionId: institution.id },
     include: {
       course: { include: { department: true } },
-      taughtBy: { include: { facultyProfile: { include: { user: true } } } },
+      facultyAssignments: { include: { faculty: { include: { user: true } } } },
     },
-    orderBy: { created_at: 'desc' }
+    orderBy: { createdAt: 'desc' }
   });
 
   return (
@@ -57,8 +57,8 @@ export default async function SubjectsPage({ params }: { params: Promise<{ tenan
         initialSubjects={subjects} 
         courses={courses} 
         faculty={faculty}
-        tenantId={institution.id} 
-        academicSystem={institution.academicStructure as any || institution.academic_system}
+        institutionId={institution.id} 
+        academicSystem={institution.academicStructure as any || institution.academicSystem}
       />
     </div>
   );
