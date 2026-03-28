@@ -3,7 +3,7 @@
 const FEATURES = [
   {
     icon: "🗄",
-    title: "Tenant Isolation",
+    title: "Institution Isolation",
     desc: "Every institution gets a secure, isolated data context with Row-Level Security — no data leaks, ever.",
     glow: "rgba(124,92,191,0.25)",
     border: "rgba(124,92,191,0.4)",

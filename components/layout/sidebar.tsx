@@ -27,31 +27,39 @@ import { useSidebar } from "./sidebar-context";
 
 const SIDEBAR_COLORS = [
   {
-    active: "bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 dark:border dark:border-violet-500/20",
+    active:
+      "bg-violet-100 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400 dark:border dark:border-violet-500/20",
     hover: "hover:bg-violet-50 hover:text-violet-700 dark:hover:bg-violet-500/5 dark:hover:text-violet-300",
   },
   {
-    active: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border dark:border-emerald-500/20",
-    hover: "hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-500/5 dark:hover:text-emerald-300",
+    active:
+      "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border dark:border-emerald-500/20",
+    hover:
+      "hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-500/5 dark:hover:text-emerald-300",
   },
   {
-    active: "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 dark:border dark:border-blue-500/20",
+    active:
+      "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 dark:border dark:border-blue-500/20",
     hover: "hover:bg-blue-50 hover:text-blue-700 dark:hover:bg-blue-500/5 dark:hover:text-blue-300",
   },
   {
-    active: "bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 dark:border dark:border-purple-500/20",
+    active:
+      "bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 dark:border dark:border-purple-500/20",
     hover: "hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-500/5 dark:hover:text-purple-300",
   },
   {
-    active: "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 dark:border dark:border-amber-500/20",
+    active:
+      "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400 dark:border dark:border-amber-500/20",
     hover: "hover:bg-amber-50 hover:text-amber-700 dark:hover:bg-amber-500/5 dark:hover:text-amber-300",
   },
   {
-    active: "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 dark:border dark:border-rose-500/20",
+    active:
+      "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400 dark:border dark:border-rose-500/20",
     hover: "hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-500/5 dark:hover:text-rose-300",
   },
   {
-    active: "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border dark:border-indigo-500/20",
+    active:
+      "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border dark:border-indigo-500/20",
     hover: "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-500/5 dark:hover:text-indigo-300",
   },
 ];
@@ -136,6 +144,12 @@ const adminLinks = [
     moduleId: "subjects",
   },
   {
+    name: "Notices",
+    href: "/admin/notices",
+    icon: Bell,
+    moduleId: "notices",
+  },
+  {
     name: "Exams",
     href: "/admin/exams",
     icon: Icons.ClipboardCheck,
@@ -198,9 +212,7 @@ export default function Sidebar({
       <div
         className={cn(
           "fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300 ",
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none",
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
         )}
         onClick={() => setIsOpen(false)}
       />
@@ -238,33 +250,25 @@ export default function Sidebar({
               Main Menu
             </p>
             {(role === "admin" ? adminLinks : role === "faculty" ? facultyLinks : studentLinks)
-              .filter(
-                (item) =>
-                  !item.moduleId ||
-                  initialModules.some((m) => m.id === item.moduleId),
-              )
+              .filter((item) => !item.moduleId || initialModules.some((m) => m.id === item.moduleId))
               .map((item, i) => {
                 const fullPathLabels = `/${urlSlug}${item.href}`;
                 const isActive = pathname.startsWith(fullPathLabels);
                 const colors = SIDEBAR_COLORS[i % SIDEBAR_COLORS.length];
-                
+
                 return (
                   <Link
                     key={item.name}
                     href={fullPathLabels}
                     className={cn(
                       "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
-                      isActive
-                        ? colors.active
-                        : `text-slate-500 ${colors.hover}`,
+                      isActive ? colors.active : `text-slate-500 ${colors.hover}`,
                     )}
                   >
                     <item.icon
                       className={cn(
                         "h-5 w-5 transition-transform group-hover:scale-110",
-                        isActive
-                          ? "text-current"
-                          : "text-slate-400 group-hover:text-current",
+                        isActive ? "text-current" : "text-slate-400 group-hover:text-current",
                       )}
                     />
                     {item.name}
@@ -290,9 +294,7 @@ export default function Sidebar({
                       !studentLinks.some((sl) => sl.moduleId === m.id),
                   )
                   .map((moduleItem, i) => {
-                    const Icon = moduleItem.icon
-                      ? (Icons as any)[moduleItem.icon]
-                      : Box;
+                    const Icon = moduleItem.icon ? (Icons as any)[moduleItem.icon] : Box;
                     const linkPath = `/${urlSlug}/${role}/${moduleItem.routePath}`;
                     const isActive = pathname.startsWith(linkPath);
                     const colors = SIDEBAR_COLORS[(i + adminLinks.length) % SIDEBAR_COLORS.length];
@@ -303,17 +305,13 @@ export default function Sidebar({
                         href={linkPath}
                         className={cn(
                           "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
-                          isActive
-                            ? colors.active
-                            : `text-slate-500 ${colors.hover}`,
+                          isActive ? colors.active : `text-slate-500 ${colors.hover}`,
                         )}
                       >
                         <Icon
                           className={cn(
                             "h-5 w-5 transition-transform group-hover:scale-110",
-                            isActive
-                              ? "text-current"
-                              : "text-slate-400 group-hover:text-current",
+                            isActive ? "text-current" : "text-slate-400 group-hover:text-current",
                           )}
                         />
                         {moduleItem.name}

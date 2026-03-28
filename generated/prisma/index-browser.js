@@ -279,6 +279,16 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NoticeScalarFieldEnum = {
+  id: 'id',
+  institutionId: 'institutionId',
+  title: 'title',
+  content: 'content',
+  targetRole: 'targetRole',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -425,6 +435,14 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   avatarUrl: 'avatarUrl',
   accountStatus: 'accountStatus'
 };
+
+exports.Prisma.NoticeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  institutionId: 'institutionId',
+  title: 'title',
+  content: 'content',
+  targetRole: 'targetRole'
+};
 exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
   PRESENT: 'PRESENT',
   ABSENT: 'ABSENT',
@@ -468,7 +486,8 @@ exports.Prisma.ModelName = {
   Student: 'Student',
   Subject: 'Subject',
   FacultyAssignment: 'FacultyAssignment',
-  User: 'User'
+  User: 'User',
+  Notice: 'Notice'
 };
 
 /**

@@ -25,12 +25,23 @@ export async function POST(req: Request) {
       return new NextResponse("Cannot disable core modules", { status: 400 });
     }
 
-    // Upsert the subscription record
+    // Ensure the module exists in the database
+    let dbModule = await prisma.module.findUnique({ where: { name: moduleId } });
+    if (!dbModule) {
+      dbModule = await prisma.module.create({
+        data: {
+          name: moduleDef.id,
+          description: moduleDef.description,
+        }
+      });
+    }
+
+    // Upsert the subscription record using the definitive DB ID
     const updated = await prisma.moduleSubscription.upsert({
       where: {
         institutionId_moduleId: {
           institutionId: user.institutionId,
-          moduleId: moduleId,
+          moduleId: dbModule.id,
         },
       },
       update: {
@@ -38,7 +49,7 @@ export async function POST(req: Request) {
       },
       create: {
         institutionId: user.institutionId,
-        moduleId: moduleId,
+        moduleId: dbModule.id,
         isActive: isActive,
       },
     });

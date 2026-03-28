@@ -93,6 +93,11 @@ export type FacultyAssignment = $Result.DefaultSelection<Prisma.$FacultyAssignme
  * 
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model Notice
+ * 
+ */
+export type Notice = $Result.DefaultSelection<Prisma.$NoticePayload>
 
 /**
  * Enums
@@ -434,6 +439,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notice`: Exposes CRUD operations for the **Notice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notices
+    * const notices = await prisma.notice.findMany()
+    * ```
+    */
+  get notice(): Prisma.NoticeDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -883,7 +898,8 @@ export namespace Prisma {
     Student: 'Student',
     Subject: 'Subject',
     FacultyAssignment: 'FacultyAssignment',
-    User: 'User'
+    User: 'User',
+    Notice: 'Notice'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -899,7 +915,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "academicTerm" | "attendanceRecord" | "course" | "department" | "courseEnrollment" | "exam" | "faculty" | "examResult" | "institution" | "moduleSubscription" | "userInvitation" | "module" | "student" | "subject" | "facultyAssignment" | "user"
+      modelProps: "academicTerm" | "attendanceRecord" | "course" | "department" | "courseEnrollment" | "exam" | "faculty" | "examResult" | "institution" | "moduleSubscription" | "userInvitation" | "module" | "student" | "subject" | "facultyAssignment" | "user" | "notice"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1959,6 +1975,72 @@ export namespace Prisma {
           }
         }
       }
+      Notice: {
+        payload: Prisma.$NoticePayload<ExtArgs>
+        fields: Prisma.NoticeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NoticeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NoticeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          findFirst: {
+            args: Prisma.NoticeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NoticeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          findMany: {
+            args: Prisma.NoticeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>[]
+          }
+          create: {
+            args: Prisma.NoticeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          createMany: {
+            args: Prisma.NoticeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.NoticeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          update: {
+            args: Prisma.NoticeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          deleteMany: {
+            args: Prisma.NoticeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NoticeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NoticeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          aggregate: {
+            args: Prisma.NoticeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotice>
+          }
+          groupBy: {
+            args: Prisma.NoticeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NoticeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NoticeCountArgs<ExtArgs>
+            result: $Utils.Optional<NoticeCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2083,6 +2165,7 @@ export namespace Prisma {
     subject?: SubjectOmit
     facultyAssignment?: FacultyAssignmentOmit
     user?: UserOmit
+    notice?: NoticeOmit
   }
 
   /* Types for Logging */
@@ -2373,6 +2456,7 @@ export namespace Prisma {
     userInvitations: number
     subjects: number
     users: number
+    notices: number
   }
 
   export type InstitutionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2386,6 +2470,7 @@ export namespace Prisma {
     userInvitations?: boolean | InstitutionCountOutputTypeCountUserInvitationsArgs
     subjects?: boolean | InstitutionCountOutputTypeCountSubjectsArgs
     users?: boolean | InstitutionCountOutputTypeCountUsersArgs
+    notices?: boolean | InstitutionCountOutputTypeCountNoticesArgs
   }
 
   // Custom InputTypes
@@ -2467,6 +2552,13 @@ export namespace Prisma {
    */
   export type InstitutionCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserWhereInput
+  }
+
+  /**
+   * InstitutionCountOutputType without action
+   */
+  export type InstitutionCountOutputTypeCountNoticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoticeWhereInput
   }
 
 
@@ -10829,6 +10921,7 @@ export namespace Prisma {
     userInvitations?: boolean | Institution$userInvitationsArgs<ExtArgs>
     subjects?: boolean | Institution$subjectsArgs<ExtArgs>
     users?: boolean | Institution$usersArgs<ExtArgs>
+    notices?: boolean | Institution$noticesArgs<ExtArgs>
     _count?: boolean | InstitutionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["institution"]>
 
@@ -10857,6 +10950,7 @@ export namespace Prisma {
     userInvitations?: boolean | Institution$userInvitationsArgs<ExtArgs>
     subjects?: boolean | Institution$subjectsArgs<ExtArgs>
     users?: boolean | Institution$usersArgs<ExtArgs>
+    notices?: boolean | Institution$noticesArgs<ExtArgs>
     _count?: boolean | InstitutionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -10873,6 +10967,7 @@ export namespace Prisma {
       userInvitations: Prisma.$UserInvitationPayload<ExtArgs>[]
       subjects: Prisma.$SubjectPayload<ExtArgs>[]
       users: Prisma.$UserPayload<ExtArgs>[]
+      notices: Prisma.$NoticePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11233,6 +11328,7 @@ export namespace Prisma {
     userInvitations<T extends Institution$userInvitationsArgs<ExtArgs> = {}>(args?: Subset<T, Institution$userInvitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     subjects<T extends Institution$subjectsArgs<ExtArgs> = {}>(args?: Subset<T, Institution$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     users<T extends Institution$usersArgs<ExtArgs> = {}>(args?: Subset<T, Institution$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notices<T extends Institution$noticesArgs<ExtArgs> = {}>(args?: Subset<T, Institution$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11855,6 +11951,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Institution.notices
+   */
+  export type Institution$noticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    where?: NoticeWhereInput
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    cursor?: NoticeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
   }
 
   /**
@@ -18916,6 +19036,962 @@ export namespace Prisma {
 
 
   /**
+   * Model Notice
+   */
+
+  export type AggregateNotice = {
+    _count: NoticeCountAggregateOutputType | null
+    _min: NoticeMinAggregateOutputType | null
+    _max: NoticeMaxAggregateOutputType | null
+  }
+
+  export type NoticeMinAggregateOutputType = {
+    id: string | null
+    institutionId: string | null
+    title: string | null
+    content: string | null
+    targetRole: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NoticeMaxAggregateOutputType = {
+    id: string | null
+    institutionId: string | null
+    title: string | null
+    content: string | null
+    targetRole: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NoticeCountAggregateOutputType = {
+    id: number
+    institutionId: number
+    title: number
+    content: number
+    targetRole: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type NoticeMinAggregateInputType = {
+    id?: true
+    institutionId?: true
+    title?: true
+    content?: true
+    targetRole?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NoticeMaxAggregateInputType = {
+    id?: true
+    institutionId?: true
+    title?: true
+    content?: true
+    targetRole?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NoticeCountAggregateInputType = {
+    id?: true
+    institutionId?: true
+    title?: true
+    content?: true
+    targetRole?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type NoticeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notice to aggregate.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notices
+    **/
+    _count?: true | NoticeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NoticeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NoticeMaxAggregateInputType
+  }
+
+  export type GetNoticeAggregateType<T extends NoticeAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotice[P]>
+      : GetScalarType<T[P], AggregateNotice[P]>
+  }
+
+
+
+
+  export type NoticeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoticeWhereInput
+    orderBy?: NoticeOrderByWithAggregationInput | NoticeOrderByWithAggregationInput[]
+    by: NoticeScalarFieldEnum[] | NoticeScalarFieldEnum
+    having?: NoticeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NoticeCountAggregateInputType | true
+    _min?: NoticeMinAggregateInputType
+    _max?: NoticeMaxAggregateInputType
+  }
+
+  export type NoticeGroupByOutputType = {
+    id: string
+    institutionId: string
+    title: string
+    content: string
+    targetRole: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: NoticeCountAggregateOutputType | null
+    _min: NoticeMinAggregateOutputType | null
+    _max: NoticeMaxAggregateOutputType | null
+  }
+
+  type GetNoticeGroupByPayload<T extends NoticeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NoticeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NoticeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NoticeGroupByOutputType[P]>
+            : GetScalarType<T[P], NoticeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NoticeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    institutionId?: boolean
+    title?: boolean
+    content?: boolean
+    targetRole?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    institution?: boolean | InstitutionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notice"]>
+
+
+
+  export type NoticeSelectScalar = {
+    id?: boolean
+    institutionId?: boolean
+    title?: boolean
+    content?: boolean
+    targetRole?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type NoticeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "institutionId" | "title" | "content" | "targetRole" | "createdAt" | "updatedAt", ExtArgs["result"]["notice"]>
+  export type NoticeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    institution?: boolean | InstitutionDefaultArgs<ExtArgs>
+  }
+
+  export type $NoticePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notice"
+    objects: {
+      institution: Prisma.$InstitutionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      institutionId: string
+      title: string
+      content: string
+      targetRole: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["notice"]>
+    composites: {}
+  }
+
+  type NoticeGetPayload<S extends boolean | null | undefined | NoticeDefaultArgs> = $Result.GetResult<Prisma.$NoticePayload, S>
+
+  type NoticeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NoticeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NoticeCountAggregateInputType | true
+    }
+
+  export interface NoticeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notice'], meta: { name: 'Notice' } }
+    /**
+     * Find zero or one Notice that matches the filter.
+     * @param {NoticeFindUniqueArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NoticeFindUniqueArgs>(args: SelectSubset<T, NoticeFindUniqueArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notice that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NoticeFindUniqueOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NoticeFindUniqueOrThrowArgs>(args: SelectSubset<T, NoticeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindFirstArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NoticeFindFirstArgs>(args?: SelectSubset<T, NoticeFindFirstArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindFirstOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NoticeFindFirstOrThrowArgs>(args?: SelectSubset<T, NoticeFindFirstOrThrowArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notices
+     * const notices = await prisma.notice.findMany()
+     * 
+     * // Get first 10 Notices
+     * const notices = await prisma.notice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const noticeWithIdOnly = await prisma.notice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NoticeFindManyArgs>(args?: SelectSubset<T, NoticeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notice.
+     * @param {NoticeCreateArgs} args - Arguments to create a Notice.
+     * @example
+     * // Create one Notice
+     * const Notice = await prisma.notice.create({
+     *   data: {
+     *     // ... data to create a Notice
+     *   }
+     * })
+     * 
+     */
+    create<T extends NoticeCreateArgs>(args: SelectSubset<T, NoticeCreateArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notices.
+     * @param {NoticeCreateManyArgs} args - Arguments to create many Notices.
+     * @example
+     * // Create many Notices
+     * const notice = await prisma.notice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NoticeCreateManyArgs>(args?: SelectSubset<T, NoticeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Notice.
+     * @param {NoticeDeleteArgs} args - Arguments to delete one Notice.
+     * @example
+     * // Delete one Notice
+     * const Notice = await prisma.notice.delete({
+     *   where: {
+     *     // ... filter to delete one Notice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NoticeDeleteArgs>(args: SelectSubset<T, NoticeDeleteArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notice.
+     * @param {NoticeUpdateArgs} args - Arguments to update one Notice.
+     * @example
+     * // Update one Notice
+     * const notice = await prisma.notice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NoticeUpdateArgs>(args: SelectSubset<T, NoticeUpdateArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notices.
+     * @param {NoticeDeleteManyArgs} args - Arguments to filter Notices to delete.
+     * @example
+     * // Delete a few Notices
+     * const { count } = await prisma.notice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NoticeDeleteManyArgs>(args?: SelectSubset<T, NoticeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notices
+     * const notice = await prisma.notice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NoticeUpdateManyArgs>(args: SelectSubset<T, NoticeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Notice.
+     * @param {NoticeUpsertArgs} args - Arguments to update or create a Notice.
+     * @example
+     * // Update or create a Notice
+     * const notice = await prisma.notice.upsert({
+     *   create: {
+     *     // ... data to create a Notice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NoticeUpsertArgs>(args: SelectSubset<T, NoticeUpsertArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeCountArgs} args - Arguments to filter Notices to count.
+     * @example
+     * // Count the number of Notices
+     * const count = await prisma.notice.count({
+     *   where: {
+     *     // ... the filter for the Notices we want to count
+     *   }
+     * })
+    **/
+    count<T extends NoticeCountArgs>(
+      args?: Subset<T, NoticeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NoticeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NoticeAggregateArgs>(args: Subset<T, NoticeAggregateArgs>): Prisma.PrismaPromise<GetNoticeAggregateType<T>>
+
+    /**
+     * Group by Notice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NoticeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NoticeGroupByArgs['orderBy'] }
+        : { orderBy?: NoticeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NoticeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNoticeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notice model
+   */
+  readonly fields: NoticeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NoticeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    institution<T extends InstitutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InstitutionDefaultArgs<ExtArgs>>): Prisma__InstitutionClient<$Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Notice model
+   */
+  interface NoticeFieldRefs {
+    readonly id: FieldRef<"Notice", 'String'>
+    readonly institutionId: FieldRef<"Notice", 'String'>
+    readonly title: FieldRef<"Notice", 'String'>
+    readonly content: FieldRef<"Notice", 'String'>
+    readonly targetRole: FieldRef<"Notice", 'String'>
+    readonly createdAt: FieldRef<"Notice", 'DateTime'>
+    readonly updatedAt: FieldRef<"Notice", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Notice findUnique
+   */
+  export type NoticeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice findUniqueOrThrow
+   */
+  export type NoticeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice findFirst
+   */
+  export type NoticeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice findFirstOrThrow
+   */
+  export type NoticeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice findMany
+   */
+  export type NoticeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notices to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice create
+   */
+  export type NoticeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notice.
+     */
+    data: XOR<NoticeCreateInput, NoticeUncheckedCreateInput>
+  }
+
+  /**
+   * Notice createMany
+   */
+  export type NoticeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notices.
+     */
+    data: NoticeCreateManyInput | NoticeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Notice update
+   */
+  export type NoticeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notice.
+     */
+    data: XOR<NoticeUpdateInput, NoticeUncheckedUpdateInput>
+    /**
+     * Choose, which Notice to update.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice updateMany
+   */
+  export type NoticeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notices.
+     */
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyInput>
+    /**
+     * Filter which Notices to update
+     */
+    where?: NoticeWhereInput
+    /**
+     * Limit how many Notices to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notice upsert
+   */
+  export type NoticeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notice to update in case it exists.
+     */
+    where: NoticeWhereUniqueInput
+    /**
+     * In case the Notice found by the `where` argument doesn't exist, create a new Notice with this data.
+     */
+    create: XOR<NoticeCreateInput, NoticeUncheckedCreateInput>
+    /**
+     * In case the Notice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NoticeUpdateInput, NoticeUncheckedUpdateInput>
+  }
+
+  /**
+   * Notice delete
+   */
+  export type NoticeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter which Notice to delete.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice deleteMany
+   */
+  export type NoticeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notices to delete
+     */
+    where?: NoticeWhereInput
+    /**
+     * Limit how many Notices to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notice without action
+   */
+  export type NoticeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -19136,6 +20212,19 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const NoticeScalarFieldEnum: {
+    id: 'id',
+    institutionId: 'institutionId',
+    title: 'title',
+    content: 'content',
+    targetRole: 'targetRole',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -19344,6 +20433,17 @@ export namespace Prisma {
   };
 
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+  export const NoticeOrderByRelevanceFieldEnum: {
+    id: 'id',
+    institutionId: 'institutionId',
+    title: 'title',
+    content: 'content',
+    targetRole: 'targetRole'
+  };
+
+  export type NoticeOrderByRelevanceFieldEnum = (typeof NoticeOrderByRelevanceFieldEnum)[keyof typeof NoticeOrderByRelevanceFieldEnum]
 
 
   /**
@@ -20041,6 +21141,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationListRelationFilter
     subjects?: SubjectListRelationFilter
     users?: UserListRelationFilter
+    notices?: NoticeListRelationFilter
   }
 
   export type InstitutionOrderByWithRelationInput = {
@@ -20062,6 +21163,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationOrderByRelationAggregateInput
     subjects?: SubjectOrderByRelationAggregateInput
     users?: UserOrderByRelationAggregateInput
+    notices?: NoticeOrderByRelationAggregateInput
     _relevance?: InstitutionOrderByRelevanceInput
   }
 
@@ -20087,6 +21189,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationListRelationFilter
     subjects?: SubjectListRelationFilter
     users?: UserListRelationFilter
+    notices?: NoticeListRelationFilter
   }, "id" | "slug">
 
   export type InstitutionOrderByWithAggregationInput = {
@@ -20622,6 +21725,72 @@ export namespace Prisma {
     accountStatus?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type NoticeWhereInput = {
+    AND?: NoticeWhereInput | NoticeWhereInput[]
+    OR?: NoticeWhereInput[]
+    NOT?: NoticeWhereInput | NoticeWhereInput[]
+    id?: StringFilter<"Notice"> | string
+    institutionId?: StringFilter<"Notice"> | string
+    title?: StringFilter<"Notice"> | string
+    content?: StringFilter<"Notice"> | string
+    targetRole?: StringNullableFilter<"Notice"> | string | null
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    updatedAt?: DateTimeFilter<"Notice"> | Date | string
+    institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
+  }
+
+  export type NoticeOrderByWithRelationInput = {
+    id?: SortOrder
+    institutionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    targetRole?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    institution?: InstitutionOrderByWithRelationInput
+    _relevance?: NoticeOrderByRelevanceInput
+  }
+
+  export type NoticeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NoticeWhereInput | NoticeWhereInput[]
+    OR?: NoticeWhereInput[]
+    NOT?: NoticeWhereInput | NoticeWhereInput[]
+    institutionId?: StringFilter<"Notice"> | string
+    title?: StringFilter<"Notice"> | string
+    content?: StringFilter<"Notice"> | string
+    targetRole?: StringNullableFilter<"Notice"> | string | null
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    updatedAt?: DateTimeFilter<"Notice"> | Date | string
+    institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
+  }, "id">
+
+  export type NoticeOrderByWithAggregationInput = {
+    id?: SortOrder
+    institutionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    targetRole?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: NoticeCountOrderByAggregateInput
+    _max?: NoticeMaxOrderByAggregateInput
+    _min?: NoticeMinOrderByAggregateInput
+  }
+
+  export type NoticeScalarWhereWithAggregatesInput = {
+    AND?: NoticeScalarWhereWithAggregatesInput | NoticeScalarWhereWithAggregatesInput[]
+    OR?: NoticeScalarWhereWithAggregatesInput[]
+    NOT?: NoticeScalarWhereWithAggregatesInput | NoticeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Notice"> | string
+    institutionId?: StringWithAggregatesFilter<"Notice"> | string
+    title?: StringWithAggregatesFilter<"Notice"> | string
+    content?: StringWithAggregatesFilter<"Notice"> | string
+    targetRole?: StringNullableWithAggregatesFilter<"Notice"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Notice"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Notice"> | Date | string
   }
 
   export type AcademicTermCreateInput = {
@@ -21210,6 +22379,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateInput = {
@@ -21231,6 +22401,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUpdateInput = {
@@ -21252,6 +22423,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateInput = {
@@ -21273,6 +22445,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionCreateManyInput = {
@@ -21820,6 +22993,75 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     accountStatus?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeCreateInput = {
+    id?: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    institution: InstitutionCreateNestedOneWithoutNoticesInput
+  }
+
+  export type NoticeUncheckedCreateInput = {
+    id?: string
+    institutionId: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NoticeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    institution?: InstitutionUpdateOneRequiredWithoutNoticesNestedInput
+  }
+
+  export type NoticeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeCreateManyInput = {
+    id?: string
+    institutionId: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NoticeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22480,6 +23722,12 @@ export namespace Prisma {
     none?: UserWhereInput
   }
 
+  export type NoticeListRelationFilter = {
+    every?: NoticeWhereInput
+    some?: NoticeWhereInput
+    none?: NoticeWhereInput
+  }
+
   export type AcademicTermOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -22497,6 +23745,10 @@ export namespace Prisma {
   }
 
   export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NoticeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23015,6 +24267,42 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type NoticeOrderByRelevanceInput = {
+    fields: NoticeOrderByRelevanceFieldEnum | NoticeOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type NoticeCountOrderByAggregateInput = {
+    id?: SortOrder
+    institutionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    targetRole?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NoticeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    institutionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    targetRole?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NoticeMinOrderByAggregateInput = {
+    id?: SortOrder
+    institutionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    targetRole?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type InstitutionCreateNestedOneWithoutAcademicTermsInput = {
@@ -23801,6 +25089,13 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type NoticeCreateNestedManyWithoutInstitutionInput = {
+    create?: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput> | NoticeCreateWithoutInstitutionInput[] | NoticeUncheckedCreateWithoutInstitutionInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutInstitutionInput | NoticeCreateOrConnectWithoutInstitutionInput[]
+    createMany?: NoticeCreateManyInstitutionInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+  }
+
   export type AcademicTermUncheckedCreateNestedManyWithoutInstitutionInput = {
     create?: XOR<AcademicTermCreateWithoutInstitutionInput, AcademicTermUncheckedCreateWithoutInstitutionInput> | AcademicTermCreateWithoutInstitutionInput[] | AcademicTermUncheckedCreateWithoutInstitutionInput[]
     connectOrCreate?: AcademicTermCreateOrConnectWithoutInstitutionInput | AcademicTermCreateOrConnectWithoutInstitutionInput[]
@@ -23869,6 +25164,13 @@ export namespace Prisma {
     connectOrCreate?: UserCreateOrConnectWithoutInstitutionInput | UserCreateOrConnectWithoutInstitutionInput[]
     createMany?: UserCreateManyInstitutionInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type NoticeUncheckedCreateNestedManyWithoutInstitutionInput = {
+    create?: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput> | NoticeCreateWithoutInstitutionInput[] | NoticeUncheckedCreateWithoutInstitutionInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutInstitutionInput | NoticeCreateOrConnectWithoutInstitutionInput[]
+    createMany?: NoticeCreateManyInstitutionInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
   }
 
   export type EnumAcademicSystemFieldUpdateOperationsInput = {
@@ -24015,6 +25317,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type NoticeUpdateManyWithoutInstitutionNestedInput = {
+    create?: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput> | NoticeCreateWithoutInstitutionInput[] | NoticeUncheckedCreateWithoutInstitutionInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutInstitutionInput | NoticeCreateOrConnectWithoutInstitutionInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutInstitutionInput | NoticeUpsertWithWhereUniqueWithoutInstitutionInput[]
+    createMany?: NoticeCreateManyInstitutionInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutInstitutionInput | NoticeUpdateWithWhereUniqueWithoutInstitutionInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutInstitutionInput | NoticeUpdateManyWithWhereWithoutInstitutionInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+  }
+
   export type AcademicTermUncheckedUpdateManyWithoutInstitutionNestedInput = {
     create?: XOR<AcademicTermCreateWithoutInstitutionInput, AcademicTermUncheckedCreateWithoutInstitutionInput> | AcademicTermCreateWithoutInstitutionInput[] | AcademicTermUncheckedCreateWithoutInstitutionInput[]
     connectOrCreate?: AcademicTermCreateOrConnectWithoutInstitutionInput | AcademicTermCreateOrConnectWithoutInstitutionInput[]
@@ -24153,6 +25469,20 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutInstitutionInput | UserUpdateWithWhereUniqueWithoutInstitutionInput[]
     updateMany?: UserUpdateManyWithWhereWithoutInstitutionInput | UserUpdateManyWithWhereWithoutInstitutionInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type NoticeUncheckedUpdateManyWithoutInstitutionNestedInput = {
+    create?: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput> | NoticeCreateWithoutInstitutionInput[] | NoticeUncheckedCreateWithoutInstitutionInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutInstitutionInput | NoticeCreateOrConnectWithoutInstitutionInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutInstitutionInput | NoticeUpsertWithWhereUniqueWithoutInstitutionInput[]
+    createMany?: NoticeCreateManyInstitutionInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutInstitutionInput | NoticeUpdateWithWhereUniqueWithoutInstitutionInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutInstitutionInput | NoticeUpdateManyWithWhereWithoutInstitutionInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
   }
 
   export type ModuleCreateNestedOneWithoutSubscriptionsInput = {
@@ -24687,6 +26017,20 @@ export namespace Prisma {
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutUserInput, StudentUpdateWithoutUserInput>, StudentUncheckedUpdateWithoutUserInput>
   }
 
+  export type InstitutionCreateNestedOneWithoutNoticesInput = {
+    create?: XOR<InstitutionCreateWithoutNoticesInput, InstitutionUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: InstitutionCreateOrConnectWithoutNoticesInput
+    connect?: InstitutionWhereUniqueInput
+  }
+
+  export type InstitutionUpdateOneRequiredWithoutNoticesNestedInput = {
+    create?: XOR<InstitutionCreateWithoutNoticesInput, InstitutionUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: InstitutionCreateOrConnectWithoutNoticesInput
+    upsert?: InstitutionUpsertWithoutNoticesInput
+    connect?: InstitutionWhereUniqueInput
+    update?: XOR<XOR<InstitutionUpdateToOneWithWhereWithoutNoticesInput, InstitutionUpdateWithoutNoticesInput>, InstitutionUncheckedUpdateWithoutNoticesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -25017,6 +26361,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutAcademicTermsInput = {
@@ -25037,6 +26382,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutAcademicTermsInput = {
@@ -25139,6 +26485,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutAcademicTermsInput = {
@@ -25159,6 +26506,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type AttendanceRecordUpsertWithWhereUniqueWithoutTermInput = {
@@ -25328,6 +26676,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutAttendanceRecordsInput = {
@@ -25348,6 +26697,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutAttendanceRecordsInput = {
@@ -25489,6 +26839,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutAttendanceRecordsInput = {
@@ -25509,6 +26860,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type DepartmentCreateWithoutCoursesInput = {
@@ -25554,6 +26906,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutCoursesInput = {
@@ -25574,6 +26927,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutCoursesInput = {
@@ -25765,6 +27119,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutCoursesInput = {
@@ -25785,6 +27140,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type CourseEnrollmentUpsertWithWhereUniqueWithoutCourseInput = {
@@ -25941,6 +27297,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutDepartmentsInput = {
@@ -25961,6 +27318,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutDepartmentsInput = {
@@ -26052,6 +27410,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutDepartmentsInput = {
@@ -26072,6 +27431,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type FacultyUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -26340,6 +27700,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutExamsInput = {
@@ -26360,6 +27721,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutExamsInput = {
@@ -26533,6 +27895,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutExamsInput = {
@@ -26553,6 +27916,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type ExamResultUpsertWithWhereUniqueWithoutExamInput = {
@@ -26842,6 +28206,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutExamResultsInput = {
@@ -26862,6 +28227,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutExamResultsInput = {
@@ -26968,6 +28334,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutExamResultsInput = {
@@ -26988,6 +28355,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type AcademicTermCreateWithoutInstitutionInput = {
@@ -27318,6 +28686,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NoticeCreateWithoutInstitutionInput = {
+    id?: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NoticeUncheckedCreateWithoutInstitutionInput = {
+    id?: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NoticeCreateOrConnectWithoutInstitutionInput = {
+    where: NoticeWhereUniqueInput
+    create: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput>
+  }
+
+  export type NoticeCreateManyInstitutionInputEnvelope = {
+    data: NoticeCreateManyInstitutionInput | NoticeCreateManyInstitutionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AcademicTermUpsertWithWhereUniqueWithoutInstitutionInput = {
     where: AcademicTermWhereUniqueInput
     update: XOR<AcademicTermUpdateWithoutInstitutionInput, AcademicTermUncheckedUpdateWithoutInstitutionInput>
@@ -27547,6 +28943,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
+  export type NoticeUpsertWithWhereUniqueWithoutInstitutionInput = {
+    where: NoticeWhereUniqueInput
+    update: XOR<NoticeUpdateWithoutInstitutionInput, NoticeUncheckedUpdateWithoutInstitutionInput>
+    create: XOR<NoticeCreateWithoutInstitutionInput, NoticeUncheckedCreateWithoutInstitutionInput>
+  }
+
+  export type NoticeUpdateWithWhereUniqueWithoutInstitutionInput = {
+    where: NoticeWhereUniqueInput
+    data: XOR<NoticeUpdateWithoutInstitutionInput, NoticeUncheckedUpdateWithoutInstitutionInput>
+  }
+
+  export type NoticeUpdateManyWithWhereWithoutInstitutionInput = {
+    where: NoticeScalarWhereInput
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyWithoutInstitutionInput>
+  }
+
+  export type NoticeScalarWhereInput = {
+    AND?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+    OR?: NoticeScalarWhereInput[]
+    NOT?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+    id?: StringFilter<"Notice"> | string
+    institutionId?: StringFilter<"Notice"> | string
+    title?: StringFilter<"Notice"> | string
+    content?: StringFilter<"Notice"> | string
+    targetRole?: StringNullableFilter<"Notice"> | string | null
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    updatedAt?: DateTimeFilter<"Notice"> | Date | string
+  }
+
   export type ModuleCreateWithoutSubscriptionsInput = {
     id?: string
     name: string
@@ -27586,6 +29011,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutModuleSubscriptionsInput = {
@@ -27606,6 +29032,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutModuleSubscriptionsInput = {
@@ -27669,6 +29096,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutModuleSubscriptionsInput = {
@@ -27689,6 +29117,7 @@ export namespace Prisma {
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionCreateWithoutUserInvitationsInput = {
@@ -27709,6 +29138,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutUserInvitationsInput = {
@@ -27729,6 +29159,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutUserInvitationsInput = {
@@ -27765,6 +29196,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutUserInvitationsInput = {
@@ -27785,6 +29217,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type ModuleSubscriptionCreateWithoutModuleInput = {
@@ -28222,6 +29655,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionCreateNestedManyWithoutInstitutionInput
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     users?: UserCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutSubjectsInput = {
@@ -28242,6 +29676,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedCreateNestedManyWithoutInstitutionInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutSubjectsInput = {
@@ -28367,6 +29802,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUpdateManyWithoutInstitutionNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     users?: UserUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutSubjectsInput = {
@@ -28387,6 +29823,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedUpdateManyWithoutInstitutionNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type FacultyAssignmentUpsertWithWhereUniqueWithoutSubjectInput = {
@@ -28589,6 +30026,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionCreateNestedManyWithoutInstitutionInput
     userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionUncheckedCreateWithoutUsersInput = {
@@ -28609,6 +30047,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedCreateNestedManyWithoutInstitutionInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutInstitutionInput
   }
 
   export type InstitutionCreateOrConnectWithoutUsersInput = {
@@ -28707,6 +30146,7 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUpdateManyWithoutInstitutionNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUpdateManyWithoutInstitutionNestedInput
   }
 
   export type InstitutionUncheckedUpdateWithoutUsersInput = {
@@ -28727,6 +30167,107 @@ export namespace Prisma {
     moduleSubscriptions?: ModuleSubscriptionUncheckedUpdateManyWithoutInstitutionNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
+  }
+
+  export type InstitutionCreateWithoutNoticesInput = {
+    id?: string
+    name: string
+    slug: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    academicSystem?: $Enums.AcademicSystem
+    academicStructure?: NullableJsonNullValueInput | InputJsonValue
+    academicTerms?: AcademicTermCreateNestedManyWithoutInstitutionInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutInstitutionInput
+    courses?: CourseCreateNestedManyWithoutInstitutionInput
+    departments?: DepartmentCreateNestedManyWithoutInstitutionInput
+    exams?: ExamCreateNestedManyWithoutInstitutionInput
+    examResults?: ExamResultCreateNestedManyWithoutInstitutionInput
+    moduleSubscriptions?: ModuleSubscriptionCreateNestedManyWithoutInstitutionInput
+    userInvitations?: UserInvitationCreateNestedManyWithoutInstitutionInput
+    subjects?: SubjectCreateNestedManyWithoutInstitutionInput
+    users?: UserCreateNestedManyWithoutInstitutionInput
+  }
+
+  export type InstitutionUncheckedCreateWithoutNoticesInput = {
+    id?: string
+    name: string
+    slug: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    academicSystem?: $Enums.AcademicSystem
+    academicStructure?: NullableJsonNullValueInput | InputJsonValue
+    academicTerms?: AcademicTermUncheckedCreateNestedManyWithoutInstitutionInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutInstitutionInput
+    courses?: CourseUncheckedCreateNestedManyWithoutInstitutionInput
+    departments?: DepartmentUncheckedCreateNestedManyWithoutInstitutionInput
+    exams?: ExamUncheckedCreateNestedManyWithoutInstitutionInput
+    examResults?: ExamResultUncheckedCreateNestedManyWithoutInstitutionInput
+    moduleSubscriptions?: ModuleSubscriptionUncheckedCreateNestedManyWithoutInstitutionInput
+    userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutInstitutionInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutInstitutionInput
+    users?: UserUncheckedCreateNestedManyWithoutInstitutionInput
+  }
+
+  export type InstitutionCreateOrConnectWithoutNoticesInput = {
+    where: InstitutionWhereUniqueInput
+    create: XOR<InstitutionCreateWithoutNoticesInput, InstitutionUncheckedCreateWithoutNoticesInput>
+  }
+
+  export type InstitutionUpsertWithoutNoticesInput = {
+    update: XOR<InstitutionUpdateWithoutNoticesInput, InstitutionUncheckedUpdateWithoutNoticesInput>
+    create: XOR<InstitutionCreateWithoutNoticesInput, InstitutionUncheckedCreateWithoutNoticesInput>
+    where?: InstitutionWhereInput
+  }
+
+  export type InstitutionUpdateToOneWithWhereWithoutNoticesInput = {
+    where?: InstitutionWhereInput
+    data: XOR<InstitutionUpdateWithoutNoticesInput, InstitutionUncheckedUpdateWithoutNoticesInput>
+  }
+
+  export type InstitutionUpdateWithoutNoticesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    academicSystem?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
+    academicStructure?: NullableJsonNullValueInput | InputJsonValue
+    academicTerms?: AcademicTermUpdateManyWithoutInstitutionNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutInstitutionNestedInput
+    courses?: CourseUpdateManyWithoutInstitutionNestedInput
+    departments?: DepartmentUpdateManyWithoutInstitutionNestedInput
+    exams?: ExamUpdateManyWithoutInstitutionNestedInput
+    examResults?: ExamResultUpdateManyWithoutInstitutionNestedInput
+    moduleSubscriptions?: ModuleSubscriptionUpdateManyWithoutInstitutionNestedInput
+    userInvitations?: UserInvitationUpdateManyWithoutInstitutionNestedInput
+    subjects?: SubjectUpdateManyWithoutInstitutionNestedInput
+    users?: UserUpdateManyWithoutInstitutionNestedInput
+  }
+
+  export type InstitutionUncheckedUpdateWithoutNoticesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    academicSystem?: EnumAcademicSystemFieldUpdateOperationsInput | $Enums.AcademicSystem
+    academicStructure?: NullableJsonNullValueInput | InputJsonValue
+    academicTerms?: AcademicTermUncheckedUpdateManyWithoutInstitutionNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutInstitutionNestedInput
+    courses?: CourseUncheckedUpdateManyWithoutInstitutionNestedInput
+    departments?: DepartmentUncheckedUpdateManyWithoutInstitutionNestedInput
+    exams?: ExamUncheckedUpdateManyWithoutInstitutionNestedInput
+    examResults?: ExamResultUncheckedUpdateManyWithoutInstitutionNestedInput
+    moduleSubscriptions?: ModuleSubscriptionUncheckedUpdateManyWithoutInstitutionNestedInput
+    userInvitations?: UserInvitationUncheckedUpdateManyWithoutInstitutionNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutInstitutionNestedInput
+    users?: UserUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
   export type AttendanceRecordCreateManyTermInput = {
@@ -29207,6 +30748,15 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type NoticeCreateManyInstitutionInput = {
+    id?: string
+    title: string
+    content: string
+    targetRole?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type AcademicTermUpdateWithoutInstitutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -29531,6 +31081,33 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     accountStatus?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUpdateWithoutInstitutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUncheckedUpdateWithoutInstitutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUncheckedUpdateManyWithoutInstitutionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    targetRole?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

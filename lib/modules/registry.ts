@@ -61,6 +61,16 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     defaultEnabled: true,
     dependencies: ['courses']
   },
+  notices: {
+    id: 'notices',
+    name: 'Notice',
+    description: 'Manage notices for different roles',
+    type: 'OPTIONAL',
+    icon: 'Bell',
+    routePath: '/notices',
+    defaultEnabled: false,
+    // dependencies: ['']
+  },
   attendance: {
     id: 'attendance',
     name: 'Attendance',
