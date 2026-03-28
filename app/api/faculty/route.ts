@@ -3,19 +3,10 @@ import { prisma } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
 import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
-import { sendEmail, getFacultyWelcomeEmailTemplate } from '@/lib/mail';
+import { sendEmail, getInviteEmailTemplate } from '@/lib/mail';
 import { resolveTenant } from '@/lib/tenant/resolver';
 import { getTenantUrl } from '@/lib/config';
-
-// generate temp password
-function generateTempPassword(): string {
-  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$';
-  let pass = '';
-  for (let i = 0; i < 10; i++) {
-    pass += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return pass;
-}
+import crypto from 'crypto';
 
 // GET /api/faculty – list all faculty for admin's tenant
 export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
@@ -42,7 +33,8 @@ export const GET = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user:
 
 
 
-// POST /api/faculty – create one or multiple faculty (JSON or CSV parsed array)
+// Creates a User + Faculty stub with status INVITED, generates a UserInvitation
+// token, and emails the faculty member an accept-invite link to set their password.
 export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
   const body = await req.json();
 
@@ -54,7 +46,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
     return NextResponse.json({ error: 'No entries provided' }, { status: 400 });
   }
 
-  const results: Array<{ name: string; employeeNumber: string; username: string; temp_password: string }> = [];
+  const results: Array<{ name: string; employeeNumber: string; username: string; email_sent: boolean }> = [];
   const errors: Array<{ employeeNumber: string; error: string }> = [];
 
   for (const entry of entries) {
@@ -66,7 +58,10 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
     }
 
     try {
-      await prisma.$transaction(async (tx) => {
+      // Resolve institution info outside the transaction (read-only)
+      const institution = await resolveTenant(user.institutionId);
+
+      const txResult = await prisma.$transaction(async (tx) => {
         // Resolve department by name if provided
         let departmentRecord = null;
         if (department) {
@@ -81,46 +76,58 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
         });
         const username = `FAC${String(facCount + 1).padStart(3, '0')}`;
 
-        // Generate and hash temp password
-        const tempPassword = generateTempPassword();
-        const hashed = await hashPassword(tempPassword);
+        // Create User record with a placeholder password (will be set via invite link)
+        const placeholderHash = await hashPassword(crypto.randomBytes(32).toString('hex'));
 
-        // Create User record
         const newUser = await tx.user.create({
           data: {
             institutionId: user.institutionId,
             username,
-            name, // Save to User table
-            passwordHash: hashed,
+            name,
+            passwordHash: placeholderHash,
             role: 'FACULTY',
             email,
-            accountStatus: 'TEMP', // signals must-reset
+            accountStatus: 'INVITED',
           }
         });
 
-        // Create Faculty
+        // Create Faculty profile
         await tx.faculty.create({
           data: {
             userId: newUser.id,
             employeeNumber,
-            designation: 'Faculty', // default designation
+            designation: 'Faculty',
             departmentId: departmentRecord?.id ?? null,
           }
         });
 
-        // Trigger Faculty Welcome Email
-        const institution = await resolveTenant(user.institutionId);
-        // const loginLink = getTenantUrl(user.institutionId as any, 'login');
-        const loginLink = getTenantUrl(institution?.slug as any, 'login');
+        // Generate a secure invitation token
+        const token = crypto.randomBytes(32).toString('hex');
+        const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 hours
 
-        await sendEmail({
-          to: email,
-          subject: `Welcome to ${institution?.name || 'Unicore'} Faculty Portal`,
-          html: getFacultyWelcomeEmailTemplate(institution?.name || 'Unicore', username, tempPassword, loginLink)
+        await tx.userInvitation.create({
+          data: {
+            email,
+            role: 'FACULTY',
+            token,
+            institutionId: user.institutionId,
+            expiresAt,
+          }
         });
 
-        results.push({ name, employeeNumber, username, temp_password: tempPassword });
+        return { username, token };
       });
+
+      // Send invitation email (outside transaction so DB work isn't rolled back on email failure)
+      const inviteLink = getTenantUrl(institution?.slug as string, `accept-invite?token=${txResult.token}`);
+
+      const emailResult = await sendEmail({
+        to: email,
+        subject: `You're invited to join ${institution?.name || 'Unicore'} as Faculty`,
+        html: getInviteEmailTemplate(institution?.name || 'Unicore', inviteLink, 'FACULTY'),
+      });
+
+      results.push({ name, employeeNumber, username: txResult.username, email_sent: emailResult.success });
     } catch (err: any) {
       errors.push({
         employeeNumber,
