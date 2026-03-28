@@ -79,8 +79,10 @@ export default function AttendanceManager({
           if (data.count > 0) {
             setStatuses(data.statuses);
             setPastCount(data.count);
+            setTermId(data.termId || "");
           } else {
             setStatuses({});
+            setTermId("");
           }
         }
       } catch {

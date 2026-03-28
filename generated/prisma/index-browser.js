@@ -135,7 +135,10 @@ exports.Prisma.AttendanceRecordScalarFieldEnum = {
   institutionId: 'institutionId',
   studentId: 'studentId',
   subjectId: 'subjectId',
+  courseId: 'courseId',
   termId: 'termId',
+  markedById: 'markedById',
+  slotType: 'slotType',
   attendanceDate: 'attendanceDate',
   status: 'status',
   createdAt: 'createdAt',
@@ -317,7 +320,10 @@ exports.Prisma.AttendanceRecordOrderByRelevanceFieldEnum = {
   institutionId: 'institutionId',
   studentId: 'studentId',
   subjectId: 'subjectId',
-  termId: 'termId'
+  courseId: 'courseId',
+  termId: 'termId',
+  markedById: 'markedById',
+  slotType: 'slotType'
 };
 
 exports.Prisma.CourseOrderByRelevanceFieldEnum = {

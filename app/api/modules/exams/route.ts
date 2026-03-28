@@ -41,9 +41,10 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
        return NextResponse.json({ error: 'Exams module disabled' }, { status: 403 });
     }
 
-    const { name, date, courseId, subjectId, termId } = await req.json();
+    const { name, examDate, date, courseId, subjectId, termId } = await req.json();
+    const finalDate = examDate || date;
 
-    if (!name || !date || !courseId || !subjectId || !termId) {
+    if (!name || !finalDate || !courseId || !subjectId || !termId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -59,7 +60,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
     const exam = await prisma.exam.create({
       data: {
         name,
-        examDate: new Date(date),
+        examDate: new Date(finalDate),
         institutionId: user.institutionId,
         courseId,
         subjectId,

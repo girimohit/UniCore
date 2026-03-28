@@ -2290,6 +2290,7 @@ export namespace Prisma {
     exams: number
     students: number
     subjects: number
+    attendanceRecords: number
   }
 
   export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2297,6 +2298,7 @@ export namespace Prisma {
     exams?: boolean | CourseCountOutputTypeCountExamsArgs
     students?: boolean | CourseCountOutputTypeCountStudentsArgs
     subjects?: boolean | CourseCountOutputTypeCountSubjectsArgs
+    attendanceRecords?: boolean | CourseCountOutputTypeCountAttendanceRecordsArgs
   }
 
   // Custom InputTypes
@@ -2336,6 +2338,13 @@ export namespace Prisma {
    */
   export type CourseCountOutputTypeCountSubjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SubjectWhereInput
+  }
+
+  /**
+   * CourseCountOutputType without action
+   */
+  export type CourseCountOutputTypeCountAttendanceRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceRecordWhereInput
   }
 
 
@@ -2688,6 +2697,37 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountFacultyAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FacultyAssignmentWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    attendanceRecordsMarked: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attendanceRecordsMarked?: boolean | UserCountOutputTypeCountAttendanceRecordsMarkedArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAttendanceRecordsMarkedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceRecordWhereInput
   }
 
 
@@ -3724,7 +3764,10 @@ export namespace Prisma {
     institutionId: string | null
     studentId: string | null
     subjectId: string | null
+    courseId: string | null
     termId: string | null
+    markedById: string | null
+    slotType: string | null
     attendanceDate: Date | null
     status: $Enums.AttendanceStatus | null
     createdAt: Date | null
@@ -3736,7 +3779,10 @@ export namespace Prisma {
     institutionId: string | null
     studentId: string | null
     subjectId: string | null
+    courseId: string | null
     termId: string | null
+    markedById: string | null
+    slotType: string | null
     attendanceDate: Date | null
     status: $Enums.AttendanceStatus | null
     createdAt: Date | null
@@ -3748,7 +3794,10 @@ export namespace Prisma {
     institutionId: number
     studentId: number
     subjectId: number
+    courseId: number
     termId: number
+    markedById: number
+    slotType: number
     attendanceDate: number
     status: number
     createdAt: number
@@ -3762,7 +3811,10 @@ export namespace Prisma {
     institutionId?: true
     studentId?: true
     subjectId?: true
+    courseId?: true
     termId?: true
+    markedById?: true
+    slotType?: true
     attendanceDate?: true
     status?: true
     createdAt?: true
@@ -3774,7 +3826,10 @@ export namespace Prisma {
     institutionId?: true
     studentId?: true
     subjectId?: true
+    courseId?: true
     termId?: true
+    markedById?: true
+    slotType?: true
     attendanceDate?: true
     status?: true
     createdAt?: true
@@ -3786,7 +3841,10 @@ export namespace Prisma {
     institutionId?: true
     studentId?: true
     subjectId?: true
+    courseId?: true
     termId?: true
+    markedById?: true
+    slotType?: true
     attendanceDate?: true
     status?: true
     createdAt?: true
@@ -3871,7 +3929,10 @@ export namespace Prisma {
     institutionId: string
     studentId: string
     subjectId: string
+    courseId: string
     termId: string | null
+    markedById: string | null
+    slotType: string
     attendanceDate: Date
     status: $Enums.AttendanceStatus
     createdAt: Date
@@ -3900,7 +3961,10 @@ export namespace Prisma {
     institutionId?: boolean
     studentId?: boolean
     subjectId?: boolean
+    courseId?: boolean
     termId?: boolean
+    markedById?: boolean
+    slotType?: boolean
     attendanceDate?: boolean
     status?: boolean
     createdAt?: boolean
@@ -3908,6 +3972,8 @@ export namespace Prisma {
     term?: boolean | AttendanceRecord$termArgs<ExtArgs>
     student?: boolean | StudentDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    markedBy?: boolean | AttendanceRecord$markedByArgs<ExtArgs>
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attendanceRecord"]>
 
@@ -3918,18 +3984,23 @@ export namespace Prisma {
     institutionId?: boolean
     studentId?: boolean
     subjectId?: boolean
+    courseId?: boolean
     termId?: boolean
+    markedById?: boolean
+    slotType?: boolean
     attendanceDate?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AttendanceRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "institutionId" | "studentId" | "subjectId" | "termId" | "attendanceDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceRecord"]>
+  export type AttendanceRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "institutionId" | "studentId" | "subjectId" | "courseId" | "termId" | "markedById" | "slotType" | "attendanceDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["attendanceRecord"]>
   export type AttendanceRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     term?: boolean | AttendanceRecord$termArgs<ExtArgs>
     student?: boolean | StudentDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    markedBy?: boolean | AttendanceRecord$markedByArgs<ExtArgs>
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
   }
 
@@ -3939,6 +4010,8 @@ export namespace Prisma {
       term: Prisma.$AcademicTermPayload<ExtArgs> | null
       student: Prisma.$StudentPayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs>
+      course: Prisma.$CoursePayload<ExtArgs>
+      markedBy: Prisma.$UserPayload<ExtArgs> | null
       institution: Prisma.$InstitutionPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3946,7 +4019,10 @@ export namespace Prisma {
       institutionId: string
       studentId: string
       subjectId: string
+      courseId: string
       termId: string | null
+      markedById: string | null
+      slotType: string
       attendanceDate: Date
       status: $Enums.AttendanceStatus
       createdAt: Date
@@ -4294,6 +4370,8 @@ export namespace Prisma {
     term<T extends AttendanceRecord$termArgs<ExtArgs> = {}>(args?: Subset<T, AttendanceRecord$termArgs<ExtArgs>>): Prisma__AcademicTermClient<$Result.GetResult<Prisma.$AcademicTermPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    markedBy<T extends AttendanceRecord$markedByArgs<ExtArgs> = {}>(args?: Subset<T, AttendanceRecord$markedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     institution<T extends InstitutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InstitutionDefaultArgs<ExtArgs>>): Prisma__InstitutionClient<$Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4328,7 +4406,10 @@ export namespace Prisma {
     readonly institutionId: FieldRef<"AttendanceRecord", 'String'>
     readonly studentId: FieldRef<"AttendanceRecord", 'String'>
     readonly subjectId: FieldRef<"AttendanceRecord", 'String'>
+    readonly courseId: FieldRef<"AttendanceRecord", 'String'>
     readonly termId: FieldRef<"AttendanceRecord", 'String'>
+    readonly markedById: FieldRef<"AttendanceRecord", 'String'>
+    readonly slotType: FieldRef<"AttendanceRecord", 'String'>
     readonly attendanceDate: FieldRef<"AttendanceRecord", 'DateTime'>
     readonly status: FieldRef<"AttendanceRecord", 'AttendanceStatus'>
     readonly createdAt: FieldRef<"AttendanceRecord", 'DateTime'>
@@ -4700,6 +4781,25 @@ export namespace Prisma {
   }
 
   /**
+   * AttendanceRecord.markedBy
+   */
+  export type AttendanceRecord$markedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * AttendanceRecord without action
    */
   export type AttendanceRecordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4904,6 +5004,7 @@ export namespace Prisma {
     exams?: boolean | Course$examsArgs<ExtArgs>
     students?: boolean | Course$studentsArgs<ExtArgs>
     subjects?: boolean | Course$subjectsArgs<ExtArgs>
+    attendanceRecords?: boolean | Course$attendanceRecordsArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -4927,6 +5028,7 @@ export namespace Prisma {
     exams?: boolean | Course$examsArgs<ExtArgs>
     students?: boolean | Course$studentsArgs<ExtArgs>
     subjects?: boolean | Course$subjectsArgs<ExtArgs>
+    attendanceRecords?: boolean | Course$attendanceRecordsArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4939,6 +5041,7 @@ export namespace Prisma {
       exams: Prisma.$ExamPayload<ExtArgs>[]
       students: Prisma.$StudentPayload<ExtArgs>[]
       subjects: Prisma.$SubjectPayload<ExtArgs>[]
+      attendanceRecords: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5294,6 +5397,7 @@ export namespace Prisma {
     exams<T extends Course$examsArgs<ExtArgs> = {}>(args?: Subset<T, Course$examsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     students<T extends Course$studentsArgs<ExtArgs> = {}>(args?: Subset<T, Course$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     subjects<T extends Course$subjectsArgs<ExtArgs> = {}>(args?: Subset<T, Course$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attendanceRecords<T extends Course$attendanceRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Course$attendanceRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5771,6 +5875,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SubjectScalarFieldEnum | SubjectScalarFieldEnum[]
+  }
+
+  /**
+   * Course.attendanceRecords
+   */
+  export type Course$attendanceRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    where?: AttendanceRecordWhereInput
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    cursor?: AttendanceRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
   }
 
   /**
@@ -18212,6 +18340,8 @@ export namespace Prisma {
     faculty?: boolean | User$facultyArgs<ExtArgs>
     student?: boolean | User$studentArgs<ExtArgs>
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
+    attendanceRecordsMarked?: boolean | User$attendanceRecordsMarkedArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
 
@@ -18236,6 +18366,8 @@ export namespace Prisma {
     faculty?: boolean | User$facultyArgs<ExtArgs>
     student?: boolean | User$studentArgs<ExtArgs>
     institution?: boolean | InstitutionDefaultArgs<ExtArgs>
+    attendanceRecordsMarked?: boolean | User$attendanceRecordsMarkedArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18244,6 +18376,7 @@ export namespace Prisma {
       faculty: Prisma.$FacultyPayload<ExtArgs> | null
       student: Prisma.$StudentPayload<ExtArgs> | null
       institution: Prisma.$InstitutionPayload<ExtArgs>
+      attendanceRecordsMarked: Prisma.$AttendanceRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -18601,6 +18734,7 @@ export namespace Prisma {
     faculty<T extends User$facultyArgs<ExtArgs> = {}>(args?: Subset<T, User$facultyArgs<ExtArgs>>): Prisma__FacultyClient<$Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     student<T extends User$studentArgs<ExtArgs> = {}>(args?: Subset<T, User$studentArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     institution<T extends InstitutionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InstitutionDefaultArgs<ExtArgs>>): Prisma__InstitutionClient<$Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    attendanceRecordsMarked<T extends User$attendanceRecordsMarkedArgs<ExtArgs> = {}>(args?: Subset<T, User$attendanceRecordsMarkedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendanceRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19025,6 +19159,30 @@ export namespace Prisma {
      */
     include?: StudentInclude<ExtArgs> | null
     where?: StudentWhereInput
+  }
+
+  /**
+   * User.attendanceRecordsMarked
+   */
+  export type User$attendanceRecordsMarkedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttendanceRecord
+     */
+    select?: AttendanceRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttendanceRecord
+     */
+    omit?: AttendanceRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceRecordInclude<ExtArgs> | null
+    where?: AttendanceRecordWhereInput
+    orderBy?: AttendanceRecordOrderByWithRelationInput | AttendanceRecordOrderByWithRelationInput[]
+    cursor?: AttendanceRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceRecordScalarFieldEnum | AttendanceRecordScalarFieldEnum[]
   }
 
   /**
@@ -20034,7 +20192,10 @@ export namespace Prisma {
     institutionId: 'institutionId',
     studentId: 'studentId',
     subjectId: 'subjectId',
+    courseId: 'courseId',
     termId: 'termId',
+    markedById: 'markedById',
+    slotType: 'slotType',
     attendanceDate: 'attendanceDate',
     status: 'status',
     createdAt: 'createdAt',
@@ -20276,7 +20437,10 @@ export namespace Prisma {
     institutionId: 'institutionId',
     studentId: 'studentId',
     subjectId: 'subjectId',
-    termId: 'termId'
+    courseId: 'courseId',
+    termId: 'termId',
+    markedById: 'markedById',
+    slotType: 'slotType'
   };
 
   export type AttendanceRecordOrderByRelevanceFieldEnum = (typeof AttendanceRecordOrderByRelevanceFieldEnum)[keyof typeof AttendanceRecordOrderByRelevanceFieldEnum]
@@ -20624,7 +20788,10 @@ export namespace Prisma {
     institutionId?: StringFilter<"AttendanceRecord"> | string
     studentId?: StringFilter<"AttendanceRecord"> | string
     subjectId?: StringFilter<"AttendanceRecord"> | string
+    courseId?: StringFilter<"AttendanceRecord"> | string
     termId?: StringNullableFilter<"AttendanceRecord"> | string | null
+    markedById?: StringNullableFilter<"AttendanceRecord"> | string | null
+    slotType?: StringFilter<"AttendanceRecord"> | string
     attendanceDate?: DateTimeFilter<"AttendanceRecord"> | Date | string
     status?: EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
     createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -20632,6 +20799,8 @@ export namespace Prisma {
     term?: XOR<AcademicTermNullableScalarRelationFilter, AcademicTermWhereInput> | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    markedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
   }
 
@@ -20640,7 +20809,10 @@ export namespace Prisma {
     institutionId?: SortOrder
     studentId?: SortOrder
     subjectId?: SortOrder
+    courseId?: SortOrder
     termId?: SortOrderInput | SortOrder
+    markedById?: SortOrderInput | SortOrder
+    slotType?: SortOrder
     attendanceDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -20648,20 +20820,25 @@ export namespace Prisma {
     term?: AcademicTermOrderByWithRelationInput
     student?: StudentOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
+    course?: CourseOrderByWithRelationInput
+    markedBy?: UserOrderByWithRelationInput
     institution?: InstitutionOrderByWithRelationInput
     _relevance?: AttendanceRecordOrderByRelevanceInput
   }
 
   export type AttendanceRecordWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    studentId_subjectId_attendanceDate?: AttendanceRecordStudentIdSubjectIdAttendanceDateCompoundUniqueInput
+    studentId_subjectId_attendanceDate_slotType?: AttendanceRecordStudentIdSubjectIdAttendanceDateSlotTypeCompoundUniqueInput
     AND?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
     OR?: AttendanceRecordWhereInput[]
     NOT?: AttendanceRecordWhereInput | AttendanceRecordWhereInput[]
     institutionId?: StringFilter<"AttendanceRecord"> | string
     studentId?: StringFilter<"AttendanceRecord"> | string
     subjectId?: StringFilter<"AttendanceRecord"> | string
+    courseId?: StringFilter<"AttendanceRecord"> | string
     termId?: StringNullableFilter<"AttendanceRecord"> | string | null
+    markedById?: StringNullableFilter<"AttendanceRecord"> | string | null
+    slotType?: StringFilter<"AttendanceRecord"> | string
     attendanceDate?: DateTimeFilter<"AttendanceRecord"> | Date | string
     status?: EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
     createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -20669,15 +20846,20 @@ export namespace Prisma {
     term?: XOR<AcademicTermNullableScalarRelationFilter, AcademicTermWhereInput> | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    markedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
-  }, "id" | "studentId_subjectId_attendanceDate">
+  }, "id" | "studentId_subjectId_attendanceDate_slotType">
 
   export type AttendanceRecordOrderByWithAggregationInput = {
     id?: SortOrder
     institutionId?: SortOrder
     studentId?: SortOrder
     subjectId?: SortOrder
+    courseId?: SortOrder
     termId?: SortOrderInput | SortOrder
+    markedById?: SortOrderInput | SortOrder
+    slotType?: SortOrder
     attendanceDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -20695,7 +20877,10 @@ export namespace Prisma {
     institutionId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
     studentId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
     subjectId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
+    courseId?: StringWithAggregatesFilter<"AttendanceRecord"> | string
     termId?: StringNullableWithAggregatesFilter<"AttendanceRecord"> | string | null
+    markedById?: StringNullableWithAggregatesFilter<"AttendanceRecord"> | string | null
+    slotType?: StringWithAggregatesFilter<"AttendanceRecord"> | string
     attendanceDate?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
     status?: EnumAttendanceStatusWithAggregatesFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
     createdAt?: DateTimeWithAggregatesFilter<"AttendanceRecord"> | Date | string
@@ -20719,6 +20904,7 @@ export namespace Prisma {
     exams?: ExamListRelationFilter
     students?: StudentListRelationFilter
     subjects?: SubjectListRelationFilter
+    attendanceRecords?: AttendanceRecordListRelationFilter
   }
 
   export type CourseOrderByWithRelationInput = {
@@ -20735,6 +20921,7 @@ export namespace Prisma {
     exams?: ExamOrderByRelationAggregateInput
     students?: StudentOrderByRelationAggregateInput
     subjects?: SubjectOrderByRelationAggregateInput
+    attendanceRecords?: AttendanceRecordOrderByRelationAggregateInput
     _relevance?: CourseOrderByRelevanceInput
   }
 
@@ -20756,6 +20943,7 @@ export namespace Prisma {
     exams?: ExamListRelationFilter
     students?: StudentListRelationFilter
     subjects?: SubjectListRelationFilter
+    attendanceRecords?: AttendanceRecordListRelationFilter
   }, "id" | "institutionId_code">
 
   export type CourseOrderByWithAggregationInput = {
@@ -21666,6 +21854,7 @@ export namespace Prisma {
     faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
+    attendanceRecordsMarked?: AttendanceRecordListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -21684,6 +21873,7 @@ export namespace Prisma {
     faculty?: FacultyOrderByWithRelationInput
     student?: StudentOrderByWithRelationInput
     institution?: InstitutionOrderByWithRelationInput
+    attendanceRecordsMarked?: AttendanceRecordOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -21707,6 +21897,7 @@ export namespace Prisma {
     faculty?: XOR<FacultyNullableScalarRelationFilter, FacultyWhereInput> | null
     student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
     institution?: XOR<InstitutionScalarRelationFilter, InstitutionWhereInput>
+    attendanceRecordsMarked?: AttendanceRecordListRelationFilter
   }, "id" | "institutionId_username">
 
   export type UserOrderByWithAggregationInput = {
@@ -21890,6 +22081,7 @@ export namespace Prisma {
 
   export type AttendanceRecordCreateInput = {
     id?: string
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -21897,6 +22089,8 @@ export namespace Prisma {
     term?: AcademicTermCreateNestedOneWithoutAttendancesInput
     student: StudentCreateNestedOneWithoutAttendanceRecordsInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
     institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
   }
 
@@ -21905,7 +22099,10 @@ export namespace Prisma {
     institutionId: string
     studentId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -21914,6 +22111,7 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21921,6 +22119,8 @@ export namespace Prisma {
     term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
     student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   }
 
@@ -21929,7 +22129,10 @@ export namespace Prisma {
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21941,7 +22144,10 @@ export namespace Prisma {
     institutionId: string
     studentId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -21950,6 +22156,7 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21961,7 +22168,10 @@ export namespace Prisma {
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21980,6 +22190,7 @@ export namespace Prisma {
     exams?: ExamCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateInput = {
@@ -21994,6 +22205,7 @@ export namespace Prisma {
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUpdateInput = {
@@ -22008,6 +22220,7 @@ export namespace Prisma {
     exams?: ExamUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateInput = {
@@ -22022,6 +22235,7 @@ export namespace Prisma {
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateManyInput = {
@@ -22925,6 +23139,7 @@ export namespace Prisma {
     faculty?: FacultyCreateNestedOneWithoutUserInput
     student?: StudentCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
+    attendanceRecordsMarked?: AttendanceRecordCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -22942,6 +23157,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     faculty?: FacultyUncheckedCreateNestedOneWithoutUserInput
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserUpdateInput = {
@@ -22959,6 +23175,7 @@ export namespace Prisma {
     faculty?: FacultyUpdateOneWithoutUserNestedInput
     student?: StudentUpdateOneWithoutUserNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutUsersNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -22976,6 +23193,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: FacultyUncheckedUpdateOneWithoutUserNestedInput
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -23247,6 +23465,16 @@ export namespace Prisma {
     isNot?: SubjectWhereInput
   }
 
+  export type CourseScalarRelationFilter = {
+    is?: CourseWhereInput
+    isNot?: CourseWhereInput
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -23258,10 +23486,11 @@ export namespace Prisma {
     search: string
   }
 
-  export type AttendanceRecordStudentIdSubjectIdAttendanceDateCompoundUniqueInput = {
+  export type AttendanceRecordStudentIdSubjectIdAttendanceDateSlotTypeCompoundUniqueInput = {
     studentId: string
     subjectId: string
     attendanceDate: Date | string
+    slotType: string
   }
 
   export type AttendanceRecordCountOrderByAggregateInput = {
@@ -23269,7 +23498,10 @@ export namespace Prisma {
     institutionId?: SortOrder
     studentId?: SortOrder
     subjectId?: SortOrder
+    courseId?: SortOrder
     termId?: SortOrder
+    markedById?: SortOrder
+    slotType?: SortOrder
     attendanceDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -23281,7 +23513,10 @@ export namespace Prisma {
     institutionId?: SortOrder
     studentId?: SortOrder
     subjectId?: SortOrder
+    courseId?: SortOrder
     termId?: SortOrder
+    markedById?: SortOrder
+    slotType?: SortOrder
     attendanceDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -23293,7 +23528,10 @@ export namespace Prisma {
     institutionId?: SortOrder
     studentId?: SortOrder
     subjectId?: SortOrder
+    courseId?: SortOrder
     termId?: SortOrder
+    markedById?: SortOrder
+    slotType?: SortOrder
     attendanceDate?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
@@ -23460,11 +23698,6 @@ export namespace Prisma {
     code?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type CourseScalarRelationFilter = {
-    is?: CourseWhereInput
-    isNot?: CourseWhereInput
   }
 
   export type CourseEnrollmentOrderByRelevanceInput = {
@@ -24457,6 +24690,18 @@ export namespace Prisma {
     connect?: SubjectWhereUniqueInput
   }
 
+  export type CourseCreateNestedOneWithoutAttendanceRecordsInput = {
+    create?: XOR<CourseCreateWithoutAttendanceRecordsInput, CourseUncheckedCreateWithoutAttendanceRecordsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutAttendanceRecordsInput
+    connect?: CourseWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAttendanceRecordsMarkedInput = {
+    create?: XOR<UserCreateWithoutAttendanceRecordsMarkedInput, UserUncheckedCreateWithoutAttendanceRecordsMarkedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendanceRecordsMarkedInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type InstitutionCreateNestedOneWithoutAttendanceRecordsInput = {
     create?: XOR<InstitutionCreateWithoutAttendanceRecordsInput, InstitutionUncheckedCreateWithoutAttendanceRecordsInput>
     connectOrCreate?: InstitutionCreateOrConnectWithoutAttendanceRecordsInput
@@ -24491,6 +24736,24 @@ export namespace Prisma {
     upsert?: SubjectUpsertWithoutAttendancesInput
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutAttendancesInput, SubjectUpdateWithoutAttendancesInput>, SubjectUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput = {
+    create?: XOR<CourseCreateWithoutAttendanceRecordsInput, CourseUncheckedCreateWithoutAttendanceRecordsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutAttendanceRecordsInput
+    upsert?: CourseUpsertWithoutAttendanceRecordsInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutAttendanceRecordsInput, CourseUpdateWithoutAttendanceRecordsInput>, CourseUncheckedUpdateWithoutAttendanceRecordsInput>
+  }
+
+  export type UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput = {
+    create?: XOR<UserCreateWithoutAttendanceRecordsMarkedInput, UserUncheckedCreateWithoutAttendanceRecordsMarkedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendanceRecordsMarkedInput
+    upsert?: UserUpsertWithoutAttendanceRecordsMarkedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAttendanceRecordsMarkedInput, UserUpdateWithoutAttendanceRecordsMarkedInput>, UserUncheckedUpdateWithoutAttendanceRecordsMarkedInput>
   }
 
   export type InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput = {
@@ -24545,6 +24808,13 @@ export namespace Prisma {
     connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
   }
 
+  export type AttendanceRecordCreateNestedManyWithoutCourseInput = {
+    create?: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput> | AttendanceRecordCreateWithoutCourseInput[] | AttendanceRecordUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutCourseInput | AttendanceRecordCreateOrConnectWithoutCourseInput[]
+    createMany?: AttendanceRecordCreateManyCourseInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+  }
+
   export type CourseEnrollmentUncheckedCreateNestedManyWithoutCourseInput = {
     create?: XOR<CourseEnrollmentCreateWithoutCourseInput, CourseEnrollmentUncheckedCreateWithoutCourseInput> | CourseEnrollmentCreateWithoutCourseInput[] | CourseEnrollmentUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CourseEnrollmentCreateOrConnectWithoutCourseInput | CourseEnrollmentCreateOrConnectWithoutCourseInput[]
@@ -24571,6 +24841,13 @@ export namespace Prisma {
     connectOrCreate?: SubjectCreateOrConnectWithoutCourseInput | SubjectCreateOrConnectWithoutCourseInput[]
     createMany?: SubjectCreateManyCourseInputEnvelope
     connect?: SubjectWhereUniqueInput | SubjectWhereUniqueInput[]
+  }
+
+  export type AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput> | AttendanceRecordCreateWithoutCourseInput[] | AttendanceRecordUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutCourseInput | AttendanceRecordCreateOrConnectWithoutCourseInput[]
+    createMany?: AttendanceRecordCreateManyCourseInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
   }
 
   export type DepartmentUpdateOneRequiredWithoutCoursesNestedInput = {
@@ -24645,6 +24922,20 @@ export namespace Prisma {
     deleteMany?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
   }
 
+  export type AttendanceRecordUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput> | AttendanceRecordCreateWithoutCourseInput[] | AttendanceRecordUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutCourseInput | AttendanceRecordCreateOrConnectWithoutCourseInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutCourseInput | AttendanceRecordUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: AttendanceRecordCreateManyCourseInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutCourseInput | AttendanceRecordUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutCourseInput | AttendanceRecordUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
   export type CourseEnrollmentUncheckedUpdateManyWithoutCourseNestedInput = {
     create?: XOR<CourseEnrollmentCreateWithoutCourseInput, CourseEnrollmentUncheckedCreateWithoutCourseInput> | CourseEnrollmentCreateWithoutCourseInput[] | CourseEnrollmentUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: CourseEnrollmentCreateOrConnectWithoutCourseInput | CourseEnrollmentCreateOrConnectWithoutCourseInput[]
@@ -24699,6 +24990,20 @@ export namespace Prisma {
     update?: SubjectUpdateWithWhereUniqueWithoutCourseInput | SubjectUpdateWithWhereUniqueWithoutCourseInput[]
     updateMany?: SubjectUpdateManyWithWhereWithoutCourseInput | SubjectUpdateManyWithWhereWithoutCourseInput[]
     deleteMany?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput> | AttendanceRecordCreateWithoutCourseInput[] | AttendanceRecordUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutCourseInput | AttendanceRecordCreateOrConnectWithoutCourseInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutCourseInput | AttendanceRecordUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: AttendanceRecordCreateManyCourseInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutCourseInput | AttendanceRecordUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutCourseInput | AttendanceRecordUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
   }
 
   export type CourseCreateNestedManyWithoutDepartmentInput = {
@@ -25981,6 +26286,13 @@ export namespace Prisma {
     connect?: InstitutionWhereUniqueInput
   }
 
+  export type AttendanceRecordCreateNestedManyWithoutMarkedByInput = {
+    create?: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput> | AttendanceRecordCreateWithoutMarkedByInput[] | AttendanceRecordUncheckedCreateWithoutMarkedByInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutMarkedByInput | AttendanceRecordCreateOrConnectWithoutMarkedByInput[]
+    createMany?: AttendanceRecordCreateManyMarkedByInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+  }
+
   export type FacultyUncheckedCreateNestedOneWithoutUserInput = {
     create?: XOR<FacultyCreateWithoutUserInput, FacultyUncheckedCreateWithoutUserInput>
     connectOrCreate?: FacultyCreateOrConnectWithoutUserInput
@@ -25991,6 +26303,13 @@ export namespace Prisma {
     create?: XOR<StudentCreateWithoutUserInput, StudentUncheckedCreateWithoutUserInput>
     connectOrCreate?: StudentCreateOrConnectWithoutUserInput
     connect?: StudentWhereUniqueInput
+  }
+
+  export type AttendanceRecordUncheckedCreateNestedManyWithoutMarkedByInput = {
+    create?: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput> | AttendanceRecordCreateWithoutMarkedByInput[] | AttendanceRecordUncheckedCreateWithoutMarkedByInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutMarkedByInput | AttendanceRecordCreateOrConnectWithoutMarkedByInput[]
+    createMany?: AttendanceRecordCreateManyMarkedByInputEnvelope
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -26025,6 +26344,20 @@ export namespace Prisma {
     update?: XOR<XOR<InstitutionUpdateToOneWithWhereWithoutUsersInput, InstitutionUpdateWithoutUsersInput>, InstitutionUncheckedUpdateWithoutUsersInput>
   }
 
+  export type AttendanceRecordUpdateManyWithoutMarkedByNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput> | AttendanceRecordCreateWithoutMarkedByInput[] | AttendanceRecordUncheckedCreateWithoutMarkedByInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutMarkedByInput | AttendanceRecordCreateOrConnectWithoutMarkedByInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutMarkedByInput | AttendanceRecordUpsertWithWhereUniqueWithoutMarkedByInput[]
+    createMany?: AttendanceRecordCreateManyMarkedByInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutMarkedByInput | AttendanceRecordUpdateWithWhereUniqueWithoutMarkedByInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutMarkedByInput | AttendanceRecordUpdateManyWithWhereWithoutMarkedByInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
+  }
+
   export type FacultyUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<FacultyCreateWithoutUserInput, FacultyUncheckedCreateWithoutUserInput>
     connectOrCreate?: FacultyCreateOrConnectWithoutUserInput
@@ -26043,6 +26376,20 @@ export namespace Prisma {
     delete?: StudentWhereInput | boolean
     connect?: StudentWhereUniqueInput
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutUserInput, StudentUpdateWithoutUserInput>, StudentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutMarkedByNestedInput = {
+    create?: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput> | AttendanceRecordCreateWithoutMarkedByInput[] | AttendanceRecordUncheckedCreateWithoutMarkedByInput[]
+    connectOrCreate?: AttendanceRecordCreateOrConnectWithoutMarkedByInput | AttendanceRecordCreateOrConnectWithoutMarkedByInput[]
+    upsert?: AttendanceRecordUpsertWithWhereUniqueWithoutMarkedByInput | AttendanceRecordUpsertWithWhereUniqueWithoutMarkedByInput[]
+    createMany?: AttendanceRecordCreateManyMarkedByInputEnvelope
+    set?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    disconnect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    delete?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    connect?: AttendanceRecordWhereUniqueInput | AttendanceRecordWhereUniqueInput[]
+    update?: AttendanceRecordUpdateWithWhereUniqueWithoutMarkedByInput | AttendanceRecordUpdateWithWhereUniqueWithoutMarkedByInput[]
+    updateMany?: AttendanceRecordUpdateManyWithWhereWithoutMarkedByInput | AttendanceRecordUpdateManyWithWhereWithoutMarkedByInput[]
+    deleteMany?: AttendanceRecordScalarWhereInput | AttendanceRecordScalarWhereInput[]
   }
 
   export type InstitutionCreateNestedOneWithoutNoticesInput = {
@@ -26420,12 +26767,15 @@ export namespace Prisma {
 
   export type AttendanceRecordCreateWithoutTermInput = {
     id?: string
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     student: StudentCreateNestedOneWithoutAttendanceRecordsInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
     institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
   }
 
@@ -26434,6 +26784,9 @@ export namespace Prisma {
     institutionId: string
     studentId: string
     subjectId: string
+    courseId: string
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -26561,7 +26914,10 @@ export namespace Prisma {
     institutionId?: StringFilter<"AttendanceRecord"> | string
     studentId?: StringFilter<"AttendanceRecord"> | string
     subjectId?: StringFilter<"AttendanceRecord"> | string
+    courseId?: StringFilter<"AttendanceRecord"> | string
     termId?: StringNullableFilter<"AttendanceRecord"> | string | null
+    markedById?: StringNullableFilter<"AttendanceRecord"> | string | null
+    slotType?: StringFilter<"AttendanceRecord"> | string
     attendanceDate?: DateTimeFilter<"AttendanceRecord"> | Date | string
     status?: EnumAttendanceStatusFilter<"AttendanceRecord"> | $Enums.AttendanceStatus
     createdAt?: DateTimeFilter<"AttendanceRecord"> | Date | string
@@ -26684,6 +27040,78 @@ export namespace Prisma {
   export type SubjectCreateOrConnectWithoutAttendancesInput = {
     where: SubjectWhereUniqueInput
     create: XOR<SubjectCreateWithoutAttendancesInput, SubjectUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type CourseCreateWithoutAttendanceRecordsInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department: DepartmentCreateNestedOneWithoutCoursesInput
+    institution: InstitutionCreateNestedOneWithoutCoursesInput
+    courseEnrollments?: CourseEnrollmentCreateNestedManyWithoutCourseInput
+    exams?: ExamCreateNestedManyWithoutCourseInput
+    students?: StudentCreateNestedManyWithoutCourseInput
+    subjects?: SubjectCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseUncheckedCreateWithoutAttendanceRecordsInput = {
+    id?: string
+    institutionId: string
+    name: string
+    code: string
+    departmentId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    courseEnrollments?: CourseEnrollmentUncheckedCreateNestedManyWithoutCourseInput
+    exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
+    students?: StudentUncheckedCreateNestedManyWithoutCourseInput
+    subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseCreateOrConnectWithoutAttendanceRecordsInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutAttendanceRecordsInput, CourseUncheckedCreateWithoutAttendanceRecordsInput>
+  }
+
+  export type UserCreateWithoutAttendanceRecordsMarkedInput = {
+    id?: string
+    username: string
+    passwordHash: string
+    name?: string
+    email?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role: $Enums.UserRole
+    accountStatus?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    faculty?: FacultyCreateNestedOneWithoutUserInput
+    student?: StudentCreateNestedOneWithoutUserInput
+    institution: InstitutionCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutAttendanceRecordsMarkedInput = {
+    id?: string
+    institutionId: string
+    username: string
+    passwordHash: string
+    name?: string
+    email?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role: $Enums.UserRole
+    accountStatus?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    faculty?: FacultyUncheckedCreateNestedOneWithoutUserInput
+    student?: StudentUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAttendanceRecordsMarkedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAttendanceRecordsMarkedInput, UserUncheckedCreateWithoutAttendanceRecordsMarkedInput>
   }
 
   export type InstitutionCreateWithoutAttendanceRecordsInput = {
@@ -26836,6 +27264,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     exams?: ExamUncheckedUpdateManyWithoutSubjectNestedInput
     facultyAssignments?: FacultyAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type CourseUpsertWithoutAttendanceRecordsInput = {
+    update: XOR<CourseUpdateWithoutAttendanceRecordsInput, CourseUncheckedUpdateWithoutAttendanceRecordsInput>
+    create: XOR<CourseCreateWithoutAttendanceRecordsInput, CourseUncheckedCreateWithoutAttendanceRecordsInput>
+    where?: CourseWhereInput
+  }
+
+  export type CourseUpdateToOneWithWhereWithoutAttendanceRecordsInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutAttendanceRecordsInput, CourseUncheckedUpdateWithoutAttendanceRecordsInput>
+  }
+
+  export type CourseUpdateWithoutAttendanceRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneRequiredWithoutCoursesNestedInput
+    institution?: InstitutionUpdateOneRequiredWithoutCoursesNestedInput
+    courseEnrollments?: CourseEnrollmentUpdateManyWithoutCourseNestedInput
+    exams?: ExamUpdateManyWithoutCourseNestedInput
+    students?: StudentUpdateManyWithoutCourseNestedInput
+    subjects?: SubjectUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseUncheckedUpdateWithoutAttendanceRecordsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    departmentId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseEnrollments?: CourseEnrollmentUncheckedUpdateManyWithoutCourseNestedInput
+    exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
+    students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
+    subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type UserUpsertWithoutAttendanceRecordsMarkedInput = {
+    update: XOR<UserUpdateWithoutAttendanceRecordsMarkedInput, UserUncheckedUpdateWithoutAttendanceRecordsMarkedInput>
+    create: XOR<UserCreateWithoutAttendanceRecordsMarkedInput, UserUncheckedCreateWithoutAttendanceRecordsMarkedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAttendanceRecordsMarkedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAttendanceRecordsMarkedInput, UserUncheckedUpdateWithoutAttendanceRecordsMarkedInput>
+  }
+
+  export type UserUpdateWithoutAttendanceRecordsMarkedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    accountStatus?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: FacultyUpdateOneWithoutUserNestedInput
+    student?: StudentUpdateOneWithoutUserNestedInput
+    institution?: InstitutionUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAttendanceRecordsMarkedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    accountStatus?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    faculty?: FacultyUncheckedUpdateOneWithoutUserNestedInput
+    student?: StudentUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type InstitutionUpsertWithoutAttendanceRecordsInput = {
@@ -27087,6 +27599,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttendanceRecordCreateWithoutCourseInput = {
+    id?: string
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    term?: AcademicTermCreateNestedOneWithoutAttendancesInput
+    student: StudentCreateNestedOneWithoutAttendanceRecordsInput
+    subject: SubjectCreateNestedOneWithoutAttendancesInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
+    institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
+  }
+
+  export type AttendanceRecordUncheckedCreateWithoutCourseInput = {
+    id?: string
+    institutionId: string
+    studentId: string
+    subjectId: string
+    termId?: string | null
+    markedById?: string | null
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordCreateOrConnectWithoutCourseInput = {
+    where: AttendanceRecordWhereUniqueInput
+    create: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput>
+  }
+
+  export type AttendanceRecordCreateManyCourseInputEnvelope = {
+    data: AttendanceRecordCreateManyCourseInput | AttendanceRecordCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DepartmentUpsertWithoutCoursesInput = {
     update: XOR<DepartmentUpdateWithoutCoursesInput, DepartmentUncheckedUpdateWithoutCoursesInput>
     create: XOR<DepartmentCreateWithoutCoursesInput, DepartmentUncheckedCreateWithoutCoursesInput>
@@ -27271,6 +27821,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
   }
 
+  export type AttendanceRecordUpsertWithWhereUniqueWithoutCourseInput = {
+    where: AttendanceRecordWhereUniqueInput
+    update: XOR<AttendanceRecordUpdateWithoutCourseInput, AttendanceRecordUncheckedUpdateWithoutCourseInput>
+    create: XOR<AttendanceRecordCreateWithoutCourseInput, AttendanceRecordUncheckedCreateWithoutCourseInput>
+  }
+
+  export type AttendanceRecordUpdateWithWhereUniqueWithoutCourseInput = {
+    where: AttendanceRecordWhereUniqueInput
+    data: XOR<AttendanceRecordUpdateWithoutCourseInput, AttendanceRecordUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type AttendanceRecordUpdateManyWithWhereWithoutCourseInput = {
+    where: AttendanceRecordScalarWhereInput
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyWithoutCourseInput>
+  }
+
   export type CourseCreateWithoutDepartmentInput = {
     id?: string
     name: string
@@ -27282,6 +27848,7 @@ export namespace Prisma {
     exams?: ExamCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutDepartmentInput = {
@@ -27295,6 +27862,7 @@ export namespace Prisma {
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutDepartmentInput = {
@@ -27500,6 +28068,7 @@ export namespace Prisma {
     exams?: ExamCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCourseEnrollmentsInput = {
@@ -27513,6 +28082,7 @@ export namespace Prisma {
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCourseEnrollmentsInput = {
@@ -27571,6 +28141,7 @@ export namespace Prisma {
     exams?: ExamUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCourseEnrollmentsInput = {
@@ -27584,6 +28155,7 @@ export namespace Prisma {
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type StudentUpsertWithoutCourseEnrollmentsInput = {
@@ -27632,6 +28204,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutExamsInput = {
@@ -27645,6 +28218,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutExamsInput = {
@@ -27809,6 +28383,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutExamsInput = {
@@ -27822,6 +28397,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type AcademicTermUpsertWithoutExamsInput = {
@@ -28016,6 +28592,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     student?: StudentCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
+    attendanceRecordsMarked?: AttendanceRecordCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserUncheckedCreateWithoutFacultyInput = {
@@ -28032,6 +28609,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserCreateOrConnectWithoutFacultyInput = {
@@ -28117,6 +28695,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneWithoutUserNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutUsersNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFacultyInput = {
@@ -28133,6 +28712,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedUpdateManyWithoutMarkedByNestedInput
   }
 
   export type FacultyAssignmentUpsertWithWhereUniqueWithoutFacultyInput = {
@@ -28423,6 +29003,7 @@ export namespace Prisma {
 
   export type AttendanceRecordCreateWithoutInstitutionInput = {
     id?: string
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -28430,13 +29011,18 @@ export namespace Prisma {
     term?: AcademicTermCreateNestedOneWithoutAttendancesInput
     student: StudentCreateNestedOneWithoutAttendanceRecordsInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
   }
 
   export type AttendanceRecordUncheckedCreateWithoutInstitutionInput = {
     id?: string
     studentId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -28464,6 +29050,7 @@ export namespace Prisma {
     exams?: ExamCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutInstitutionInput = {
@@ -28477,6 +29064,7 @@ export namespace Prisma {
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutInstitutionInput = {
@@ -28689,6 +29277,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     faculty?: FacultyCreateNestedOneWithoutUserInput
     student?: StudentCreateNestedOneWithoutUserInput
+    attendanceRecordsMarked?: AttendanceRecordCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserUncheckedCreateWithoutInstitutionInput = {
@@ -28705,6 +29294,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     faculty?: FacultyUncheckedCreateNestedOneWithoutUserInput
     student?: StudentUncheckedCreateNestedOneWithoutUserInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserCreateOrConnectWithoutInstitutionInput = {
@@ -29295,12 +29885,15 @@ export namespace Prisma {
 
   export type AttendanceRecordCreateWithoutStudentInput = {
     id?: string
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     term?: AcademicTermCreateNestedOneWithoutAttendancesInput
     subject: SubjectCreateNestedOneWithoutAttendancesInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
     institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
   }
 
@@ -29308,7 +29901,10 @@ export namespace Prisma {
     id?: string
     institutionId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -29386,6 +29982,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentCreateNestedManyWithoutCourseInput
     exams?: ExamCreateNestedManyWithoutCourseInput
     subjects?: SubjectCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutStudentsInput = {
@@ -29399,6 +29996,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     subjects?: SubjectUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutStudentsInput = {
@@ -29420,6 +30018,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     faculty?: FacultyCreateNestedOneWithoutUserInput
     institution: InstitutionCreateNestedOneWithoutUsersInput
+    attendanceRecordsMarked?: AttendanceRecordCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserUncheckedCreateWithoutStudentInput = {
@@ -29436,6 +30035,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     faculty?: FacultyUncheckedCreateNestedOneWithoutUserInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedCreateNestedManyWithoutMarkedByInput
   }
 
   export type UserCreateOrConnectWithoutStudentInput = {
@@ -29513,6 +30113,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUpdateManyWithoutCourseNestedInput
     exams?: ExamUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutStudentsInput = {
@@ -29526,6 +30127,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type UserUpsertWithoutStudentInput = {
@@ -29553,6 +30155,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: FacultyUpdateOneWithoutUserNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutUsersNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentInput = {
@@ -29569,16 +30172,20 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: FacultyUncheckedUpdateOneWithoutUserNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedUpdateManyWithoutMarkedByNestedInput
   }
 
   export type AttendanceRecordCreateWithoutSubjectInput = {
     id?: string
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     term?: AcademicTermCreateNestedOneWithoutAttendancesInput
     student: StudentCreateNestedOneWithoutAttendanceRecordsInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    markedBy?: UserCreateNestedOneWithoutAttendanceRecordsMarkedInput
     institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
   }
 
@@ -29586,7 +30193,10 @@ export namespace Prisma {
     id?: string
     institutionId: string
     studentId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -29648,6 +30258,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentCreateNestedManyWithoutCourseInput
     exams?: ExamCreateNestedManyWithoutCourseInput
     students?: StudentCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSubjectsInput = {
@@ -29661,6 +30272,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedCreateNestedManyWithoutCourseInput
     exams?: ExamUncheckedCreateNestedManyWithoutCourseInput
     students?: StudentUncheckedCreateNestedManyWithoutCourseInput
+    attendanceRecords?: AttendanceRecordUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSubjectsInput = {
@@ -29791,6 +30403,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUpdateManyWithoutCourseNestedInput
     exams?: ExamUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSubjectsInput = {
@@ -29804,6 +30417,7 @@ export namespace Prisma {
     courseEnrollments?: CourseEnrollmentUncheckedUpdateManyWithoutCourseNestedInput
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type InstitutionUpsertWithoutSubjectsInput = {
@@ -30088,6 +30702,44 @@ export namespace Prisma {
     create: XOR<InstitutionCreateWithoutUsersInput, InstitutionUncheckedCreateWithoutUsersInput>
   }
 
+  export type AttendanceRecordCreateWithoutMarkedByInput = {
+    id?: string
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    term?: AcademicTermCreateNestedOneWithoutAttendancesInput
+    student: StudentCreateNestedOneWithoutAttendanceRecordsInput
+    subject: SubjectCreateNestedOneWithoutAttendancesInput
+    course: CourseCreateNestedOneWithoutAttendanceRecordsInput
+    institution: InstitutionCreateNestedOneWithoutAttendanceRecordsInput
+  }
+
+  export type AttendanceRecordUncheckedCreateWithoutMarkedByInput = {
+    id?: string
+    institutionId: string
+    studentId: string
+    subjectId: string
+    courseId: string
+    termId?: string | null
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordCreateOrConnectWithoutMarkedByInput = {
+    where: AttendanceRecordWhereUniqueInput
+    create: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput>
+  }
+
+  export type AttendanceRecordCreateManyMarkedByInputEnvelope = {
+    data: AttendanceRecordCreateManyMarkedByInput | AttendanceRecordCreateManyMarkedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FacultyUpsertWithoutUserInput = {
     update: XOR<FacultyUpdateWithoutUserInput, FacultyUncheckedUpdateWithoutUserInput>
     create: XOR<FacultyCreateWithoutUserInput, FacultyUncheckedCreateWithoutUserInput>
@@ -30203,6 +30855,22 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutInstitutionNestedInput
   }
 
+  export type AttendanceRecordUpsertWithWhereUniqueWithoutMarkedByInput = {
+    where: AttendanceRecordWhereUniqueInput
+    update: XOR<AttendanceRecordUpdateWithoutMarkedByInput, AttendanceRecordUncheckedUpdateWithoutMarkedByInput>
+    create: XOR<AttendanceRecordCreateWithoutMarkedByInput, AttendanceRecordUncheckedCreateWithoutMarkedByInput>
+  }
+
+  export type AttendanceRecordUpdateWithWhereUniqueWithoutMarkedByInput = {
+    where: AttendanceRecordWhereUniqueInput
+    data: XOR<AttendanceRecordUpdateWithoutMarkedByInput, AttendanceRecordUncheckedUpdateWithoutMarkedByInput>
+  }
+
+  export type AttendanceRecordUpdateManyWithWhereWithoutMarkedByInput = {
+    where: AttendanceRecordScalarWhereInput
+    data: XOR<AttendanceRecordUpdateManyMutationInput, AttendanceRecordUncheckedUpdateManyWithoutMarkedByInput>
+  }
+
   export type InstitutionCreateWithoutNoticesInput = {
     id?: string
     name: string
@@ -30308,6 +30976,9 @@ export namespace Prisma {
     institutionId: string
     studentId: string
     subjectId: string
+    courseId: string
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -30327,12 +30998,15 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateWithoutTermInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   }
 
@@ -30341,6 +31015,9 @@ export namespace Prisma {
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30352,6 +31029,9 @@ export namespace Prisma {
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30424,6 +31104,20 @@ export namespace Prisma {
     name: string
     code: string
     academicCycle?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordCreateManyCourseInput = {
+    id?: string
+    institutionId: string
+    studentId: string
+    subjectId: string
+    termId?: string | null
+    markedById?: string | null
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30547,6 +31241,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AttendanceRecordUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
+    student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
+    institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+  }
+
+  export type AttendanceRecordUncheckedUpdateWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutCourseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CourseCreateManyDepartmentInput = {
     id?: string
     institutionId: string
@@ -30574,6 +31310,7 @@ export namespace Prisma {
     exams?: ExamUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutDepartmentInput = {
@@ -30587,6 +31324,7 @@ export namespace Prisma {
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutDepartmentInput = {
@@ -30698,7 +31436,10 @@ export namespace Prisma {
     id?: string
     studentId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -30827,6 +31568,7 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateWithoutInstitutionInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30834,13 +31576,18 @@ export namespace Prisma {
     term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
     student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
   }
 
   export type AttendanceRecordUncheckedUpdateWithoutInstitutionInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30851,7 +31598,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30869,6 +31619,7 @@ export namespace Prisma {
     exams?: ExamUpdateManyWithoutCourseNestedInput
     students?: StudentUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutInstitutionInput = {
@@ -30882,6 +31633,7 @@ export namespace Prisma {
     exams?: ExamUncheckedUpdateManyWithoutCourseNestedInput
     students?: StudentUncheckedUpdateManyWithoutCourseNestedInput
     subjects?: SubjectUncheckedUpdateManyWithoutCourseNestedInput
+    attendanceRecords?: AttendanceRecordUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutInstitutionInput = {
@@ -31090,6 +31842,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: FacultyUpdateOneWithoutUserNestedInput
     student?: StudentUpdateOneWithoutUserNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInstitutionInput = {
@@ -31106,6 +31859,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     faculty?: FacultyUncheckedUpdateOneWithoutUserNestedInput
     student?: StudentUncheckedUpdateOneWithoutUserNestedInput
+    attendanceRecordsMarked?: AttendanceRecordUncheckedUpdateManyWithoutMarkedByNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutInstitutionInput = {
@@ -31185,7 +31939,10 @@ export namespace Prisma {
     id?: string
     institutionId: string
     subjectId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -31209,12 +31966,15 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateWithoutStudentInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
     subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   }
 
@@ -31222,7 +31982,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     institutionId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31233,7 +31996,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     institutionId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31289,7 +32055,10 @@ export namespace Prisma {
     id?: string
     institutionId: string
     studentId: string
+    courseId: string
     termId?: string | null
+    markedById?: string | null
+    slotType?: string
     attendanceDate: Date | string
     status: $Enums.AttendanceStatus
     createdAt?: Date | string
@@ -31315,12 +32084,15 @@ export namespace Prisma {
 
   export type AttendanceRecordUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
     student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    markedBy?: UserUpdateOneWithoutAttendanceRecordsMarkedNestedInput
     institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
   }
 
@@ -31328,7 +32100,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31339,7 +32114,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     institutionId?: StringFieldUpdateOperationsInput | string
     studentId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
     termId?: NullableStringFieldUpdateOperationsInput | string | null
+    markedById?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
     attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31397,6 +32175,62 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
     responsibility?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttendanceRecordCreateManyMarkedByInput = {
+    id?: string
+    institutionId: string
+    studentId: string
+    subjectId: string
+    courseId: string
+    termId?: string | null
+    slotType?: string
+    attendanceDate: Date | string
+    status: $Enums.AttendanceStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceRecordUpdateWithoutMarkedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    term?: AcademicTermUpdateOneWithoutAttendancesNestedInput
+    student?: StudentUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutAttendancesNestedInput
+    course?: CourseUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+    institution?: InstitutionUpdateOneRequiredWithoutAttendanceRecordsNestedInput
+  }
+
+  export type AttendanceRecordUncheckedUpdateWithoutMarkedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    termId?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceRecordUncheckedUpdateManyWithoutMarkedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    institutionId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    termId?: NullableStringFieldUpdateOperationsInput | string | null
+    slotType?: StringFieldUpdateOperationsInput | string
+    attendanceDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

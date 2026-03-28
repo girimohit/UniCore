@@ -19,6 +19,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], asy
     const { searchParams } = new URL(req.url);
     const subjectId = searchParams.get('subjectId');
     const date = searchParams.get('date');
+    const slotType = searchParams.get('slotType') || 'THEORY';
 
     if (!subjectId || !date) {
       return NextResponse.json({ error: 'subjectId and date are required' }, { status: 400 });
@@ -32,15 +33,21 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], asy
         institutionId: user.institutionId,
         subjectId,
         attendanceDate,
+        slotType,
       },
-      select: { studentId: true, status: true },
+      select: { studentId: true, status: true, termId: true },
     });
 
     // Return as a map: { studentId: status }
     const statusMap: Record<string, string> = {};
-    records.forEach((r) => { statusMap[r.studentId] = r.status; });
+    let savedTermId = '';
 
-    return NextResponse.json({ statuses: statusMap, count: records.length });
+    records.forEach((r) => { 
+      statusMap[r.studentId] = r.status; 
+      if (r.termId) savedTermId = r.termId;
+    });
+
+    return NextResponse.json({ statuses: statusMap, count: records.length, termId: savedTermId });
   } catch (error) {
     console.error('Error loading attendance records:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -54,7 +61,7 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], as
             return NextResponse.json({ error: 'Attendance module disabled' }, { status: 403 });
         }
 
-        const { subjectId, date, records, termId } = await req.json();
+        const { subjectId, date, records, termId, slotType = 'THEORY' } = await req.json();
         // records: Array<{ studentId: string, status: AttendanceStatus }>
 
         if (!subjectId || !date || !Array.isArray(records)) {
@@ -107,23 +114,28 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], as
         const transaction = await prisma.$transaction(
             validRecords.map((record: any) => prisma.attendanceRecord.upsert({
                 where: {
-                    studentId_subjectId_attendanceDate: {
+                    studentId_subjectId_attendanceDate_slotType: {
                         studentId: record.studentId,
                         subjectId: subjectId,
-                        attendanceDate: attendanceDate
+                        attendanceDate: attendanceDate,
+                        slotType: slotType
                     }
                 },
                 update: {
-                    status: record.status,
-                    termId: termId || undefined
+                    status: record.status as AttendanceStatus,
+                    termId: termId || undefined,
+                    markedById: user.userId
                 },
                 create: {
                     institutionId: user.institutionId,
                     studentId: record.studentId,
                     subjectId: subjectId,
+                    courseId: subject.courseId,
                     attendanceDate: attendanceDate,
-                    status: record.status,
-                    termId: termId || undefined
+                    status: record.status as AttendanceStatus,
+                    termId: termId || undefined,
+                    markedById: user.userId,
+                    slotType: slotType
                 }
             }))
         );
