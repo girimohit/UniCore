@@ -49,18 +49,50 @@ export default function AttendanceManager({
   const [subjectId, setSubjectId] = useState(initialSubjectId);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [termId, setTermId] = useState("");
+  const [statuses, setStatuses] = useState<Record<string, "PRESENT" | "ABSENT">>({});
+  const [loading, setLoading] = useState(false);
+  const [loadingPast, setLoadingPast] = useState(false);
+  const [pastCount, setPastCount] = useState(0);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
 
   // Sync with search params if they change
   useEffect(() => {
     const sId = searchParams.get("subjectId");
     if (sId) setSubjectId(sId);
   }, [searchParams]);
-  const [statuses, setStatuses] = useState<
-    Record<string, "PRESENT" | "ABSENT">
-  >({});
-  const [loading, setLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
+
+  // Auto-load past records whenever subject or date changes
+  useEffect(() => {
+    if (!subjectId || !date) return;
+    let cancelled = false;
+
+    const loadPast = async () => {
+      setLoadingPast(true);
+      setPastCount(0);
+      try {
+        const res = await fetch(
+          `/api/modules/attendance/mark?subjectId=${subjectId}&date=${date}`
+        );
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          if (data.count > 0) {
+            setStatuses(data.statuses);
+            setPastCount(data.count);
+          } else {
+            setStatuses({});
+          }
+        }
+      } catch {
+        // silently fail — form stays blank
+      } finally {
+        if (!cancelled) setLoadingPast(false);
+      }
+    };
+
+    loadPast();
+    return () => { cancelled = true; };
+  }, [subjectId, date]);
 
   const handleStatus = (studentId: string, status: "PRESENT" | "ABSENT") => {
     setStatuses((prev) => ({ ...prev, [studentId]: status }));
@@ -174,6 +206,22 @@ export default function AttendanceManager({
           </p>
         )}
 
+        {loadingPast && (
+          <div className="flex items-center gap-2 text-muted-foreground bg-secondary/10 rounded-xl px-4 py-2">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <p className="text-xs font-semibold">Loading previous records...</p>
+          </div>
+        )}
+
+        {!loadingPast && pastCount > 0 && !saved && (
+          <div className="flex items-center gap-2 text-amber-600 bg-amber-500/10 rounded-xl px-4 py-2">
+            <CheckCircle className="w-4 h-4" />
+            <p className="text-xs font-semibold">
+              {pastCount} record{pastCount !== 1 ? 's' : ''} previously saved — editing mode
+            </p>
+          </div>
+        )}
+
         {saved && (
           <div className="flex items-center gap-2 text-emerald-600 bg-emerald-500/10 rounded-xl px-4 py-2">
             <CheckCircle className="w-4 h-4" />
@@ -183,14 +231,14 @@ export default function AttendanceManager({
 
         <button
           onClick={handleSave}
-          disabled={loading || filteredStudents.length === 0}
+          disabled={loading || loadingPast || filteredStudents.length === 0}
           className="w-full mt-2 flex justify-center items-center gap-2 bg-gradient-to-r from-primary to-accent hover:from-primary hover:to-primary text-primary-foreground px-4 h-12 rounded-xl font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
-              <Save className="h-5 w-5" /> Save Records
+              <Save className="h-5 w-5" /> {pastCount > 0 ? 'Update Records' : 'Save Records'}
             </>
           )}
         </button>

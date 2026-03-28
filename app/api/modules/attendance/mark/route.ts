@@ -4,6 +4,49 @@ import { withAuth } from '@/lib/auth-middleware';
 import { isModuleEnabled } from '@/lib/modules/loader';
 import { AttendanceStatus } from '@prisma/client';
 
+/**
+ * GET /api/modules/attendance/mark?subjectId=&date=
+ * Load existing attendance records for a specific subject + date.
+ * Faculty use this to pre-populate the attendance sheet for editing.
+ */
+export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], async (req, context, user) => {
+  try {
+    const active = await isModuleEnabled(user.institutionId, 'attendance');
+    if (!active) {
+      return NextResponse.json({ error: 'Attendance module disabled' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const subjectId = searchParams.get('subjectId');
+    const date = searchParams.get('date');
+
+    if (!subjectId || !date) {
+      return NextResponse.json({ error: 'subjectId and date are required' }, { status: 400 });
+    }
+
+    const attendanceDate = new Date(date);
+    attendanceDate.setHours(0, 0, 0, 0);
+
+    const records = await prisma.attendanceRecord.findMany({
+      where: {
+        institutionId: user.institutionId,
+        subjectId,
+        attendanceDate,
+      },
+      select: { studentId: true, status: true },
+    });
+
+    // Return as a map: { studentId: status }
+    const statusMap: Record<string, string> = {};
+    records.forEach((r) => { statusMap[r.studentId] = r.status; });
+
+    return NextResponse.json({ statuses: statusMap, count: records.length });
+  } catch (error) {
+    console.error('Error loading attendance records:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+});
+
 export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], async (req, context, user) => {
     try {
         const active = await isModuleEnabled(user.institutionId, 'attendance');
