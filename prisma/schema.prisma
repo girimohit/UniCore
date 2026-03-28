@@ -268,9 +268,10 @@ model Subject {
 }
 
 model FacultyAssignment {
-  id        String  @id @default(cuid())
-  subjectId String
-  facultyId String
+  id             String  @id @default(cuid())
+  subjectId      String
+  facultyId      String
+  responsibility String  @default("THEORY")  // e.g. THEORY, LAB, TUTORIAL, or any custom text
   
   faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)

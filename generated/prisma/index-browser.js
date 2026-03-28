@@ -261,7 +261,8 @@ exports.Prisma.SubjectScalarFieldEnum = {
 exports.Prisma.FacultyAssignmentScalarFieldEnum = {
   id: 'id',
   subjectId: 'subjectId',
-  facultyId: 'facultyId'
+  facultyId: 'facultyId',
+  responsibility: 'responsibility'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -421,7 +422,8 @@ exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
 exports.Prisma.FacultyAssignmentOrderByRelevanceFieldEnum = {
   id: 'id',
   subjectId: 'subjectId',
-  facultyId: 'facultyId'
+  facultyId: 'facultyId',
+  responsibility: 'responsibility'
 };
 
 exports.Prisma.UserOrderByRelevanceFieldEnum = {

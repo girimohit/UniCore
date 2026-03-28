@@ -17076,18 +17076,21 @@ export namespace Prisma {
     id: string | null
     subjectId: string | null
     facultyId: string | null
+    responsibility: string | null
   }
 
   export type FacultyAssignmentMaxAggregateOutputType = {
     id: string | null
     subjectId: string | null
     facultyId: string | null
+    responsibility: string | null
   }
 
   export type FacultyAssignmentCountAggregateOutputType = {
     id: number
     subjectId: number
     facultyId: number
+    responsibility: number
     _all: number
   }
 
@@ -17096,18 +17099,21 @@ export namespace Prisma {
     id?: true
     subjectId?: true
     facultyId?: true
+    responsibility?: true
   }
 
   export type FacultyAssignmentMaxAggregateInputType = {
     id?: true
     subjectId?: true
     facultyId?: true
+    responsibility?: true
   }
 
   export type FacultyAssignmentCountAggregateInputType = {
     id?: true
     subjectId?: true
     facultyId?: true
+    responsibility?: true
     _all?: true
   }
 
@@ -17187,6 +17193,7 @@ export namespace Prisma {
     id: string
     subjectId: string
     facultyId: string
+    responsibility: string
     _count: FacultyAssignmentCountAggregateOutputType | null
     _min: FacultyAssignmentMinAggregateOutputType | null
     _max: FacultyAssignmentMaxAggregateOutputType | null
@@ -17210,6 +17217,7 @@ export namespace Prisma {
     id?: boolean
     subjectId?: boolean
     facultyId?: boolean
+    responsibility?: boolean
     faculty?: boolean | FacultyDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["facultyAssignment"]>
@@ -17220,9 +17228,10 @@ export namespace Prisma {
     id?: boolean
     subjectId?: boolean
     facultyId?: boolean
+    responsibility?: boolean
   }
 
-  export type FacultyAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subjectId" | "facultyId", ExtArgs["result"]["facultyAssignment"]>
+  export type FacultyAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subjectId" | "facultyId" | "responsibility", ExtArgs["result"]["facultyAssignment"]>
   export type FacultyAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     faculty?: boolean | FacultyDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -17238,6 +17247,7 @@ export namespace Prisma {
       id: string
       subjectId: string
       facultyId: string
+      responsibility: string
     }, ExtArgs["result"]["facultyAssignment"]>
     composites: {}
   }
@@ -17612,6 +17622,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FacultyAssignment", 'String'>
     readonly subjectId: FieldRef<"FacultyAssignment", 'String'>
     readonly facultyId: FieldRef<"FacultyAssignment", 'String'>
+    readonly responsibility: FieldRef<"FacultyAssignment", 'String'>
   }
     
 
@@ -20188,7 +20199,8 @@ export namespace Prisma {
   export const FacultyAssignmentScalarFieldEnum: {
     id: 'id',
     subjectId: 'subjectId',
-    facultyId: 'facultyId'
+    facultyId: 'facultyId',
+    responsibility: 'responsibility'
   };
 
   export type FacultyAssignmentScalarFieldEnum = (typeof FacultyAssignmentScalarFieldEnum)[keyof typeof FacultyAssignmentScalarFieldEnum]
@@ -20414,7 +20426,8 @@ export namespace Prisma {
   export const FacultyAssignmentOrderByRelevanceFieldEnum: {
     id: 'id',
     subjectId: 'subjectId',
-    facultyId: 'facultyId'
+    facultyId: 'facultyId',
+    responsibility: 'responsibility'
   };
 
   export type FacultyAssignmentOrderByRelevanceFieldEnum = (typeof FacultyAssignmentOrderByRelevanceFieldEnum)[keyof typeof FacultyAssignmentOrderByRelevanceFieldEnum]
@@ -21586,6 +21599,7 @@ export namespace Prisma {
     id?: StringFilter<"FacultyAssignment"> | string
     subjectId?: StringFilter<"FacultyAssignment"> | string
     facultyId?: StringFilter<"FacultyAssignment"> | string
+    responsibility?: StringFilter<"FacultyAssignment"> | string
     faculty?: XOR<FacultyScalarRelationFilter, FacultyWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
   }
@@ -21594,6 +21608,7 @@ export namespace Prisma {
     id?: SortOrder
     subjectId?: SortOrder
     facultyId?: SortOrder
+    responsibility?: SortOrder
     faculty?: FacultyOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
     _relevance?: FacultyAssignmentOrderByRelevanceInput
@@ -21607,6 +21622,7 @@ export namespace Prisma {
     NOT?: FacultyAssignmentWhereInput | FacultyAssignmentWhereInput[]
     subjectId?: StringFilter<"FacultyAssignment"> | string
     facultyId?: StringFilter<"FacultyAssignment"> | string
+    responsibility?: StringFilter<"FacultyAssignment"> | string
     faculty?: XOR<FacultyScalarRelationFilter, FacultyWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
   }, "id" | "subjectId_facultyId">
@@ -21615,6 +21631,7 @@ export namespace Prisma {
     id?: SortOrder
     subjectId?: SortOrder
     facultyId?: SortOrder
+    responsibility?: SortOrder
     _count?: FacultyAssignmentCountOrderByAggregateInput
     _max?: FacultyAssignmentMaxOrderByAggregateInput
     _min?: FacultyAssignmentMinOrderByAggregateInput
@@ -21627,6 +21644,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FacultyAssignment"> | string
     subjectId?: StringWithAggregatesFilter<"FacultyAssignment"> | string
     facultyId?: StringWithAggregatesFilter<"FacultyAssignment"> | string
+    responsibility?: StringWithAggregatesFilter<"FacultyAssignment"> | string
   }
 
   export type UserWhereInput = {
@@ -22847,6 +22865,7 @@ export namespace Prisma {
 
   export type FacultyAssignmentCreateInput = {
     id?: string
+    responsibility?: string
     faculty: FacultyCreateNestedOneWithoutFacultyAssignmentsInput
     subject: SubjectCreateNestedOneWithoutFacultyAssignmentsInput
   }
@@ -22855,10 +22874,12 @@ export namespace Prisma {
     id?: string
     subjectId: string
     facultyId: string
+    responsibility?: string
   }
 
   export type FacultyAssignmentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
     faculty?: FacultyUpdateOneRequiredWithoutFacultyAssignmentsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutFacultyAssignmentsNestedInput
   }
@@ -22867,22 +22888,26 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type FacultyAssignmentCreateManyInput = {
     id?: string
     subjectId: string
     facultyId: string
+    responsibility?: string
   }
 
   export type FacultyAssignmentUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type FacultyAssignmentUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateInput = {
@@ -24172,18 +24197,21 @@ export namespace Prisma {
     id?: SortOrder
     subjectId?: SortOrder
     facultyId?: SortOrder
+    responsibility?: SortOrder
   }
 
   export type FacultyAssignmentMaxOrderByAggregateInput = {
     id?: SortOrder
     subjectId?: SortOrder
     facultyId?: SortOrder
+    responsibility?: SortOrder
   }
 
   export type FacultyAssignmentMinOrderByAggregateInput = {
     id?: SortOrder
     subjectId?: SortOrder
     facultyId?: SortOrder
+    responsibility?: SortOrder
   }
 
   export type EnumUserRoleFilter<$PrismaModel = never> = {
@@ -28013,12 +28041,14 @@ export namespace Prisma {
 
   export type FacultyAssignmentCreateWithoutFacultyInput = {
     id?: string
+    responsibility?: string
     subject: SubjectCreateNestedOneWithoutFacultyAssignmentsInput
   }
 
   export type FacultyAssignmentUncheckedCreateWithoutFacultyInput = {
     id?: string
     subjectId: string
+    responsibility?: string
   }
 
   export type FacultyAssignmentCreateOrConnectWithoutFacultyInput = {
@@ -28128,6 +28158,7 @@ export namespace Prisma {
     id?: StringFilter<"FacultyAssignment"> | string
     subjectId?: StringFilter<"FacultyAssignment"> | string
     facultyId?: StringFilter<"FacultyAssignment"> | string
+    responsibility?: StringFilter<"FacultyAssignment"> | string
   }
 
   export type ExamCreateWithoutExamResultsInput = {
@@ -29686,12 +29717,14 @@ export namespace Prisma {
 
   export type FacultyAssignmentCreateWithoutSubjectInput = {
     id?: string
+    responsibility?: string
     faculty: FacultyCreateNestedOneWithoutFacultyAssignmentsInput
   }
 
   export type FacultyAssignmentUncheckedCreateWithoutSubjectInput = {
     id?: string
     facultyId: string
+    responsibility?: string
   }
 
   export type FacultyAssignmentCreateOrConnectWithoutSubjectInput = {
@@ -30631,21 +30664,25 @@ export namespace Prisma {
   export type FacultyAssignmentCreateManyFacultyInput = {
     id?: string
     subjectId: string
+    responsibility?: string
   }
 
   export type FacultyAssignmentUpdateWithoutFacultyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
     subject?: SubjectUpdateOneRequiredWithoutFacultyAssignmentsNestedInput
   }
 
   export type FacultyAssignmentUncheckedUpdateWithoutFacultyInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type FacultyAssignmentUncheckedUpdateManyWithoutFacultyInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type AcademicTermCreateManyInstitutionInput = {
@@ -31273,6 +31310,7 @@ export namespace Prisma {
   export type FacultyAssignmentCreateManySubjectInput = {
     id?: string
     facultyId: string
+    responsibility?: string
   }
 
   export type AttendanceRecordUpdateWithoutSubjectInput = {
@@ -31345,17 +31383,20 @@ export namespace Prisma {
 
   export type FacultyAssignmentUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
     faculty?: FacultyUpdateOneRequiredWithoutFacultyAssignmentsNestedInput
   }
 
   export type FacultyAssignmentUncheckedUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
   export type FacultyAssignmentUncheckedUpdateManyWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     facultyId?: StringFieldUpdateOperationsInput | string
+    responsibility?: StringFieldUpdateOperationsInput | string
   }
 
 

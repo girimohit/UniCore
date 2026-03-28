@@ -15,7 +15,7 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
        return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
     }
 
-    const { subjectId, facultyId } = await req.json();
+    const { subjectId, facultyId, responsibility } = await req.json();
 
     if (!subjectId || !facultyId) {
       return NextResponse.json({ error: 'Subject ID and Faculty ID are required' }, { status: 400 });
@@ -36,16 +36,14 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
     }
 
     const assignment = await prisma.facultyAssignment.upsert({
-      where: {
-        subjectId_facultyId: {
-          subjectId,
-          facultyId: faculty.faculty.id
-        }
+      where: { subjectId_facultyId: { subjectId, facultyId: faculty.faculty.id } },
+      update: {
+        responsibility: responsibility || 'THEORY',
       },
-      update: {},
       create: {
         subjectId,
-        facultyId: faculty.faculty.id
+        facultyId: faculty.faculty.id,
+        responsibility: responsibility || 'THEORY',
       }
     });
 

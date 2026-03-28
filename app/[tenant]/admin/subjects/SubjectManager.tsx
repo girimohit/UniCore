@@ -45,6 +45,7 @@ export default function SubjectManager({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [assigningSubject, setAssigningSubject] = useState<any | null>(null);
   const [assigningLoading, setAssigningLoading] = useState(false);
+  const [assigningResponsibility, setAssigningResponsibility] = useState('THEORY');
   const [subjects, setSubjects] = useState<any[]>(initialSubjects);
   const [mounted, setMounted] = useState(false);
 
@@ -174,10 +175,14 @@ export default function SubjectManager({
       const res = await fetch("/api/modules/subjects/assign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subjectId: assigningSubject.id, facultyId }),
+        body: JSON.stringify({
+          subjectId: assigningSubject.id,
+          facultyId,
+          responsibility: assigningResponsibility || 'THEORY',
+        }),
       });
       if (res.ok) {
-        // Update local state
+        const data = await res.json();
         const updatedSubjects = subjects.map((s) => {
           if (s.id === assigningSubject.id) {
             const facultyMember = faculty.find((f) => f.id === facultyId);
@@ -185,13 +190,17 @@ export default function SubjectManager({
               ...s,
               facultyAssignments: [
                 ...(s.facultyAssignments || []),
-                { faculty: { ...facultyMember, user: facultyMember } },
+                { 
+                  faculty: { ...facultyMember, user: facultyMember },
+                  responsibility: assigningResponsibility,
+                },
               ],
             };
           }
           return s;
         });
         setSubjects(updatedSubjects);
+        setAssigningResponsibility('THEORY');
         setAssigningSubject(null);
       }
     } catch (err) {
@@ -539,6 +548,34 @@ export default function SubjectManager({
               >
                 <XCircle className="w-5 h-5 text-muted-foreground" />
               </button>
+            </div>
+
+            {/* Responsibility Picker */}
+            <div className="mb-4 space-y-2">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Teaching Responsibility</label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {['THEORY', 'LAB', 'TUTORIAL'].map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setAssigningResponsibility(r)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                      assigningResponsibility === r
+                        ? 'bg-primary text-primary-foreground shadow-sm'
+                        : 'bg-secondary/10 text-muted-foreground hover:bg-secondary/20'
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+              <input
+                type="text"
+                placeholder="e.g. THEORY, LAB, or Viva / Mon+Wed slots..."
+                value={assigningResponsibility}
+                onChange={(e) => setAssigningResponsibility(e.target.value)}
+                className="w-full bg-secondary/5 border border-border/60 rounded-xl py-2.5 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
+              />
             </div>
 
             <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">

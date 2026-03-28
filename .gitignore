@@ -49,3 +49,5 @@ next-env.d.ts
 tsc_errros.log
 build_errors.log
 refactor.js
+
+docs/credentials
