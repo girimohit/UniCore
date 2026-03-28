@@ -22,7 +22,7 @@ export default function ModuleManager({ initialModules }: ModuleManagerProps) {
       const response = await fetch("/api/admin/modules/toggle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ moduleId, isEnabled }),
+        body: JSON.stringify({ moduleId, isActive: isEnabled }),
       });
 
       if (!response.ok) {
