@@ -69,7 +69,7 @@ export default function SubjectManager({
     setErrors([]);
 
     try {
-      const url = "/api/subjects";
+      const url = "/api/modules/subjects";
       const method = editingId ? "PATCH" : "POST";
       const body = editingId ? { ...form, id: editingId } : form;
 
@@ -130,7 +130,7 @@ export default function SubjectManager({
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/subjects?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/modules/subjects?id=${id}`, { method: "DELETE" });
       if (res.ok) {
         // Simple way: just clear results or re-fetch.
         // For now, let's just clear the results to show it's gone if it was just added.
@@ -150,7 +150,7 @@ export default function SubjectManager({
     setErrors([]);
 
     try {
-      const res = await fetch("/api/subjects", {
+      const res = await fetch("/api/modules/subjects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entries),
@@ -171,7 +171,7 @@ export default function SubjectManager({
     if (!assigningSubject) return;
     setAssigningLoading(true);
     try {
-      const res = await fetch("/api/subjects/assign", {
+      const res = await fetch("/api/modules/subjects/assign", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ subjectId: assigningSubject.id, facultyId }),
@@ -205,7 +205,7 @@ export default function SubjectManager({
     if (!confirm("Remove this faculty assignment?")) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/subjects/assign?subjectId=${subjectId}&facultyId=${facultyUserId}`, {
+      const res = await fetch(`/api/modules/subjects/assign?subjectId=${subjectId}&facultyId=${facultyUserId}`, {
         method: "DELETE",
       });
       if (res.ok) {

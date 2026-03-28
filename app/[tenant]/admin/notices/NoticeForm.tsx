@@ -24,8 +24,8 @@ export default function NoticeForm({ tenant, initialData }: { tenant: string, in
     setLoading(true);
 
     try {
-      const url = initialData?.id ? `/api/notices/${initialData.id}` : `/api/notices`;
-      const method = initialData?.id ? 'PUT' : 'POST';
+      const url = initialData?.id ? `/api/modules/notices?id=${initialData.id}` : `/api/modules/notices`;
+      const method = initialData?.id ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {
         method,

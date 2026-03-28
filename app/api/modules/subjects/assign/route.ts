@@ -2,10 +2,19 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { withAuth } from '@/lib/auth-middleware';
 import type { NextRequest } from 'next/server';
+import { isModuleEnabled } from '@/lib/modules/loader';
 
-// POST /api/subjects/assign – assign faculty to subject
+/**
+ * POST /api/modules/subjects/assign
+ * - Assign faculty to subject
+ */
 export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
   try {
+    const active = await isModuleEnabled(user.institutionId, 'courses');
+    if (!active) {
+       return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
+    }
+
     const { subjectId, facultyId } = await req.json();
 
     if (!subjectId || !facultyId) {
@@ -26,7 +35,6 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
       return NextResponse.json({ error: 'Subject or Faculty not found' }, { status: 404 });
     }
 
-    // Create assignment
     const assignment = await prisma.facultyAssignment.upsert({
       where: {
         subjectId_facultyId: {
@@ -48,13 +56,20 @@ export const POST = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user
   }
 });
 
-// DELETE /api/subjects/assign – remove faculty assignment
-export const DELETE = withAuth(['ADMIN'], async (req: NextRequest) => {
+/**
+ * DELETE /api/modules/subjects/assign
+ * - Remove faculty assignment
+ */
+export const DELETE = withAuth(['ADMIN'], async (req: NextRequest, _ctx: any, user: any) => {
   try {
+    const active = await isModuleEnabled(user.institutionId, 'courses');
+    if (!active) {
+       return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
+    }
+
     const { searchParams } = new URL(req.url);
     const subjectId = searchParams.get('subjectId');
-    const facultyId = searchParams.get('facultyId'); // This is the FacultyProfile.id or User.id? 
-    // Let's use User.id and resolve to FacultyProfile.id for consistency with POST
+    const facultyId = searchParams.get('facultyId');
 
     if (!subjectId || !facultyId) {
       return NextResponse.json({ error: 'Subject ID and Faculty ID are required' }, { status: 400 });

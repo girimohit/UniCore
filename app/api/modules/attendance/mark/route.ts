@@ -58,13 +58,16 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], as
         }
 
         // Process all marks sequentially (could be a transaction mapping)
+        const attendanceDate = new Date(date);
+        attendanceDate.setHours(0, 0, 0, 0);
+
         const transaction = await prisma.$transaction(
             validRecords.map((record: any) => prisma.attendanceRecord.upsert({
                 where: {
                     studentId_subjectId_attendanceDate: {
                         studentId: record.studentId,
                         subjectId: subjectId,
-                        attendanceDate: new Date(date)
+                        attendanceDate: attendanceDate
                     }
                 },
                 update: {
@@ -75,8 +78,8 @@ export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], as
                     institutionId: user.institutionId,
                     studentId: record.studentId,
                     subjectId: subjectId,
-                    attendanceDate: new Date(date),
-                    status: record.accountStatus,
+                    attendanceDate: attendanceDate,
+                    status: record.status,
                     termId: termId || undefined
                 }
             }))

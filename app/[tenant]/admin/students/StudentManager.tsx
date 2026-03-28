@@ -59,7 +59,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
   const fetchStudents = async () => {
     setStudentsLoading(true);
     try {
-      const res = await fetch("/api/students");
+      const res = await fetch("/api/modules/students");
       const data = await res.json();
       setStudents(data.students ?? []);
     } catch {
@@ -79,7 +79,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
     setResults([]);
     setErrors([]);
     try {
-      const res = await fetch("/api/students", {
+      const res = await fetch("/api/modules/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -104,7 +104,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
     setResults([]);
     setErrors([]);
     try {
-      const res = await fetch("/api/students", {
+      const res = await fetch("/api/modules/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entries),
@@ -139,7 +139,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
     setEnrollError("");
     setEnrollSuccess("");
     try {
-      const res = await fetch("/api/students/enroll", {
+      const res = await fetch("/api/modules/students/enroll", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

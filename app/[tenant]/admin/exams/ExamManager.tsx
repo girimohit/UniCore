@@ -36,7 +36,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
     setErrors([]);
 
     try {
-      const res = await fetch("/api/exams", {
+      const res = await fetch("/api/modules/exams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -33,7 +33,7 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
     setErrors([]);
 
     try {
-      const res = await fetch("/api/courses", {
+      const res = await fetch("/api/modules/courses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -61,7 +61,7 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
     setErrors([]);
 
     try {
-      const res = await fetch("/api/courses", {
+      const res = await fetch("/api/modules/courses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entries),

@@ -31,7 +31,7 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
     setErrors([]);
 
     try {
-      const res = await fetch("/api/departments", {
+      const res = await fetch("/api/modules/departments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -58,7 +58,7 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
     setErrors([]);
 
     try {
-      const res = await fetch("/api/departments", {
+      const res = await fetch("/api/modules/departments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(entries),

@@ -16,7 +16,7 @@ export default function NoticesClient({ initialNotices, tenant }: { initialNotic
     if (!confirm("Are you sure you want to delete this notice?")) return;
     
     try {
-      const res = await fetch(`/api/notices/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/modules/notices?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
         setNotices(notices.filter(n => n.id !== id));
         router.refresh();

@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 import { withAuth } from '@/lib/auth-middleware';
 import { isModuleEnabled } from '@/lib/modules/loader';
 
-export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACULTY', 'STUDENT'], async (req, context, user) => {
   try {
     const active = await isModuleEnabled(user.institutionId, 'courses');
     if (!active) {
@@ -12,8 +12,8 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, co
 
     const courses = await prisma.course.findMany({
       where: { institutionId: user.institutionId },
-      include: { department: true }, // Include related Department data
-      orderBy: { createdAt: 'desc' }
+      include: { department: true },
+      orderBy: { name: 'asc' }
     });
 
     return NextResponse.json({ courses });
@@ -23,43 +23,76 @@ export const GET = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, co
   }
 });
 
-export const POST = withAuth(['SUPER_ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
   try {
     const active = await isModuleEnabled(user.institutionId, 'courses');
     if (!active) {
        return NextResponse.json({ error: 'Courses module disabled' }, { status: 403 });
     }
 
-    const { name, code, departmentId } = await req.json();
+    const body = await req.json();
+    const entries = Array.isArray(body) ? body : [body];
 
-    if (!name || !code || !departmentId) {
-        return NextResponse.json({ error: 'Name, Code, and Department ID required' }, { status: 400 });
+    if (entries.length === 0) {
+      return NextResponse.json({ error: 'No entries provided' }, { status: 400 });
     }
 
-    // Verify department belongs to the same tenant before linking
-    const department = await prisma.department.findFirst({
-        where: { id: departmentId, institutionId: user.institutionId }
-    });
+    const created = [];
+    const errors = [];
 
-    if (!department) {
-        return NextResponse.json({ error: 'Invalid department context' }, { status: 400 });
-    }
+    for (const entry of entries) {
+      try {
+        const { name, code, department, departmentId } = entry;
 
-    const course = await prisma.course.create({
-      data: {
-        name,
-        code,
-        departmentId,
-        institutionId: user.institutionId
+        if (!name || !code || (!department && !departmentId)) {
+          errors.push({ ...entry, error: 'Name, Code, and Department info are required' });
+          continue;
+        }
+
+        // Find department record
+        let dept = null;
+        if (departmentId) {
+          dept = await prisma.department.findUnique({
+             where: { id: departmentId, institutionId: user.institutionId }
+          });
+        } else if (department) {
+          dept = await prisma.department.findFirst({
+            where: {
+              institutionId: user.institutionId,
+              OR: [
+                { name: department },
+                { code: department }
+              ]
+            }
+          });
+        }
+
+        if (!dept) {
+          errors.push({ ...entry, error: `Department not found` });
+          continue;
+        }
+
+        const course = await prisma.course.create({
+          data: {
+            name,
+            code: code.toUpperCase(),
+            institutionId: user.institutionId,
+            departmentId: dept.id,
+          }
+        });
+        created.push(course);
+      } catch (err: any) {
+        if (err.code === 'P2002') {
+          errors.push({ ...entry, error: 'Course code already exists' });
+        } else {
+          errors.push({ ...entry, error: err.message });
+        }
       }
-    });
-
-    return NextResponse.json({ message: 'Course created successfully', course }, { status: 201 });
-  } catch (error: any) {
-    if (error.code === 'P2002') {
-        return NextResponse.json({ error: 'Course code already exists' }, { status: 409 });
     }
-    console.error('Error creating course:', error);
+
+    return NextResponse.json({ created, errors, message: `${created.length} courses created, ${errors.length} failed.` });
+  } catch (error) {
+    console.error('Error in course creation:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
