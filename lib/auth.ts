@@ -29,6 +29,27 @@ export function verifyToken(token: string): JwtPayload | null {
 }
 
 /**
+ * Creates a stateless reset token valid for 24 hours.
+ * Uses a secret unique to the user's current password hash.
+ */
+export function signResetToken(userId: string, currentHash: string): string {
+  const secret = JWT_SECRET + currentHash;
+  return jwt.sign({ userId }, secret, { expiresIn: '24h' });
+}
+
+/**
+ * Verifies a reset token against a specific user's hash.
+ */
+export function verifyResetToken(token: string, currentHash: string): { userId: string } | null {
+  try {
+    const secret = JWT_SECRET + currentHash;
+    return jwt.verify(token, secret) as { userId: string };
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
  * Hashes a plaintext password asynchronously.
  */
 export async function hashPassword(password: string): Promise<string> {

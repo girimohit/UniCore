@@ -99,6 +99,26 @@ export function getStudentActivationEmailTemplate(institutionName: string, activ
   `;
 }
 
+export function getPasswordResetEmailTemplate(institutionName: string, resetLink: string) {
+  return `
+    <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+      <h2 style="color: #4f46e5;">Password Reset Request</h2>
+      <p>Greetings from <strong>${institutionName}</strong>,</p>
+      <p>You recently requested to reset your password. Click the button below to set a new one:</p>
+      <div style="margin: 30px 0;">
+        <a href="${resetLink}" style="background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Reset My Password
+        </a>
+      </div>
+      <p style="font-size: 14px; color: #666;">This link is valid for 24 hours. After that, you will need to make a new request.</p>
+      <p style="font-size: 14px; color: #666;">If the button above doesn't work, copy and paste this link in your browser:</p>
+      <p style="font-size: 14px; color: #4f46e5; word-break: break-all;">${resetLink}</p>
+      <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+      <p style="font-size: 12px; color: #999;">If you didn't request a password reset, you can safely ignore this email.</p>
+    </div>
+  `;
+}
+
 export function getFacultyWelcomeEmailTemplate(institutionName: string, username: string, tempPass: string, loginLink: string) {
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">

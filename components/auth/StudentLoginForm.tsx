@@ -247,13 +247,13 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
                 >
                   Password
                 </label>
-                <a
-                  href="#"
+                <Link
+                  href={`/${tenantSlug}/forgot-password`}
                   className="text-xs opacity-60 hover:opacity-100 transition-opacity"
                   style={{ color: "var(--text-secondary)" }}
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
