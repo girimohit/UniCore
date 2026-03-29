@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.6.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 Prisma.prismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "7.6.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -303,11 +303,9 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.AcademicTermOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  name: 'name',
-  type: 'type'
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
@@ -315,141 +313,10 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
-exports.Prisma.AttendanceRecordOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  studentId: 'studentId',
-  subjectId: 'subjectId',
-  courseId: 'courseId',
-  termId: 'termId',
-  markedById: 'markedById',
-  slotType: 'slotType'
-};
-
-exports.Prisma.CourseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  name: 'name',
-  code: 'code',
-  departmentId: 'departmentId'
-};
-
-exports.Prisma.DepartmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  name: 'name',
-  code: 'code'
-};
-
-exports.Prisma.CourseEnrollmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
-  courseId: 'courseId'
-};
-
-exports.Prisma.ExamOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  name: 'name',
-  courseId: 'courseId',
-  subjectId: 'subjectId',
-  termId: 'termId'
-};
-
-exports.Prisma.FacultyOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  employeeNumber: 'employeeNumber',
-  departmentId: 'departmentId',
-  designation: 'designation'
-};
-
-exports.Prisma.ExamResultOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  examId: 'examId',
-  studentId: 'studentId',
-  teacherRemarks: 'teacherRemarks'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
-exports.Prisma.InstitutionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  status: 'status'
-};
-
-exports.Prisma.ModuleSubscriptionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  moduleId: 'moduleId'
-};
-
-exports.Prisma.UserInvitationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  email: 'email',
-  token: 'token'
-};
-
-exports.Prisma.ModuleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description'
-};
-
-exports.Prisma.StudentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  rollNumber: 'rollNumber',
-  courseId: 'courseId',
-  gender: 'gender'
-};
-
-exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  name: 'name',
-  code: 'code',
-  courseId: 'courseId'
-};
-
-exports.Prisma.FacultyAssignmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  subjectId: 'subjectId',
-  facultyId: 'facultyId',
-  responsibility: 'responsibility'
-};
-
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  username: 'username',
-  passwordHash: 'passwordHash',
-  name: 'name',
-  email: 'email',
-  phone: 'phone',
-  avatarUrl: 'avatarUrl',
-  accountStatus: 'accountStatus'
-};
-
-exports.Prisma.NoticeOrderByRelevanceFieldEnum = {
-  id: 'id',
-  institutionId: 'institutionId',
-  title: 'title',
-  content: 'content',
-  targetRole: 'targetRole'
 };
 exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
   PRESENT: 'PRESENT',

@@ -10,6 +10,49 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Calculate hashedPassword OUTSIDE the transaction for better performance
+    const hashedPassword = await hashPassword(password);
+
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Check if slug exists
+      const existingInstitution = await tx.institution.findUnique({
+        where: { slug }
+      });
+      if (existingInstitution) {
+        throw new Error("Slug_Exists");
+      }
+
+      // 2. Create Institution
+      const institution = await tx.institution.create({
+        data: {
+          name: institution_name,
+          slug,
+          status: 'ACTIVE'
+        }
+      });
+
+      // 3. Generate username
+      const adminCount = await tx.user.count({
+        where: { role: 'ADMIN', institutionId: institution.id }
+      });
+      const username = `ADM${String(adminCount + 1).padStart(3, '0')}`;
+
+      // 4. Create Admin User
+      const adminUser = await tx.user.create({
+        data: {
+          institutionId: institution.id,
+          username,
+          passwordHash: hashedPassword,
+          role: 'ADMIN',
+          email: admin_email,
+          accountStatus: 'ACTIVE'
+        }
+      });
+
+      return { institution, adminUser, username };
+    });
+
+/* Previous Implementation (Commented Out)
     const result = await prisma.$transaction(async (tx) => {
       // 1. Check if slug exists to provide better error
       const existingInstitution = await tx.institution.findUnique({
@@ -50,6 +93,7 @@ export async function POST(req: Request) {
 
       return { institution, adminUser, username };
     });
+*/
 
     return NextResponse.json({ 
       message: 'Institution registered successfully',
