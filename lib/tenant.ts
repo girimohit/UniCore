@@ -21,18 +21,20 @@ export function getTenantFromRequest(req: NextRequest): string | null {
 
   // Step 2: Fallback to hostname extraction in case middleware hasn't set the header
   const hostname = req.headers.get('host') || '';
-  const baseDomains = ['unicore.app', 'unicore.com', 'localhost:3000', '127.0.0.1:3000'];
+  const baseDomain = process.env.BASE_DOMAIN || 'localhost:3000';
+  const baseDomains = [baseDomain, 'localhost:3000', '127.0.0.1:3000'];
   
   if (!baseDomains.includes(hostname)) {
-    const parts = hostname.split('.');
-    
-    // For local dev like du.localhost:3000
-    if ((hostname.includes('localhost') || hostname.includes('127.0.0.1')) && parts.length >= 2) {
-      return parts[0];
-    } 
-    // For prod like du.unicore.com
-    else if (parts.length >= 3) {
-      return parts[0];
+    /**
+     * Extract the subdomain.
+     * Works for "du.localhost:3000" and "du.campus.unicore-erp.tech"
+     */
+    if (hostname.endsWith(baseDomain)) {
+       return hostname.replace(`.${baseDomain}`, '');
+    } else {
+       // Manual fallback for direct IP or other localhosts
+       const parts = hostname.split('.');
+       if (parts.length >= 2) return parts[0];
     }
   }
 

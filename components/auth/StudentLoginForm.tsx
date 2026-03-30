@@ -106,11 +106,11 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
 
       const role = data.user.role as string;
       const redirectMap: Record<string, string> = {
-        ADMIN: `/${tenantSlug}/admin/dashboard`,
-        FACULTY: `/${tenantSlug}/faculty/dashboard`,
-        STUDENT: `/${tenantSlug}/student/dashboard`,
+        ADMIN: `/admin/dashboard`,
+        FACULTY: `/faculty/dashboard`,
+        STUDENT: `/student/dashboard`,
       };
-      router.push(redirectMap[role] || `/${tenantSlug}`);
+      router.push(redirectMap[role] || `/`);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -263,7 +263,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
               </div>
               <div className="flex justify-end pr-3">
                 <Link
-                  href={`/${tenantSlug}/forgot-password`}
+                  href={`/forgot-password`}
                   className=" text-xs opacity-60 hover:opacity-100 transition-opacity contet"
                   style={{ color: "var(--text-secondary)" }}
                 >
@@ -293,7 +293,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
             <p className="text-center text-xs mt-6" style={{ color: "var(--text-secondary)" }}>
               First time here?{" "}
               <Link
-                href={`/${tenantSlug}/activate`}
+                href={`/activate`}
                 className="font-semibold hover:text-[#7c5cbf] transition-colors"
                 style={{ color: "var(--text-primary)" }}
               >
