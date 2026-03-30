@@ -106,9 +106,9 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
 
       const role = data.user.role as string;
       const redirectMap: Record<string, string> = {
-        ADMIN: `/admin/dashboard`,
-        FACULTY: `/faculty/dashboard`,
-        STUDENT: `/student/dashboard`,
+        ADMIN: `/${tenantSlug}/admin/dashboard`,
+        FACULTY: `/${tenantSlug}/faculty/dashboard`,
+        STUDENT: `/${tenantSlug}/student/dashboard`,
       };
       router.push(redirectMap[role] || `/`);
     } catch (err: any) {

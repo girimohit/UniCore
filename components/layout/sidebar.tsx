@@ -218,7 +218,7 @@ export default function Sidebar({
       >
         <div className="flex h-12 items-center justify-between px-6 mb-8">
           <Link
-            href={`/${role}/dashboard`}
+            href={`/${urlSlug}/${role}/dashboard`}
             className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform"
             onClick={() => setIsOpen(false)}
           >
@@ -255,14 +255,14 @@ export default function Sidebar({
                   initialModules.some((m) => m.id === item.moduleId),
               )
               .map((item, i) => {
-                const fullPathLabels = `${item.href}`;
+                const fullPathLabels = `/${urlSlug}${item.href}`;
                 const isActive = pathname.startsWith(fullPathLabels);
                 const colors = SIDEBAR_COLORS[i % SIDEBAR_COLORS.length];
 
                 return (
                   <Link
                     key={item.name}
-                    href={fullPathLabels}
+                    href={`/${urlSlug}${item.href}`}
                     className={cn(
                       "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
                       isActive
@@ -304,7 +304,7 @@ export default function Sidebar({
                     const Icon = moduleItem.icon
                       ? (Icons as any)[moduleItem.icon]
                       : Box;
-                    const linkPath = `/${role}/${moduleItem.routePath}`;
+                    const linkPath = `/${urlSlug}/${role}/${moduleItem.routePath}`;
                     const isActive = pathname.startsWith(linkPath);
                     const colors =
                       SIDEBAR_COLORS[
@@ -314,7 +314,7 @@ export default function Sidebar({
                     return (
                       <Link
                         key={moduleItem.id}
-                        href={linkPath}
+                        href={`/${urlSlug}${linkPath}`}
                         className={cn(
                           "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200",
                           isActive

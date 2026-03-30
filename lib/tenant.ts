@@ -15,24 +15,44 @@ export interface TenantContext {
  * Primarily useful inside Next.js Route Handlers (API).
  */
 export function getTenantFromRequest(req: NextRequest): string | null {
-  // Step 1: Prefer headers set by Middleware (proxy.ts)
+  // Step 1: Prefer headers set by Middleware
   const headerSlug = req.headers.get('x-tenant-slug') || req.headers.get('x-tenant-id');
   if (headerSlug) return headerSlug;
 
-  // Step 2: Fallback to hostname extraction in case middleware hasn't set the header
+  // Step 2: Attempt path-based extraction from URL pathname (for page requests)
+  const url = new URL(req.url);
+  const pathParts = url.pathname.split('/').filter(Boolean);
+  const reservedRootPaths = [
+    'api', 'login', 'register', 'demo', 'docs', 'about', 'contact', 'admin', 'faculty', 'student'
+  ];
+
+  if (pathParts.length > 0 && !reservedRootPaths.includes(pathParts[0].toLowerCase())) {
+    return pathParts[0];
+  }
+
+  // Step 3: Fallback to Referer header for API requests from the frontend
+  const referer = req.headers.get('referer');
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      const refererPathParts = refererUrl.pathname.split('/').filter(Boolean);
+      if (refererPathParts.length > 0 && !reservedRootPaths.includes(refererPathParts[0].toLowerCase())) {
+        return refererPathParts[0];
+      }
+    } catch (e) {
+      // Ignore invalid referer URLs
+    }
+  }
+
+  // Step 4: Legacy hostname/subdomain extraction
   const hostname = req.headers.get('host') || '';
   const baseDomain = process.env.BASE_DOMAIN || 'localhost:3000';
   const baseDomains = [baseDomain, 'localhost:3000', '127.0.0.1:3000'];
   
   if (!baseDomains.includes(hostname)) {
-    /**
-     * Extract the subdomain.
-     * Works for "du.localhost:3000" and "du.campus.unicore-erp.tech"
-     */
     if (hostname.endsWith(baseDomain)) {
        return hostname.replace(`.${baseDomain}`, '');
     } else {
-       // Manual fallback for direct IP or other localhosts
        const parts = hostname.split('.');
        if (parts.length >= 2) return parts[0];
     }

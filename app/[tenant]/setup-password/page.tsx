@@ -49,7 +49,7 @@ function SetupPasswordForm({ tenant }: { tenant: string }) {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push("/login"); // Force re-login with new password to ensure fresh session
+        router.push(`/${tenant}/login`); // Force re-login with new password to ensure fresh session
       }, 2000);
     } catch (err: any) {
       setError(err.message);

@@ -31,7 +31,7 @@ export default async function AdminNoticesPage({ params }: { params: Promise<{ t
             Broadcast announcements to students and faculty at <span className="text-primary">{institution.name}</span>
           </p>
         </div>
-        <Link href={`/admin/notices/create`}>
+        <Link href={`/${tenant}/admin/notices/create`}>
           <Button size="lg" className="rounded-full shadow-lg hover:shadow-xl transition-all font-bold gap-2">
             <Plus className="w-5 h-5" />
             Create Notice

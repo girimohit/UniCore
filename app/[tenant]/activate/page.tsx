@@ -3,7 +3,8 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 import {
   KeyRound,
   Phone,
@@ -19,6 +20,8 @@ import {
 function ActivateContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const params = useParams();
+  const tenantSlug = params.tenant;
   const token = searchParams.get("token");
 
   const [phase, setPhase] = useState<
@@ -154,7 +157,7 @@ function ActivateContent() {
           <div className="pt-4 border-t border-border/40">
             {/* <p className="text-[10px] uppercase tracking-widest font-bold opacity-40 mb-4" style={{ color: "var(--text-muted)" }}>Lost your link?</p> */}
             <button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push(`/${tenantSlug}/login`)}
               style={{
                 background: "linear-gradient(135deg, #3b82f6, #6366f1)",
               }}
@@ -188,12 +191,12 @@ function ActivateContent() {
           >
             {errorMessage}
           </p>
-          <a
-            href="/login"
+          <Link
+            href={`/${tenantSlug}/login`}
             className="btn-primary w-full justify-center !py-3 inline-flex"
           >
             Go to Login
-          </a>
+          </Link>
         </div>
       </div>
     );

@@ -21,9 +21,14 @@ export default function middleware(req: NextRequest) {
   // Use BASE_DOMAIN from environment (e.g., "localhost:3000" or "unicore-erp.tech")
   const baseDomain = process.env.BASE_DOMAIN || 'localhost:3000';
   
+  // Never extract tenant from Vercel preview URLs (*.vercel.app)
+  // or any IP/localhost variant
+  const isVercelDomain = hostname.endsWith('.vercel.app') || hostname === 'vercel.app';
+  if (isVercelDomain) return NextResponse.next();
+
   // Define base sites where we don't extract subdomains
   const baseDomains = [baseDomain, 'localhost:3000', '127.0.0.1:3000'];
-  const isBaseDomain = baseDomains.some(domain => hostname === domain);
+  const isBaseDomain = baseDomains.some(domain => hostname === domain || hostname.endsWith(`:${domain}`));
   
   let tenantSlug: string | null = null;
 

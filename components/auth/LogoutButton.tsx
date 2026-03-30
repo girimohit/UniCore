@@ -17,7 +17,8 @@ export function LogoutButton({ className = '', variant = 'sidebar' }: LogoutButt
     setIsLoggingOut(true);
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/login');
+      const tenant = window.location.pathname.split('/')[1] || '';
+      router.push(`/${tenant}/login`);
       router.refresh();
     } catch (error) {
       console.error('Logout failed:', error);

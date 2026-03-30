@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
 
     const response = NextResponse.json({
       message: 'Account activated successfully',
-      redirect: `/student/dashboard`
+      redirect: `/${invitation.institution.slug}/student/dashboard`
     });
 
     response.cookies.set({

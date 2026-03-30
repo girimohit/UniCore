@@ -64,7 +64,7 @@ export default function NoticesClient({ initialNotices, tenant }: { initialNotic
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Link href={`/admin/notices/${notice.id}/edit`}>
+                <Link href={`/${tenant}/admin/notices/${notice.id}/edit`}>
                   <Button variant="outline" size="sm" className="rounded-full shadow-sm hover:bg-muted">
                     <Pencil className="w-4 h-4 mr-2" />
                     Edit

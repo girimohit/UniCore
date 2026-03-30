@@ -66,13 +66,13 @@ export default function RegisterPage() {
           <div className="bg-black/5 dark:bg-white/5 border border-border/40 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
             <p className="text-sm uppercase tracking-wider mb-1 opacity-70">Your Admin ID</p>
             <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.username}</p>
-            <p className="text-sm opacity-80">
+             <p className="text-sm opacity-80">
               Please save this Admin ID securely. You will use it to log in to your workspace at <strong className="text-white">{APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/{successData.tenantSlug}</strong>
             </p>
           </div>
-          <a href={getTenantUrl(successData.tenantSlug, 'login')} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">
+          <Link href={`/${successData.tenantSlug}/login`} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">
             Proceed to Login <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -117,12 +117,12 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "var(--text-muted)" }}>Workspace Subdomain</label>
+            <label className="block text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: "var(--text-muted)" }}>Workspace Slug</label>
             <div className="relative flex items-center">
               <Globe className="absolute left-3.5 w-4 h-4 opacity-50" />
-              <input name="subdomain" required type="text" className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-[105px] text-sm focus:outline-none focus:ring-2 transition-shadow" placeholder="stanford" style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }} />
-              <span className="absolute right-4 text-sm font-medium opacity-50">.unicore.app</span>
+              <input name="subdomain" required type="text" className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 transition-shadow" placeholder="e.g. stanford" style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }} />
             </div>
+            <p className="text-[10px] mt-1.5 opacity-50 px-1">Your workspace will be at: {APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/[slug]</p>
           </div>
           
           <div className="h-px w-full my-4" style={{ background: "var(--border-subtle)" }} />
@@ -157,7 +157,7 @@ export default function RegisterPage() {
         </form>
 
         <p className="text-center text-sm mt-8" style={{ color: "var(--text-secondary)" }}>
-          Already have an account? <Link href="/login" className="font-semibold transition-colors hover:text-[#7c5cbf]">Sign in</Link>
+          Already have an account? <Link href="/" className="font-semibold transition-colors hover:text-[#7c5cbf]">Find your institution</Link>
         </p>
       </div>
     </div>
