@@ -192,14 +192,14 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
 
           {preview.length > 0 && !loading && (
             <div className="space-y-4">
-              <div className="max-h-40 overflow-y-auto rounded-xl border border-border/40 bg-background/50">
-                <table className="w-full text-[10px] text-left">
+              <div className="max-h-40 overflow-y-auto rounded-xl border border-border bg-background/30">
+                <table className="w-full  text-[10px] text-left">
                   <thead className="sticky top-0 bg-background border-b border-border/40">
                     <tr>
                       {schema.map((s) => (
                         <th
                           key={s.key}
-                          className="px-3 py-2 font-bold uppercase tracking-wider text-muted-foreground"
+                          className="px-3 py-2 font-bold uppercase tracking-wider text-foreground"
                         >
                           {s.label}
                         </th>
@@ -207,10 +207,10 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
                     </tr>
                   </thead>
                   <tbody>
-                    {preview.slice(0, 5).map((row, i) => (
+                    {preview.map((row, i) => (
                       <tr key={i} className="border-b border-border/20 last:border-0">
                         {schema.map((s) => (
-                          <td key={s.key} className="px-3 py-2 truncate max-w-[100px]">
+                          <td key={s.key} className="px-3 py-2 truncate max-w-25">
                             {row[s.key]}
                           </td>
                         ))}
@@ -219,11 +219,11 @@ export default function CSVUpload({ onUpload, schema, templateFileName, title }:
                   </tbody>
                 </table>
               </div>
-              {preview.length > 5 && (
+              {/* {preview.length > 5 && (
                 <p className="text-center text-[10px] text-muted-foreground italic">
                   Showing first 5 of {preview.length} rows
                 </p>
-              )}
+              )} */}
               <button
                 onClick={() => onUpload(preview)}
                 className="w-full py-2.5 rounded-xl bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center justify-center gap-2"

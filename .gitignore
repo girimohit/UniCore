@@ -46,7 +46,7 @@ next-env.d.ts
 /src/generated/prisma
 
 
-tsc_errros.log
+tsc_errros.log                      
 build_error.log
 refactor.js
 

@@ -83,7 +83,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
     if (!identifier.trim()) {
       setError(`${currentTab.identifierLabel} is required.`);
       return;
-    } 
+    }
     if (!password) {
       setError("Password is required.");
       return;
@@ -247,13 +247,6 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
                 >
                   Password
                 </label>
-                <Link
-                  href={`/${tenantSlug}/forgot-password`}
-                  className="text-xs opacity-60 hover:opacity-100 transition-opacity"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  Forgot password?
-                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
@@ -267,6 +260,15 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
                   className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5cbf]/40 transition-shadow"
                   style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
                 />
+              </div>
+              <div className="flex justify-end pr-3">
+                <Link
+                  href={`/${tenantSlug}/forgot-password`}
+                  className=" text-xs opacity-60 hover:opacity-100 transition-opacity contet"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Forgot password?
+                </Link>
               </div>
             </div>
 
