@@ -1,7 +1,6 @@
 "use client";
 
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Institution } from "@prisma/client";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { Menu } from "lucide-react";
 import { useSidebar } from "./sidebar-context";
