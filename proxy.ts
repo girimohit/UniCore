@@ -5,7 +5,7 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes can handle context directly)
+     * - api (API routes can handle context directly or via referer)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
@@ -14,63 +14,38 @@ export const config = {
   ],
 };
 
+/**
+ * PATH-BASED MULTI-TENANCY MIDDLEWARE (in proxy.ts for Next.js 16 compatibility)
+ * This middleware ensures that the institution context (tenant) is correctly 
+ * handled via the URL path (e.g. /du/login).
+ */
 export default function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
-  const hostname = req.headers.get('host') || '';
+  const pathname = url.pathname;
 
-  // Use BASE_DOMAIN from environment (e.g., "localhost:3000" or "unicore-erp.tech")
-  const baseDomain = process.env.BASE_DOMAIN || 'localhost:3000';
+  // Split path to extract tenant from /[tenant]/...
+  const pathParts = pathname.split('/').filter(Boolean);
   
-  // Never extract tenant from Vercel preview URLs (*.vercel.app)
-  // or any IP/localhost variant
-  const isVercelDomain = hostname.endsWith('.vercel.app') || hostname === 'vercel.app';
-  if (isVercelDomain) return NextResponse.next();
+  // Reserved root paths that are NOT tenants
+  const reservedRootPaths = [
+    'login', 'register', 'demo', 'docs', 'about', 'contact', 'admin', 'faculty', 'student'
+  ];
 
-  // Define base sites where we don't extract subdomains
-  const baseDomains = [baseDomain, 'localhost:3000', '127.0.0.1:3000'];
-  const isBaseDomain = baseDomains.some(domain => hostname === domain || hostname.endsWith(`:${domain}`));
-  
   let tenantSlug: string | null = null;
 
-  if (!isBaseDomain) {
-    if (hostname.endsWith(baseDomain)) {
-       tenantSlug = hostname.replace(`.${baseDomain}`, '');
-    } else {
-       const parts = hostname.split('.');
-       if (parts.length >= 2) tenantSlug = parts[0];
-    }
-  }
-
-  // Reserved subdomains
-  const reservedSubdomains = ['www', 'app', 'admin', 'api', 'mail', 'static', 'test'];
-  if (tenantSlug && reservedSubdomains.includes(tenantSlug.toLowerCase())) {
-    tenantSlug = null;
+  // Look for tenant in first path segment if it's not a reserved root path
+  if (pathParts.length > 0 && !reservedRootPaths.includes(pathParts[0].toLowerCase())) {
+    tenantSlug = pathParts[0];
   }
 
   if (tenantSlug) {
-    /**
-     * INFINITE LOOP PREVENTION:
-     * If the internal pathname already starts with /${tenantSlug},
-     * it means we've already done the rewrite in a previous pass of this middleware.
-     * We should let it proceed to the page handler.
-     */
-    if (url.pathname.startsWith(`/${tenantSlug}`)) {
-      return NextResponse.next();
-    }
-
-    // Map du.domain.com/path to domain.com/du/path
-    url.pathname = `/${tenantSlug}${url.pathname}`;
-    
-    // Rewrite internally so Next.js matches the folder structure
-    const response = NextResponse.rewrite(url);
-    
-    // Attach tenant info to headers for downstream consumption
+    // Optionally attach tenant info to headers for easier access in server components/actions
+    const response = NextResponse.next();
     response.headers.set('x-tenant-slug', tenantSlug);
     response.headers.set('x-tenant-id', tenantSlug);
-    
     return response;
   }
 
-  // Bypass for root sites
+  // No tenant in path (e.g. landing page /) — proceed as normal
   return NextResponse.next();
 }
