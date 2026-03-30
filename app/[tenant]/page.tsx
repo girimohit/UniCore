@@ -8,5 +8,5 @@ interface PageProps {
 
 export default async function TenantIndexPage({ params }: PageProps) {
   const { tenant } = await params;
-  redirect(`/${tenant}/login`);
+  redirect(`/login`);
 }

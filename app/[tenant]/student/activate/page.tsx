@@ -12,8 +12,8 @@ export default async function StudentActivateRedirect({
   
   // Forward to the central acceptance page
   if (token) {
-    redirect(`/${tenant}/accept-invite?token=${token}`);
+    redirect(`/accept-invite?token=${token}`);
   }
   
-  redirect(`/${tenant}/login`);
+  redirect(`/login`);
 }

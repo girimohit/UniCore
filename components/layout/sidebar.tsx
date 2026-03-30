@@ -224,7 +224,7 @@ export default function Sidebar({
       >
         <div className="flex h-12 items-center justify-between px-6 mb-8">
           <Link
-            href={`/${urlSlug}/${role}/dashboard`}
+            href={`/${role}/dashboard`}
             className="flex items-center gap-2 font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform"
             onClick={() => setIsOpen(false)}
           >
@@ -252,7 +252,7 @@ export default function Sidebar({
             {(role === "admin" ? adminLinks : role === "faculty" ? facultyLinks : studentLinks)
               .filter((item) => !item.moduleId || initialModules.some((m) => m.id === item.moduleId))
               .map((item, i) => {
-                const fullPathLabels = `/${urlSlug}${item.href}`;
+                const fullPathLabels = `${item.href}`;
                 const isActive = pathname.startsWith(fullPathLabels);
                 const colors = SIDEBAR_COLORS[i % SIDEBAR_COLORS.length];
 
@@ -295,7 +295,7 @@ export default function Sidebar({
                   )
                   .map((moduleItem, i) => {
                     const Icon = moduleItem.icon ? (Icons as any)[moduleItem.icon] : Box;
-                    const linkPath = `/${urlSlug}/${role}/${moduleItem.routePath}`;
+                    const linkPath = `/${role}/${moduleItem.routePath}`;
                     const isActive = pathname.startsWith(linkPath);
                     const colors = SIDEBAR_COLORS[(i + adminLinks.length) % SIDEBAR_COLORS.length];
 

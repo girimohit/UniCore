@@ -17,7 +17,7 @@ export default async function FacultyAttendancePage({
   const session = await getCurrentUser();
 
   if (!session || session.role !== 'FACULTY') {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   const institution = await resolveTenant(tenant);

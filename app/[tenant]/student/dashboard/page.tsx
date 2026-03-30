@@ -20,7 +20,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
   const session = await getCurrentUser();
 
   if (!session || session.role !== 'STUDENT') {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   const institution = await prisma.institution.findUnique({
@@ -116,7 +116,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
             </div>
           </div>
           <div className="flex flex-wrap gap-4">
-             <Link href={`/${tenant}/student/subjects`}>
+             <Link href={`/student/subjects`}>
               <Button className="rounded-full px-8 py-6 bg-white text-slate-900 hover:bg-slate-100 font-bold shadow-xl shadow-white/10 transition-all hover:scale-105">
                 My Subjects <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -165,7 +165,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
               <h3 className="text-3xl font-display font-black text-foreground">{recentSubjects.length}</h3>
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-60">Active Subjects</p>
             </div>
-            <Link href={`/${tenant}/student/subjects`} className="mt-6 flex items-center text-[10px] font-black text-blue-500 uppercase tracking-widest hover:gap-2 transition-all">
+            <Link href={`/student/subjects`} className="mt-6 flex items-center text-[10px] font-black text-blue-500 uppercase tracking-widest hover:gap-2 transition-all">
               Details <ArrowRight className="h-3 w-3 ml-1" />
             </Link>
           </CardContent>
@@ -211,7 +211,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
               <h3 className="text-3xl font-display font-black text-foreground">—</h3>
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-60">Board Notices</p>
             </div>
-            <Link href={`/${tenant}/student/notices`} className="mt-6 flex items-center text-[10px] font-black text-amber-500 uppercase tracking-widest hover:gap-2 transition-all">
+            <Link href={`/student/notices`} className="mt-6 flex items-center text-[10px] font-black text-amber-500 uppercase tracking-widest hover:gap-2 transition-all">
               View All <ArrowRight className="h-3 w-3 ml-1" />
             </Link>
           </CardContent>
@@ -227,7 +227,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
                 <div className="w-1.5 h-6 bg-primary rounded-full" />
                 <h3 className="text-xl font-display font-black tracking-tight text-foreground">Current Subjects</h3>
             </div>
-            <Link href={`/${tenant}/student/subjects`}>
+            <Link href={`/student/subjects`}>
               <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-all">Full Roster</Button>
             </Link>
           </div>
@@ -253,7 +253,7 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
                     <div className="relative z-10 space-y-3">
                       <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${textColors[i % 4]}`}>{sub.code}</div>
                       <h4 className="font-bold text-lg text-foreground leading-tight">{sub.name}</h4>
-                      <Link href={`/${tenant}/student/attendance`} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest pt-2 ${textColors[i % 4]} opacity-70 group-hover:opacity-100`}>
+                      <Link href={`/student/attendance`} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest pt-2 ${textColors[i % 4]} opacity-70 group-hover:opacity-100`}>
                         Attendance <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>

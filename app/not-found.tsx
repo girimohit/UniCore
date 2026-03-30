@@ -62,7 +62,7 @@ export default function TenantNotFound() {
             Go Back
           </button>
           <Link
-            href={tenant ? `/${tenant}/admin/dashboard` : "/"}
+            href={tenant ? `/admin/dashboard` : "/"}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95"
           >
             <Home className="w-4 h-4" />

@@ -4,5 +4,5 @@ export default async function StudentRootPage({ params }: { params: Promise<{ te
   const { tenant } = await params;
   
   // Student module is now multi-page. Redirecting to the dashboard as entry point.
-  redirect(`/${tenant}/student/dashboard`);
+  redirect(`/student/dashboard`);
 }

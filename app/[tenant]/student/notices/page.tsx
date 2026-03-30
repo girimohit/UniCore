@@ -10,7 +10,7 @@ export default async function StudentNoticesPage({ params }: { params: Promise<{
   const session = await getCurrentUser();
 
   if (!session || session.role !== 'STUDENT') {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   const institution = await prisma.institution.findUnique({

@@ -20,7 +20,7 @@ export default async function FacultySubjectsPage({
   const session = await getCurrentUser();
 
   if (!session || session.role !== "FACULTY") {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   const institution = await resolveTenant(tenant);
@@ -67,7 +67,7 @@ export default async function FacultySubjectsPage({
             {assignedSubjects.map((subject) => (
               <Link
                 key={subject.id}
-                href={`/${tenant}/faculty/attendance?subjectId=${subject.id}`}
+                href={`/faculty/attendance?subjectId=${subject.id}`}
                 className="group glass p-8 rounded-[2.5rem] border border-border/50 hover:border-primary/50 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-primary/20 transition-colors"></div>

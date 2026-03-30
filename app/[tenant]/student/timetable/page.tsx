@@ -46,7 +46,7 @@ export default async function StudentTimetablePage({ params }: { params: Promise
   const session = await getCurrentUser();
 
   if (!session || session.role !== 'STUDENT') {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   const institution = await prisma.institution.findUnique({

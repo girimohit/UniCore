@@ -55,7 +55,7 @@ function ResetPasswordForm() {
 
       setSuccess(true);
       setTimeout(() => {
-        router.push(`/${tenant}/login`);
+        router.push(`/login`);
       }, 3000);
     } catch (err: any) {
       setError(err.message);
@@ -71,7 +71,7 @@ function ResetPasswordForm() {
           <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto" />
           <h2 className="text-xl font-black">Invalid Request</h2>
           <p className="text-muted-foreground text-sm opacity-80">This reset link appears to be invalid or was missing a token.</p>
-          <Link href={`/${tenant}/login`} className="block pt-2">
+          <Link href={`/login`} className="block pt-2">
             <Button variant="outline" className="w-full rounded-xl">Back to Login</Button>
           </Link>
         </Card>
@@ -91,7 +91,7 @@ function ResetPasswordForm() {
             <p className="text-muted-foreground text-sm opacity-80 font-medium">Your password has been successfully reset.</p>
           </div>
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Redirecting you to login...</p>
-          <Link href={`/${tenant}/login`} className="block">
+          <Link href={`/login`} className="block">
             <Button className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 font-black uppercase tracking-widest text-[11px]">Go to Login Now <ArrowRight className="ml-2 w-4 h-4" /></Button>
           </Link>
         </Card>

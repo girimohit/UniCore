@@ -62,7 +62,7 @@ export default function TenantError({
             Try Again
           </button>
           <Link 
-            href={tenant ? `/${tenant}/admin/dashboard` : "/"}
+            href={tenant ? `/admin/dashboard` : "/"}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-muted text-muted-foreground font-bold hover:bg-muted/80 transition-all active:scale-95"
           >
             <Home className="w-4 h-4" />

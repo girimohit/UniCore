@@ -104,7 +104,7 @@ export default async function AcceptInvitePage({
           message="This account has already been activated. Please proceed to the login page to access your account."
           action={
             <Link
-              href={`/${tenant}/login`}
+              href={`/login`}
               className="btn-primary px-6 py-2.5 rounded-xl font-bold"
             >
               Go to Login

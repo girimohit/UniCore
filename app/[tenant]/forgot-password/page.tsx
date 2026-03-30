@@ -65,7 +65,7 @@ export default function ForgotPasswordPage() {
             >
                 Try a different email
             </Button>
-            <Link href={`/${tenant}/login`} className="block">
+            <Link href={`/login`} className="block">
               <Button variant="ghost" className="w-full rounded-xl gap-2 font-bold opacity-70 hover:opacity-100 uppercase tracking-widest text-[10px]">
                 <ChevronLeft className="w-4 h-4" /> Back to Login
               </Button>
@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send Reset Link <ArrowRight className="ml-2 w-4 h-4" /></>}
             </Button>
 
-            <Link href={`/${tenant}/login`} className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all mt-4">
+            <Link href={`/login`} className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-all mt-4">
                <ChevronLeft className="w-4 h-4" /> Back to Login
             </Link>
           </form>

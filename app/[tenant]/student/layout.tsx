@@ -25,7 +25,7 @@ export default async function StudentLayout({
 
   const session = await getCurrentUser();
   if (!session) {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   if (session.role !== "STUDENT" && session.role !== "ADMIN") {

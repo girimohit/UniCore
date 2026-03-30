@@ -30,7 +30,7 @@ export default async function AdminLayout({
 
   const session = await getCurrentUser();
   if (!session) {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   if (session.role !== "ADMIN" && session.role !== "SUPER_ADMIN") {

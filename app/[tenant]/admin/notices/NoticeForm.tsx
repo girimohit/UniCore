@@ -36,7 +36,7 @@ export default function NoticeForm({ tenant, initialData }: { tenant: string, in
       if (!res.ok) throw new Error("Failed to save notice");
       
       toast.success(initialData ? 'Notice updated successfully!' : 'Notice published successfully!');
-      router.push(`/${tenant}/admin/notices`);
+      router.push(`/admin/notices`);
       router.refresh();
     } catch (error) {
       toast.error('Something went wrong. Please try again.');
@@ -48,7 +48,7 @@ export default function NoticeForm({ tenant, initialData }: { tenant: string, in
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <Link href={`/${tenant}/admin/notices`} className="inline-flex items-center text-sm font-bold text-muted-foreground hover:text-primary transition-colors">
+      <Link href={`/admin/notices`} className="inline-flex items-center text-sm font-bold text-muted-foreground hover:text-primary transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" />
         Back to Notices
       </Link>

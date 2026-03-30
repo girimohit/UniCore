@@ -29,7 +29,7 @@ export default async function FacultyLayout({
 
   const session = await getCurrentUser();
   if (!session) {
-    redirect(`/${tenant}/login`);
+    redirect(`/login`);
   }
 
   if (session.role !== "FACULTY" && session.role !== "ADMIN") {
