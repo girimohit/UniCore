@@ -106,16 +106,16 @@ export default function Hero() {
                 border: "1px solid var(--border-subtle)",
               }}
             >
-              demo.unicore.app/admin
+              unicore.com/demo/admin
             </div>
           </div>
         </div>
 
         {/* Content */}
-        <div className="grid grid-cols-[180px_1fr] sm:grid-cols-[200px_1fr] h-56">
+        <div className="flex flex-col sm:grid sm:grid-cols-[160px_1fr] md:grid-cols-[200px_1fr] min-h-[320px] sm:h-64 md:h-56">
           {/* Sidebar */}
           <div
-            className="border-r p-3 flex flex-col gap-1.5"
+            className="border-b sm:border-b-0 sm:border-r p-2 sm:p-3 flex flex-row sm:flex-col gap-1.5 overflow-x-auto sm:overflow-x-visible scrollbar-none"
             style={{
               background: "var(--bg-elevated)",
               borderColor: "var(--border-subtle)",
@@ -130,7 +130,7 @@ export default function Hero() {
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all"
+                className="flex items-center gap-2 px-3 sm:px-2.5 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-medium cursor-pointer transition-all whitespace-nowrap"
                 style={{
                   background: item.active
                     ? "var(--uc-purple)/10"
@@ -138,14 +138,14 @@ export default function Hero() {
                   color: item.active ? "var(--uc-purple)" : "var(--text-muted)",
                 }}
               >
-                <span className="text-base leading-none">{item.icon}</span>
+                <span className="text-sm sm:text-base leading-none">{item.icon}</span>
                 {item.label}
               </div>
             ))}
           </div>
 
           {/* Main */}
-          <div className="p-4 grid grid-cols-3 gap-3 content-start">
+          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 content-start">
             {[
               {
                 label: "Total Students",
@@ -171,19 +171,19 @@ export default function Hero() {
                 className="rounded-xl p-3 border uc-card-premium"
               >
                 <p
-                  className="text-[11px] mb-1"
+                  className="text-[10px] sm:text-[11px] mb-1"
                   style={{ color: "var(--text-muted)" }}
                 >
                   {c.label}
                 </p>
                 <p
-                  className={`font-display font-black text-xl bg-gradient-to-r ${c.grad}
+                  className={`font-display font-black text-lg sm:text-xl bg-gradient-to-r ${c.grad}
                   bg-clip-text text-transparent`}
                 >
                   {c.value}
                 </p>
                 <div
-                  className="mt-2 h-1.5 rounded-full overflow-hidden"
+                  className="mt-2 h-1 rounded-full overflow-hidden"
                   style={{ background: "var(--border-subtle)" }}
                 >
                   <div
