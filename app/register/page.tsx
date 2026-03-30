@@ -18,6 +18,15 @@ export default function RegisterPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
+    const slug = (formData.get("subdomain") as string)?.toLowerCase();
+
+    // Validation: 2-25 chars, lowercase alphanumeric and hyphens, no hyphen at start/end
+    const slugRegex = /^[a-z0-9][a-z0-9-]{0,23}[a-z0-9]$/;
+    if (!slugRegex.test(slug)) {
+      setError("Slug must be 2-25 characters, lowercase letters, numbers, and hyphens ONLY. Cannot start or end with a hyphen.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/institutions/register", {
@@ -25,7 +34,7 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           institution_name: formData.get("institutionName"),
-          slug: formData.get("subdomain"),
+          slug: slug,
           admin_name: formData.get("adminName"),
           admin_email: formData.get("adminEmail"),
           password: formData.get("adminPassword"),
@@ -63,11 +72,25 @@ export default function RegisterPage() {
           <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
             Your institution workspace has been successfully provisioned.
           </p>
-          <div className="bg-black/5 dark:bg-white/5 border border-border/40 rounded-xl p-6 text-left mb-8 backdrop-blur-sm">
-            <p className="text-sm uppercase tracking-wider mb-1 opacity-70">Your Admin ID</p>
-            <p className="font-mono text-2xl font-bold tracking-wider mb-4 text-[#7c5cbf]">{successData.username}</p>
-             <p className="text-sm opacity-80">
-              Please save this Admin ID securely. You will use it to log in to your workspace at <strong className="text-white">{APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/{successData.tenantSlug}</strong>
+          <div className="bg-black/5 dark:bg-white/5 border border-border/40 rounded-xl p-6 text-left mb-6 backdrop-blur-sm">
+            <p className="text-xs uppercase tracking-widest mb-1 opacity-60 font-black">Your Admin ID</p>
+            <p className="font-mono text-3xl font-black tracking-wider mb-4 text-[#7c5cbf]">{successData.username}</p>
+            
+            <div className="h-px bg-border/40 my-4" />
+
+            <p className="text-sm font-bold text-white mb-2">Workspace URL:</p>
+            <a 
+              href={`/${successData.tenantSlug}/login`} 
+              className="text-sm text-[#d4608a] hover:underline break-all font-mono"
+            >
+              {APP_CONFIG.baseUrl.replace('http://', '').replace('https://', '')}/{successData.tenantSlug}/login
+            </a>
+          </div>
+
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-left mb-8 flex gap-3 items-start">
+            <div className="p-1 px-2 rounded-md bg-amber-500 text-[10px] font-black text-black">WARNING</div>
+            <p className="text-xs text-amber-200/80 leading-relaxed font-medium">
+              Please save these credentials securely. You can <span className="text-amber-300 font-bold underline">ONLY</span> log in to your institution at the unique workspace URL provided above.
             </p>
           </div>
           <Link href={`/${successData.tenantSlug}/login`} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">

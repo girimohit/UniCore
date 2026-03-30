@@ -4,10 +4,17 @@ import { hashPassword } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
-    const { institution_name, slug, admin_name, admin_email, password } = await req.json();
+    const { institution_name, slug: rawSlug, admin_name, admin_email, password } = await req.json();
+    const slug = rawSlug?.toLowerCase();
 
     if (!institution_name || !slug || !admin_name || !admin_email || !password) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Validation: 2-25 chars, lowercase alphanumeric and hyphens, no hyphen at start/end
+    const slugRegex = /^[a-z0-9][a-z0-9-]{0,23}[a-z0-9]$/;
+    if (!slugRegex.test(slug)) {
+      return NextResponse.json({ error: 'Invalid workspace slug format (2-25 chars, lowercase alphanumeric and hyphens only)' }, { status: 400 });
     }
 
     // Calculate hashedPassword OUTSIDE the transaction for better performance
