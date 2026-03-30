@@ -18,36 +18,53 @@ export default function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const hostname = req.headers.get('host') || '';
 
-  // Allowed base domains
+  // Define base domains where we don't extract subdomains (landing page)
   const baseDomains = ['unicore.app', 'unicore.com', 'localhost:3000', '127.0.0.1:3000'];
-  const isBaseDomain = baseDomains.includes(hostname);
+  const isBaseDomain = baseDomains.some(domain => hostname === domain);
   
-  let tenantSlug = null;
+  let tenantSlug: string | null = null;
 
-  // STEP 1: Extract tenant from path segment (Prioritized)
-  const pathSegments = url.pathname.split('/').filter(Boolean);
-  if (pathSegments.length > 0) {
-    const firstSegment = pathSegments[0];
-    // Do not treat global pages as a tenant
-    const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'features'];
-    if (!reservedPaths.includes(firstSegment)) {
-      tenantSlug = firstSegment;
+  if (!isBaseDomain) {
+    // Subdomain extraction logic
+    const parts = hostname.split('.');
+    
+    // Handle localhost and production cases separately
+    if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+      // e.g., du.localhost:3000 -> ["du", "localhost:3000"]
+      if (parts.length >= 2) {
+        tenantSlug = parts[0];
+      }
+    } else {
+      // e.g., du.unicore.com -> ["du", "unicore", "com"]
+      if (parts.length >= 3) {
+        tenantSlug = parts[0];
+      }
     }
   }
 
-  // STEP 2: Fallback to Subdomain (if requested, but user said "dont follow the subdomain thing")
-  // For now, we only support path-based as requested.
-  // If we ever need subdomain support again, we can add it here.
+  // Reserved subdomains that shouldn't be treated as tenants
+  const reservedSubdomains = ['www', 'app', 'admin', 'api', 'mail', 'static'];
+  if (tenantSlug && reservedSubdomains.includes(tenantSlug.toLowerCase())) {
+    tenantSlug = null;
+  }
 
   if (tenantSlug) {
-    // Attach tenant info to request headers for downstream consumption
-    const response = NextResponse.next();
+    // Prevent double nesting if the path already starts with the tenant slug
+    // (e.g. if someone manually types du.domain.com/du/...)
+    if (!url.pathname.startsWith(`/${tenantSlug}`)) {
+      url.pathname = `/${tenantSlug}${url.pathname}`;
+    }
+    
+    // Rewrite internally so Next.js matches the /[tenant]/... folder structure
+    const response = NextResponse.rewrite(url);
+    
+    // Attach tenant info to headers for downstream consumption (Server Components / API)
     response.headers.set('x-tenant-id', tenantSlug);
     response.headers.set('x-tenant-slug', tenantSlug);
     
     return response;
   }
 
-  // Bypass for root / www sites
+  // Bypass for root / www sites (loads the main landing page from app/page.tsx)
   return NextResponse.next();
 }

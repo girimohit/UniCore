@@ -15,19 +15,24 @@ export interface TenantContext {
  * Primarily useful inside Next.js Route Handlers (API).
  */
 export function getTenantFromRequest(req: NextRequest): string | null {
-  // Step 1: Prefer headers set by Middleware
+  // Step 1: Prefer headers set by Middleware (proxy.ts)
   const headerSlug = req.headers.get('x-tenant-slug') || req.headers.get('x-tenant-id');
   if (headerSlug) return headerSlug;
 
-  // Step 2: Fallback extraction from URL path (for cases where middleware hasn't run)
-  const url = new URL(req.url);
-  const pathSegments = url.pathname.split('/').filter(Boolean);
+  // Step 2: Fallback to hostname extraction in case middleware hasn't set the header
+  const hostname = req.headers.get('host') || '';
+  const baseDomains = ['unicore.app', 'unicore.com', 'localhost:3000', '127.0.0.1:3000'];
   
-  if (pathSegments.length > 0) {
-    const firstSegment = pathSegments[0];
-    const reservedPaths = ['login', 'register', 'about', 'pricing', 'contact', 'api', '_next'];
-    if (!reservedPaths.includes(firstSegment)) {
-      return firstSegment;
+  if (!baseDomains.includes(hostname)) {
+    const parts = hostname.split('.');
+    
+    // For local dev like du.localhost:3000
+    if ((hostname.includes('localhost') || hostname.includes('127.0.0.1')) && parts.length >= 2) {
+      return parts[0];
+    } 
+    // For prod like du.unicore.com
+    else if (parts.length >= 3) {
+      return parts[0];
     }
   }
 
