@@ -3,29 +3,29 @@ const STEPS = [
     num: "01",
     title: "Register Institution",
     desc: "Sign up and configure your institution profile, subdomain, and branding in minutes.",
-    grad: "from-[#7c5cbf] to-[#9b7fd4]",
-    color: "#7c5cbf",
+    grad: "from-[var(--uc-purple)] to-[var(--uc-purple-soft)]",
+    color: "var(--uc-purple)",
   },
   {
     num: "02",
     title: "Pick Your Modules",
     desc: "Choose from Attendance, Exams, Library, Finance, and more — only pay for what you need.",
-    grad: "from-[#d4608a] to-[#e083a5]",
-    color: "#d4608a",
+    grad: "from-[var(--uc-pink)] to-[var(--uc-pink-soft)]",
+    color: "var(--uc-pink)",
   },
   {
     num: "03",
     title: "Invite Your Team",
     desc: "Add admins, faculty, and staff. Send branded email invitations to students automatically.",
-    grad: "from-[#0ea5c9] to-[#38bdd8]",
-    color: "#0ea5c9",
+    grad: "from-[var(--uc-cyan)] to-[var(--uc-cyan-soft)]",
+    color: "var(--uc-cyan)",
   },
   {
     num: "04",
     title: "Go Live",
     desc: "Import data via CSV or API, run a quick checklist, and launch to your entire institution.",
-    grad: "from-[#2a9e75] to-[#0ea5c9]",
-    color: "#2a9e75",
+    grad: "from-[var(--uc-emerald)] to-[var(--uc-cyan)]",
+    color: "var(--uc-emerald)",
   },
 ];
 
@@ -52,7 +52,7 @@ export default function HowItWorks() {
             style={{ background: "var(--border-medium)" }}>
             <div className="absolute inset-0"
               style={{
-                background: "linear-gradient(90deg, #7c5cbf, #d4608a, #0ea5c9, #2a9e75)",
+                background: "linear-gradient(90deg, var(--uc-purple), var(--uc-pink), var(--uc-cyan), var(--uc-emerald))",
                 opacity: 0.5,
               }} />
           </div>

@@ -78,15 +78,15 @@ export default function Pricing() {
               style={p.featured ? {
                 borderColor: "rgba(124,92,191,0.38)",
                 background: "var(--bg-elevated)",
-                boxShadow: "0 0 0 1px rgba(124,92,191,0.15), 0 24px 80px rgba(124,92,191,0.12)",
+                boxShadow: "0 0 0 1px rgba(124,92,191,0.15), 0 24px 80px rgba(124,92,191,0.10)",
               } : {}}
             >
               {p.featured && (
                 <>
                   <div className="absolute top-0 inset-x-0 h-0.5"
-                    style={{ background: "linear-gradient(90deg, #7c5cbf, #d4608a)" }} />
+                    style={{ background: "linear-gradient(90deg, var(--uc-purple), var(--uc-pink))" }} />
                   <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, #7c5cbf, #d4608a)" }}>
+                    style={{ background: "linear-gradient(135deg, var(--uc-purple), var(--uc-pink))" }}>
                     Most Popular
                   </div>
                 </>
@@ -114,7 +114,7 @@ export default function Pricing() {
                     <span className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
                       style={{
                         background: "rgba(42,158,117,0.12)",
-                        color: "#2a9e75",
+                        color: "var(--uc-emerald)",
                         border: "1px solid rgba(42,158,117,0.22)",
                       }}>
                       ✓

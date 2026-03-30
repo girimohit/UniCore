@@ -6,19 +6,19 @@ export default function CTA() {
     <section className="py-24 px-4 relative overflow-hidden">
       {/* Ambient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.08]"
-          style={{ background: "radial-gradient(circle, #7c5cbf, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
+          style={{ background: "radial-gradient(circle, var(--uc-purple), transparent 70%)", filter: "blur(80px)", opacity: 0.08 }} />
       </div>
 
       <div className="max-w-3xl mx-auto relative z-10">
-        <div className="uc-card p-12 md:p-16 text-center"
+        <div className="uc-card p-12 md:p-16 text-center relative"
           style={{
             borderColor: "rgba(124,92,191,0.22)",
             background: "var(--bg-elevated)",
           }}>
           {/* Top accent bar */}
           <div className="absolute top-0 inset-x-0 h-0.5 rounded-t-[20px]"
-            style={{ background: "linear-gradient(90deg, #7c5cbf, #d4608a, #d4922a, #0ea5c9)" }} />
+            style={{ background: "linear-gradient(90deg, var(--uc-purple), var(--uc-pink), var(--uc-amber), var(--uc-cyan))" }} />
 
           <div className="tag tag-purple mb-6 mx-auto">Get Started Today</div>
 

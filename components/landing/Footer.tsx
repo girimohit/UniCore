@@ -24,9 +24,9 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4 group">
               <div className="relative w-8 h-8 rounded-xl flex items-center justify-center
                 font-display font-black text-sm text-white
-                bg-gradient-to-br from-[#7c5cbf] to-[#d4608a]
+                bg-gradient-to-br from-[var(--uc-purple)] to-[var(--uc-pink)]
                 shadow-md group-hover:scale-105 transition-transform">
-                <Sparkles className="absolute -top-1 -right-1 w-2.5 h-2.5 text-amber-300" />
+                <Sparkles className="absolute -top-1 -right-1 w-2.5 h-2.5 text-[var(--uc-amber)]" />
                 U
               </div>
               <span className="font-display font-bold text-base"
@@ -84,7 +84,7 @@ export default function Footer() {
                   const el = e.currentTarget;
                   el.style.background = "rgba(124,92,191,0.10)";
                   el.style.borderColor = "rgba(124,92,191,0.30)";
-                  el.style.color = "#7c5cbf";
+                  el.style.color = "var(--uc-purple)";
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget;

@@ -32,7 +32,7 @@ export default function Navbar() {
   return (
     <>
       {/* Shimmer bar at very top */}
-      <div className="shimmer-bar fixed top-0 inset-x-0 z-[60]" />
+      {/* <div className="shimmer-bar fixed top-0 inset-x-0 z-60" /> */}
 
       {/* Floating capsule nav */}
       <header className="fixed top-4 inset-x-0 z-50 flex justify-center  px-4 pointer-events-none">
@@ -55,11 +55,11 @@ export default function Navbar() {
               className="
                 relative w-8 h-8 rounded-xl flex items-center justify-center
                 font-display font-black text-sm text-white
-                bg-gradient-to-br from-[#7c5cbf] to-[#d4608a]
+                bg-gradient-to-br from-[var(--uc-purple)] to-[var(--uc-pink)]
                 shadow-md group-hover:scale-110 transition-transform duration-300
               "
             >
-              <Sparkles className="absolute -top-1 -right-1 w-2.5 h-2.5 text-amber-300 pulse-dot" />
+              <Sparkles className="absolute -top-1 -right-1 w-2.5 h-2.5 text-[var(--uc-amber)] pulse-dot" />
               U
             </div>
             <span className="font-display font-bold text-base tracking-tight hidden sm:block"
@@ -80,7 +80,7 @@ export default function Navbar() {
                 href={l.href}
                 className="
                   px-3.5 py-1.5 rounded-full text-sm font-medium
-                  transition-all duration-200 hover:bg-[rgba(124,92,191,0.08)]
+                  transition-all duration-200 hover:bg-[var(--uc-purple)]/10
                 "
                 style={{ color: "var(--text-secondary)" }}
                 onMouseEnter={e =>
@@ -102,7 +102,7 @@ export default function Navbar() {
                 className="
                   w-8 h-8 rounded-full flex items-center justify-center
                   transition-all duration-200
-                  hover:bg-[rgba(124,92,191,0.1)]
+                  hover:bg-[var(--uc-purple)]/10
                 "
                 style={{ color: "var(--text-muted)" }}
                 aria-label="Toggle theme"
@@ -124,7 +124,7 @@ export default function Navbar() {
             {/* Mobile hamburger */}
             <button
               className="md:hidden w-8 h-8 rounded-full flex items-center justify-center
-                hover:bg-[rgba(124,92,191,0.1)] transition"
+                hover:bg-[var(--uc-purple)]/10 transition"
               style={{ color: "var(--text-muted)" }}
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Menu"
@@ -153,7 +153,7 @@ export default function Navbar() {
                   href={l.href}
                   onClick={() => setMenuOpen(false)}
                   className="px-4 py-2.5 rounded-xl text-sm font-medium
-                    hover:bg-[rgba(124,92,191,0.08)] transition"
+                    hover:bg-[var(--uc-purple)]/10 transition"
                   style={{ color: "var(--text-secondary)" }}
                 >
                   {l.label}

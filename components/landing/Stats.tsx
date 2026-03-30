@@ -1,8 +1,8 @@
 const STATS = [
-  { num: "99.9%", label: "Uptime SLA",       grad: "from-[#7c5cbf] to-[#d4608a]" },
-  { num: "150+",  label: "Institutions",     grad: "from-[#0ea5c9] to-[#7c5cbf]" },
-  { num: "10M+",  label: "Records Synced",   grad: "from-[#2a9e75] to-[#0ea5c9]" },
-  { num: "48ms",  label: "Avg Response",     grad: "from-[#d4922a] to-[#d4608a]" },
+  { num: "99.9%", label: "Uptime SLA",       grad: "from-[var(--uc-purple)] to-[var(--uc-pink)]" },
+  { num: "150+",  label: "Institutions",     grad: "from-[var(--uc-cyan)] to-[var(--uc-purple)]" },
+  { num: "10M+",  label: "Records Synced",   grad: "from-[var(--uc-emerald)] to-[var(--uc-cyan)]" },
+  { num: "48ms",  label: "Avg Response",     grad: "from-[var(--uc-amber)] to-[var(--uc-pink)]" },
 ];
 
 export default function Stats() {

@@ -12,7 +12,7 @@ import Footer       from "@/components/landing/Footer";
 export default function HomePage() {
   return (
     <>
-      <Navbar />
+      <Navbar    />
       <main>
         <Hero />
         <Stats />
