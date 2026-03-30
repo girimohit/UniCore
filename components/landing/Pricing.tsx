@@ -4,52 +4,48 @@ import { ChevronRight } from "lucide-react";
 const PLANS = [
   {
     name: "Starter",
-    price: "0",
-    period: "forever free",
+    price: "Free",
+    period: "for 3 months",
     desc: "Perfect for small institutions just getting started.",
     features: [
       "Up to 200 students",
       "3 core modules",
       "Community support",
-      "Basic analytics",
-      "Single campus",
+      "Standard sub-domain",
     ],
     cta: "Get Started Free",
     href: "/register",
     featured: false,
   },
   {
-    name: "Growth",
-    price: "₹15000",
-    period: "/ month, billed annually",
-    desc: "For growing institutions that need the full feature set.",
+    name: "Professional",
+    price: "₹9,999",
+    period: "per month, billed annually",
+    desc: "Full-featured suite for growing schools and colleges.",
     features: [
-      "Up to 5,000 students",
-      "All modules included",
-      "Priority 24/7 support",
-      "Advanced analytics",
-      "Custom domain & branding",
-      "Full API access",
-      // "Multi-campus support",
+      "Up to 2,500 students",
+      "All modules",
+      "Fee & Payroll Management",
+      "Automated Report Cards",
+      "24/7 Priority Support",
     ],
-    cta: "Start Free Trial",
-    href: "/register?plan=growth",
+    cta: "Start 14-Day Trial",
+    href: "/register?plan=pro",
     featured: true,
   },
   {
-    name: "Enterprise",
+    name: "Institutional",
     price: "Custom",
     period: "tailored to your scale",
-    desc: "For large networks with compliance and custom integration needs.",
+    desc: "For large university networks and multi-campus institutions.",
     features: [
-      "Unlimited students",
-      "Private cloud option",
-      "Dedicated SLA & support",
-      "Custom integrations",
-      "On-premise deployment",
-      "SSO & SAML",
+      "10,000+ students",
+      "Multi-campus orchestration",
+      "Custom branding & domains",
+      "Advanced API & Webhooks",
+      "Dedicated Success Manager",
     ],
-    cta: "Contact Sales",
+    cta: "Speak to Sales",
     href: "/contact",
     featured: false,
   },
@@ -64,8 +60,10 @@ export default function Pricing() {
           <h2 className="font-display font-black text-4xl md:text-5xl tracking-tight mb-4">
             Simple, Transparent
           </h2>
-          <p className="max-w-lg mx-auto text-lg font-light"
-            style={{ color: "var(--text-secondary)" }}>
+          <p
+            className="max-w-lg mx-auto text-lg font-light"
+            style={{ color: "var(--text-secondary)" }}
+          >
             No hidden fees. No surprise bills. Scale with full confidence.
           </p>
         </div>
@@ -75,48 +73,81 @@ export default function Pricing() {
             <div
               key={p.name}
               className={`uc-card p-8 relative overflow-hidden ${p.featured ? "md:-mt-4 md:mb-4" : ""}`}
-              style={p.featured ? {
-                borderColor: "rgba(124,92,191,0.38)",
-                background: "var(--bg-elevated)",
-                boxShadow: "0 0 0 1px rgba(124,92,191,0.15), 0 24px 80px rgba(124,92,191,0.10)",
-              } : {}}
+              style={
+                p.featured
+                  ? {
+                      borderColor: "rgba(124,92,191,0.38)",
+                      background: "var(--bg-elevated)",
+                      boxShadow:
+                        "0 0 0 1px rgba(124,92,191,0.15), 0 24px 80px rgba(124,92,191,0.10)",
+                    }
+                  : {}
+              }
             >
               {p.featured && (
                 <>
-                  <div className="absolute top-0 inset-x-0 h-0.5"
-                    style={{ background: "linear-gradient(90deg, var(--uc-purple), var(--uc-pink))" }} />
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white"
-                    style={{ background: "linear-gradient(135deg, var(--uc-purple), var(--uc-pink))" }}>
+                  <div
+                    className="absolute top-0 inset-x-0 h-0.5"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, var(--uc-purple), var(--uc-pink))",
+                    }}
+                  />
+                  <div
+                    className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, var(--uc-purple), var(--uc-pink))",
+                    }}
+                  >
                     Most Popular
                   </div>
                 </>
               )}
 
               <div className="mb-6">
-                <p className="text-sm font-semibold uppercase tracking-wider mb-2"
-                  style={{ color: "var(--text-muted)" }}>{p.name}</p>
+                <p
+                  className="text-sm font-semibold uppercase tracking-wider mb-2"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {p.name}
+                </p>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className={`font-display font-black text-5xl tracking-tight
+                  <span
+                    className={`font-display font-black text-5xl tracking-tight
                     ${p.featured ? "grad-purple" : ""}`}
-                    style={!p.featured ? { color: "var(--text-primary)" } : {}}>
+                    style={!p.featured ? { color: "var(--text-primary)" } : {}}
+                  >
                     {p.price}
                   </span>
                 </div>
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>{p.period}</p>
+                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                  {p.period}
+                </p>
               </div>
 
-              <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>{p.desc}</p>
+              <p
+                className="text-sm mb-6"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {p.desc}
+              </p>
 
               <ul className="flex flex-col gap-3 mb-8">
                 {p.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5 text-sm"
-                    style={{ color: "var(--text-secondary)" }}>
-                    <span className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  <li
+                    key={f}
+                    className="flex items-center gap-2.5 text-sm"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
                       style={{
                         background: "rgba(42,158,117,0.12)",
                         color: "var(--uc-emerald)",
                         border: "1px solid rgba(42,158,117,0.22)",
-                      }}>
+                      }}
+                    >
                       ✓
                     </span>
                     {f}
@@ -128,9 +159,10 @@ export default function Pricing() {
                 href={p.href}
                 className={`flex items-center justify-center gap-2 w-full py-3 rounded-xl
                   text-sm font-semibold transition-all duration-200
-                  ${p.featured
-                    ? "btn-primary !rounded-xl !py-3 w-full justify-center"
-                    : "btn-ghost !rounded-xl !py-3 w-full justify-center"
+                  ${
+                    p.featured
+                      ? "btn-primary !rounded-xl !py-3 w-full justify-center"
+                      : "btn-ghost !rounded-xl !py-3 w-full justify-center"
                   }`}
               >
                 {p.cta} <ChevronRight className="w-4 h-4" />

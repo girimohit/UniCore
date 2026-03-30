@@ -46,15 +46,15 @@ const MODULES = [
     accent: "#7c5cbf",
     glow: "rgba(124,92,191,0.10)",
   },
-  {
-    badge: "● Library",
-    badgeClass: "tag-cyan",
-    title: "Resource Center",
-    desc: "Physical and digital catalog management with RFID integration, inter-library loans, and borrowing analytics.",
-    pills: ["Catalog", "RFID", "Loans", "Fines", "E-Books"],
-    accent: "#0ea5c9",
-    glow: "rgba(14,165,201,0.08)",
-  },
+  // {
+  //   badge: "● Library",
+  //   badgeClass: "tag-cyan",
+  //   title: "Resource Center",
+  //   desc: "Physical and digital catalog management with RFID integration, inter-library loans, and borrowing analytics.",
+  //   pills: ["Catalog", "RFID", "Loans", "Fines", "E-Books"],
+  //   accent: "#0ea5c9",
+  //   glow: "rgba(14,165,201,0.08)",
+  // },
 ];
 
 export default function Modules() {

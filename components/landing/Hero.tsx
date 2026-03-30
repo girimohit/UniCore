@@ -49,14 +49,14 @@ export default function Hero() {
       </p>
 
       {/* CTA buttons */}
-      <div className="fade-up delay-3 flex flex-col sm:flex-row gap-4 items-center mb-20">
+      <div className="fade-up delay-3 flex flex-col sm:flex-row gap-4 items-center mb-16  ">
         <Link href="/register" className="btn-primary text-base px-8 py-3.5">
           Register Your Institution <ChevronRight className="w-4 h-4" />
         </Link>
-        <Link href="/demo" className="btn-ghost text-base px-8 py-3.5">
+        {/* <Link href="/demo" className="btn-ghost text-base px-8 py-3.5">
           <MonitorSmartphone className="w-4 h-4" />
           Live Demo
-        </Link>
+        </Link> */}
       </div>
 
       {/* Trust strip */}
