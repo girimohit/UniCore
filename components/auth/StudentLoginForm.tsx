@@ -172,9 +172,9 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
             >
               {institutionName}
             </h1>
-            <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--text-secondary)" }}>
+            {/* <p className="text-xs mt-1.5 font-medium" style={{ color: "var(--text-secondary)" }}>
               Student Portal &middot; <span className="font-mono opacity-70">{tenantSlug}.unicore.app</span>
-            </p>
+            </p> */}
           </div>
 
           {/* Role tabs */}

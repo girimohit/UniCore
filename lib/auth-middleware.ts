@@ -41,9 +41,14 @@ export function withAuth(
       // 3. Tenant Validation - Ensure token tenant matches the request subdomain
       const requestTenant = getTenantFromRequest(req);
 
-      // If the request has a subdomain context, enforce tenant isolation
-      if (requestTenant && decodedUser.institutionId !== requestTenant) {
-        return NextResponse.json({ error: 'Forbidden: Cross-tenant access denied' }, { status: 403 });
+      /**
+       * If the request has a subdomain context, enforce tenant isolation.
+       * We compare the slug in the JWT with the slug from the subdomain.
+       */
+      if (requestTenant && decodedUser.institutionSlug !== requestTenant) {
+        return NextResponse.json({ 
+          error: 'Forbidden: Cross-tenant access denied. Please log in to the correct institution portal.' 
+        }, { status: 403 });
       }
 
       // 4. Role Validation

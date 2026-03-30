@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-for-dev-only';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-for-dev-only-2024';
 
 export interface JwtPayload {
   userId: string;
   institutionId: string;
+  institutionSlug: string;
   role: string;
 }
 

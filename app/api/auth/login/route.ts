@@ -20,7 +20,9 @@ export async function POST(req: Request) {
     try {
       institution = await getTenantContext(subdomain);
     } catch (err: unknown) {
-      if (err instanceof Error) {return NextResponse.json({ error: err.message }, { status: 403 });}
+      if (err instanceof Error) {
+        return NextResponse.json({ error: err.message }, { status: 403 });
+      }
       return NextResponse.json({ error: "Something went wrong" }, { status: 403 });
     }
 
@@ -55,6 +57,7 @@ export async function POST(req: Request) {
     const token = signToken({
       userId: user.id,
       institutionId: user.institutionId,
+      institutionSlug: institution.slug,
       role: user.role,
     });
 

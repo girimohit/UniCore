@@ -47,7 +47,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
     }
 
-    const invitation = await prisma.userInvitation.findUnique({ where: { token } });
+    const invitation = await prisma.userInvitation.findUnique({ 
+        where: { token },
+        include: { institution: { select: { slug: true } } }
+    });
 
     if (!invitation || invitation.isUsed) {
       return NextResponse.json({ error: 'Invalid or already used activation link' }, { status: 410 });
@@ -99,6 +102,7 @@ export async function POST(req: NextRequest) {
     const jwtToken = signToken({
       userId: user.id,
       institutionId: user.institutionId,
+      institutionSlug: invitation.institution.slug,
       role: 'STUDENT',
     });
 
