@@ -1,12 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FileQuestion, Home, ArrowLeft } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth-server";
+import { useEffect, useState } from "react";
 
 export default function TenantNotFound() {
+  const [role, setRole] = useState<string | null>(null);
   const params = useParams();
   const tenant = params?.tenant as string;
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkAuth() {
+      const user = await getCurrentUser();
+      if (user) {
+        setRole(user.role.toLowerCase());
+      }
+    }
+    checkAuth();
+  }, []);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-6 bg-background relative overflow-hidden">
@@ -55,14 +69,14 @@ export default function TenantNotFound() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
           <button
-            onClick={() => window.history.back()}
+            onClick={() => router.back()}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-muted text-muted-foreground font-bold hover:bg-muted/80 transition-all active:scale-95"
           >
             <ArrowLeft className="w-4 h-4" />
             Go Back
           </button>
           <Link
-            href={tenant ? `/admin/dashboard` : "/"}
+            href={role ? `/${tenant}/${role}/dashboard` : `/`}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-primary text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95"
           >
             <Home className="w-4 h-4" />

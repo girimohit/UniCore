@@ -264,8 +264,8 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
               <div className="flex justify-end pr-3">
                 <Link
                   href={`/${tenantSlug}/forgot-password`}
-                  className=" text-xs opacity-60 hover:opacity-100 transition-opacity contet"
-                  style={{ color: "var(--text-secondary)" }}
+                  className=" text-xs opacity-80 hover:underline hover:opacity-100 transition-opacity contet"
+                  style={{ color: "var(--text-primary)" }}
                 >
                   Forgot password?
                 </Link>

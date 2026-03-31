@@ -1,3 +1,5 @@
+"use server"
+
 import { cookies } from 'next/headers';
 import { verifyToken, JwtPayload } from '@/lib/auth';
 

@@ -3,22 +3,37 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import {
-  Menu, X, Sun, Moon, Sparkles, ChevronRight,
-} from "lucide-react";
+import { Menu, X, Sun, Moon, Sparkles, ChevronRight } from "lucide-react";
+import { getCurrentUser } from "@/lib/auth-server";
+import { useRouter } from "next/navigation";
 
 const NAV_LINKS = [
-  { label: "Features",  href: "#features"  },
-  { label: "Modules",   href: "#modules"   },
-  { label: "Pricing",   href: "#pricing"   },
-  { label: "Docs",      href: "#docs"      },
+  { label: "Features", href: "#features" },
+  { label: "Modules", href: "#modules" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Docs", href: "#docs" },
 ];
 
 export default function Navbar() {
-  const [scrolled,   setScrolled]   = useState(false);
-  const [menuOpen,   setMenuOpen]   = useState(false);
-  const [mounted,    setMounted]    = useState(false);
-  const { theme, setTheme }         = useTheme();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [institution, setInstitution] = useState<string | null>(null);
+  const [role, setRole] = useState<string | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    const checkAuth = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        setIsLoggedIn(true);
+        setInstitution(user.institutionSlug.toLowerCase());
+        setRole(user.role.toLowerCase());
+      }
+    };
+    checkAuth();
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -41,9 +56,11 @@ export default function Navbar() {
             nav-capsule pointer-events-auto
             flex items-center gap-2 px-4 py-2.5
             transition-all duration-500 backdrop-blur-md bg-white/5 dark:bg-black/40
-            ${scrolled
-              ? "w-full max-w-3xl shadow-2xl border-white/10"
-              : "w-full max-w-2xl shadow-lg border-white/5"}
+            ${
+              scrolled
+                ? "w-full max-w-3xl shadow-2xl border-white/10"
+                : "w-full max-w-2xl shadow-lg border-white/5"
+            }
           `}
         >
           {/* Logo */}
@@ -62,15 +79,19 @@ export default function Navbar() {
               <Sparkles className="absolute -top-1 -right-1 w-2.5 h-2.5 text-[var(--uc-amber)] pulse-dot" />
               U
             </div>
-            <span className="font-display font-bold text-base tracking-tight hidden sm:block"
-              style={{ color: "var(--text-primary)" }}>
+            <span
+              className="font-display font-bold text-base tracking-tight hidden sm:block"
+              style={{ color: "var(--text-primary)" }}
+            >
               UNICORE
             </span>
           </Link>
 
           {/* Divider */}
-          <div className="hidden md:block w-px h-4 mx-1"
-            style={{ background: "var(--border-medium)" }} />
+          <div
+            className="hidden md:block w-px h-4 mx-1"
+            style={{ background: "var(--border-medium)" }}
+          />
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1 flex-1">
@@ -83,10 +104,12 @@ export default function Navbar() {
                   transition-all duration-200 hover:bg-[var(--uc-purple)]/10
                 "
                 style={{ color: "var(--text-secondary)" }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.color = "var(--text-primary)")}
-                onMouseLeave={e =>
-                  (e.currentTarget.style.color = "var(--text-secondary)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-secondary)")
+                }
               >
                 {l.label}
               </a>
@@ -107,18 +130,22 @@ export default function Navbar() {
                 style={{ color: "var(--text-muted)" }}
                 aria-label="Toggle theme"
               >
-                {theme === "dark"
-                  ? <Sun  className="w-4 h-4" />
-                  : <Moon className="w-4 h-4" />}
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
               </button>
             )}
 
             {/* CTA */}
             <Link
-              href="/register"
+              href={isLoggedIn ? `/${institution}/${role}/dashboard` : `/login`}
               className="btn-primary !py-2 !px-4 !text-sm hidden sm:inline-flex"
             >
-              Get Started <ChevronRight className="w-3.5 h-3.5" />
+              {/* Get Started <ChevronRight className="w-3.5 h-3.5" /> */}
+              Login <ChevronRight className="w-3.5 h-3.5" />
+              {/* {isLoggedIn ? "Dashboard" : "Login"} <ChevronRight className="w-3.5 h-3.5" /> */}
             </Link>
 
             {/* Mobile hamburger */}
@@ -129,7 +156,11 @@ export default function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Menu"
             >
-              {menuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              {menuOpen ? (
+                <X className="w-4 h-4" />
+              ) : (
+                <Menu className="w-4 h-4" />
+              )}
             </button>
           </div>
         </nav>

@@ -4,8 +4,14 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
-  Sparkles, ArrowRight, Loader2, Lock, Hash,
-  GraduationCap, Briefcase, ShieldCheck
+  Sparkles,
+  ArrowRight,
+  Loader2,
+  Lock,
+  Hash,
+  GraduationCap,
+  Briefcase,
+  ShieldCheck,
 } from "lucide-react";
 
 type LoginTab = "student" | "faculty" | "admin";
@@ -54,7 +60,10 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [subdomain, setSubdomain] = useState(searchParams.get("subdomain") || "");
+  const [subdomain, setSubdomain] = useState("");
+  //   const [subdomain, setSubdomain] = useState(
+  //     searchParams.get("subdomain") || "",
+  //   );
 
   // Detect subdomain/tenant from hostname or URL path
   useEffect(() => {
@@ -88,7 +97,6 @@ function LoginForm() {
     }
   }, []);
 
-
   const handleTabChange = (tab: LoginTab) => {
     setActiveTab(tab);
     setIdentifier("");
@@ -100,10 +108,18 @@ function LoginForm() {
     e.preventDefault();
     setError("");
 
-    if (!username.trim()) { setError(`${currentTab.identifierLabel} is required.`); return; }
-    if (!password) { setError("Password is required."); return; }
+    if (!username.trim()) {
+      setError(`${currentTab.identifierLabel} is required.`);
+      return;
+    }
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
     if (!subdomain) {
-      setError("Could not detect your institution workspace. Please use your institution's subdomain URL.");
+      setError(
+        "Could not detect your institution workspace. Please use your institution's subdomain URL.",
+      );
       return;
     }
 
@@ -112,14 +128,23 @@ function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim(), password, subdomain }),
+        body: JSON.stringify({
+          username: username.trim(),
+          password,
+          subdomain,
+        }),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Invalid credentials.");
 
       if (data.user.accountStatus === "TEMP") {
-        router.push(`/${subdomain}/setup-password?username=${encodeURIComponent(username.trim())}`);
+        setError(
+          "Please activate your account first using invitation link sent to your Email by Institution Admin.",
+        );
+        // router.push(
+        //   `/${subdomain}/setup-password?username=${encodeURIComponent(username.trim())}`,
+        // );
         return;
       }
 
@@ -154,13 +179,22 @@ function LoginForm() {
               U
             </div>
           </Link>
-          <h1 className="font-display font-black text-2xl tracking-tight" style={{ color: "var(--text-primary)" }}>
+          <h1
+            className="font-display font-black text-2xl tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
             Sign in to UNICORE
           </h1>
           {subdomain && (
-            <p className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="text-xs mt-1"
+              style={{ color: "var(--text-secondary)" }}
+            >
               Workspace:{" "}
-              <span className="font-bold" style={{ color: "var(--text-primary)" }}>
+              <span
+                className="font-bold"
+                style={{ color: "var(--text-primary)" }}
+              >
                 {subdomain}.unicore.app
               </span>
             </p>
@@ -170,14 +204,19 @@ function LoginForm() {
         {/* Tab switcher */}
         <div
           className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl mb-7"
-          style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+          style={{
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--border-subtle)",
+          }}
         >
           {TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
               className={`flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
-                activeTab === tab.key ? "text-white shadow-md" : "opacity-50 hover:opacity-80"
+                activeTab === tab.key
+                  ? "text-white shadow-md"
+                  : "opacity-50 hover:opacity-80"
               }`}
               style={
                 activeTab === tab.key
@@ -208,6 +247,32 @@ function LoginForm() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label
+                className="block text-xs font-semibold uppercase tracking-wider"
+                style={{ color: "var(--text-muted)" }}
+              >
+                Institution Slug
+              </label>
+            </div>
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
+              <input
+                type="text"
+                required
+                autoComplete="Institution Slug"
+                value={subdomain}
+                onChange={(e) => setSubdomain(e.target.value)}
+                placeholder="e.g. DU"
+                className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5cbf]/40 transition-shadow"
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+          </div>
+          <div>
             <label
               className="block text-xs font-semibold uppercase tracking-wider mb-1.5"
               style={{ color: "var(--text-muted)" }}
@@ -225,7 +290,10 @@ function LoginForm() {
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder={currentTab.identifierPlaceholder}
                 className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5cbf]/40 transition-shadow"
-                style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)",
+                }}
               />
             </div>
           </div>
@@ -238,13 +306,6 @@ function LoginForm() {
               >
                 Password
               </label>
-              <a
-                href="#"
-                className="text-xs opacity-60 hover:opacity-100 transition-opacity"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Forgot password?
-              </a>
             </div>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
@@ -256,11 +317,22 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#7c5cbf]/40 transition-shadow"
-                style={{ borderColor: "var(--border-strong)", color: "var(--text-primary)" }}
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)",
+                }}
               />
             </div>
+            <div className="flex justify-end mt-1 pr-3">
+              <Link
+                href={`/${subdomain}/forgot-password`}
+                className=" text-xs opacity-80 hover:underline hover:opacity-100 transition-opacity contet"
+                style={{ color: "var(--text-primary)" }}
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
-
           <button
             type="submit"
             disabled={loading}
@@ -278,8 +350,11 @@ function LoginForm() {
         </form>
 
         {/* Contextual footer links */}
-        {activeTab === "student" && (
-          <p className="text-center text-xs mt-6" style={{ color: "var(--text-secondary)" }}>
+        {/* {activeTab === "student" && (
+          <p
+            className="text-center text-xs mt-6"
+            style={{ color: "var(--text-secondary)" }}
+          >
             First time here?{" "}
             <Link
               href="/student/activate"
@@ -291,7 +366,10 @@ function LoginForm() {
           </p>
         )}
         {activeTab === "admin" && (
-          <p className="text-center text-xs mt-6" style={{ color: "var(--text-secondary)" }}>
+          <p
+            className="text-center text-xs mt-6"
+            style={{ color: "var(--text-secondary)" }}
+          >
             New institution?{" "}
             <Link
               href="/register"
@@ -301,10 +379,13 @@ function LoginForm() {
               Register your workspace
             </Link>
           </p>
-        )}
+        )} */}
       </div>
 
-      <p className="text-center text-xs mt-5 opacity-40" style={{ color: "var(--text-secondary)" }}>
+      <p
+        className="text-center text-xs mt-5 opacity-40"
+        style={{ color: "var(--text-secondary)" }}
+      >
         © UNICORE · All rights reserved
       </p>
     </div>
@@ -327,7 +408,11 @@ export default function LoginPage() {
         style={{ background: "var(--uc-cyan)", filter: "blur(120px)" }}
       />
 
-      <Suspense fallback={<div className="glass p-10 rounded-2xl animate-pulse w-[400px] h-[500px]" />}>
+      <Suspense
+        fallback={
+          <div className="glass p-10 rounded-2xl animate-pulse w-[400px] h-[500px]" />
+        }
+      >
         <LoginForm />
       </Suspense>
     </div>
