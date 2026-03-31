@@ -289,7 +289,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
           </form>
 
           {/* Contextual CTAs */}
-          {activeTab === "student" && (
+          {/* {activeTab === "student" && (
             <p className="text-center text-xs mt-6" style={{ color: "var(--text-secondary)" }}>
               First time here?{" "}
               <Link
@@ -300,7 +300,7 @@ export default function StudentLoginForm({ tenantSlug, institutionName, isActive
                 Activate your account
               </Link>
             </p>
-          )}
+          )} */}
         </div>
 
         {/* Back to global site */}

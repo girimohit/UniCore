@@ -4,7 +4,7 @@
  */
 export const APP_CONFIG = {
   // Use NEXT_PUBLIC_ prefix for client-side accessibility if needed
-  baseUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  baseUrl: process.env.NEXT_PUBLIC_APP_URL || 'unicore-ten.vercel.app',
   
   // Flag to control whether we prioritize path-based vs subdomain-based routing
   routingStrategy: 'path' as 'path' | 'subdomain',
