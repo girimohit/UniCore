@@ -1,12 +1,9 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Lock, Loader2, CheckCircle, ArrowRight, Eye, EyeOff, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Lock, Loader2, CheckCircle, ArrowRight, Eye, EyeOff, AlertTriangle, Sparkles, ChevronLeft } from "lucide-react";
 
 function ResetPasswordForm() {
   const params = useParams();
@@ -21,6 +18,11 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,122 +66,199 @@ function ResetPasswordForm() {
     }
   };
 
+  if (!mounted) return null;
+
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
-        <Card className="max-w-md w-full border-border/40 bg-card/60 backdrop-blur-xl p-10 text-center space-y-4 rounded-[2rem]">
-          <AlertTriangle className="w-12 h-12 text-rose-500 mx-auto" />
-          <h2 className="text-xl font-black">Invalid Request</h2>
-          <p className="text-muted-foreground text-sm opacity-80">This reset link appears to be invalid or was missing a token.</p>
-          <Link href={`/${tenant}/login`} className="block pt-2">
-            <Button variant="outline" className="w-full rounded-xl">Back to Login</Button>
+      <div
+        className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        style={{ background: "var(--bg-base)" }}
+      >
+        <div className="w-full max-w-md relative z-10 glass p-8 sm:p-10 rounded-[28px] shadow-2xl text-center">
+          <div className="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <AlertTriangle className="w-8 h-8" />
+          </div>
+          <h1
+            className="font-display font-black text-3xl mb-4"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Invalid Request
+          </h1>
+          <p className="mb-8 opacity-70" style={{ color: "var(--text-secondary)" }}>
+            This reset link appears to be invalid or was missing a token.
+          </p>
+          <Link href={`/${tenant}/login`} className="btn-ghost w-full justify-center !py-3.5 shadow-sm inline-flex items-center gap-2">
+             <ChevronLeft className="w-4 h-4" /> Back to Login
           </Link>
-        </Card>
+        </div>
       </div>
     );
   }
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
-        <Card className="max-w-md w-full border-border/40 bg-card/60 backdrop-blur-xl p-10 text-center space-y-6 rounded-[2rem] border-emerald-500/10">
-          <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-2 border border-emerald-500/20">
-            <CheckCircle className="w-8 h-8 text-emerald-500" />
+      <div
+        className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+        style={{ background: "var(--bg-base)" }}
+      >
+        <div className="w-full max-w-md relative z-10 glass p-8 sm:p-10 rounded-[28px] shadow-2xl text-center">
+          <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-8 h-8" />
           </div>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-black tracking-tight">Success!</h2>
-            <p className="text-muted-foreground text-sm opacity-80 font-medium">Your password has been successfully reset.</p>
-          </div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground animate-pulse">Redirecting you to login...</p>
-          <Link href={`/${tenant}/login`} className="block">
-            <Button className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-500/20 font-black uppercase tracking-widest text-[11px]">Go to Login Now <ArrowRight className="ml-2 w-4 h-4" /></Button>
+          <h1
+            className="font-display font-black text-3xl mb-4"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Success!
+          </h1>
+          <p className="mb-4 opacity-70" style={{ color: "var(--text-secondary)" }}>
+            Your password has been successfully reset.
+          </p>
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-40 animate-pulse mb-8" style={{ color: "var(--text-primary)" }}>
+            Redirecting you to login...
+          </p>
+          <Link href={`/${tenant}/login`} className="btn-primary w-full justify-center !py-3.5 shadow-xl inline-flex items-center gap-2">
+             Go to Login Now <ArrowRight className="w-4 h-4" />
           </Link>
-        </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950 overflow-hidden relative font-sans">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      style={{ background: "var(--bg-base)" }}
+    >
       {/* Background Decor */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-500/20 rounded-full blur-[120px] pointer-events-none" />
+      <div
+        className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full opacity-30 orb"
+        style={{ background: "var(--uc-purple)", filter: "blur(100px)" }}
+      />
+      <div
+        className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full opacity-30 orb-2"
+        style={{ background: "var(--uc-cyan)", filter: "blur(100px)" }}
+      />
 
-      <Card className="max-w-md w-full border-border/40 bg-card/60 backdrop-blur-xl rounded-[2rem] overflow-hidden relative z-10 shadow-2xl">
-        <CardHeader className="text-center pt-10">
-          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
-            <Lock className="w-8 h-8 text-primary" />
+      <div className="w-full max-w-md relative z-10 glass p-8 sm:p-10 rounded-[28px] shadow-2xl">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7c5cbf] to-[#d4608a] text-white mb-6 shadow-lg">
+             <Sparkles className="w-6 h-6" />
           </div>
-          <CardTitle className="text-2xl font-black tracking-tight leading-tight uppercase">Update Password</CardTitle>
-          <CardDescription className="text-muted-foreground mt-2 px-4 opacity-80">
-            Security first! Please choose a strong, new password for your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-8 pb-10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div className="space-y-2 group">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">New Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50 transition-opacity group-focus-within:opacity-100" />
-                  <Input
-                    type={showPass ? "text" : "password"}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Min 8 characters"
-                    className="pl-10 pr-10 h-12 rounded-xl bg-slate-900/50 border-border/40 focus:ring-primary/20 transition-all font-medium"
-                  />
-                  <button 
-                    type="button"
-                    onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100 transition-opacity"
-                  >
-                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
+          <h1
+            className="font-display font-black text-3xl mb-2 tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Update Password
+          </h1>
+          <p className="text-sm opacity-70" style={{ color: "var(--text-secondary)" }}>
+             Security first! Please choose a strong, new password for your account.
+          </p>
+        </div>
 
-              <div className="space-y-2 group">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Confirm Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50 transition-opacity group-focus-within:opacity-100" />
-                  <Input
-                    type={showPass ? "text" : "password"}
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repeat new password"
-                    className="pl-10 h-12 rounded-xl bg-slate-900/50 border-border/40 focus:ring-primary/20 transition-all font-medium"
-                  />
-                </div>
-              </div>
-            </div>
+        {error && (
+          <div
+            className="p-3 mb-6 text-sm rounded-xl font-bold"
+            style={{
+              background: "rgba(346.8, 77.2%, 49.8%, 0.1)",
+              color: "hsl(var(--destructive))",
+              border: "1px solid rgba(346.8, 77.2%, 49.8%, 0.2)",
+            }}
+          >
+            {error}
+          </div>
+        )}
 
-            {error && (
-              <div className="p-3 text-xs bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl font-bold">
-                {error}
-              </div>
-            )}
-
-            <Button 
-                type="submit" 
-                disabled={loading} 
-                className="w-full h-12 rounded-xl font-black uppercase tracking-widest text-[11px] bg-gradient-to-r from-violet-600 to-indigo-600 shadow-lg shadow-indigo-600/20 hover:shadow-xl hover:scale-[1.02] transition-all active:scale-95"
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+           <div>
+            <label
+              className="block text-xs font-semibold uppercase tracking-wider mb-2 opacity-60 ml-1"
+              style={{ color: "var(--text-primary)" }}
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Reset Password <ArrowRight className="ml-2 w-4 h-4" /></>}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              New Password
+            </label>
+            <div className="relative group">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40 transition-opacity group-focus-within:opacity-100" />
+              <input
+                type={showPass ? "text" : "password"}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Min 8 characters"
+                className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 transition-all font-medium"
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)",
+                }}
+              />
+              <button 
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 transition-opacity"
+              >
+                {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label
+              className="block text-xs font-semibold uppercase tracking-wider mb-2 opacity-60 ml-1"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Confirm Password
+            </label>
+            <div className="relative group">
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40 transition-opacity group-focus-within:opacity-100" />
+              <input
+                type={showPass ? "text" : "password"}
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Repeat new password"
+                className="w-full bg-transparent border rounded-xl py-3 pl-10 pr-10 text-sm focus:outline-none focus:ring-2 transition-all font-medium"
+                style={{
+                  borderColor: "var(--border-strong)",
+                  color: "var(--text-primary)",
+                }}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full justify-center !py-3.5 shadow-xl mt-2"
+          >
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>
+                Reset Password <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-950 font-black text-white p-4">Loading Secured Session...</div>}>
+    <Suspense fallback={
+       <div 
+         className="min-h-screen flex items-center justify-center p-4"
+         style={{ background: "var(--bg-base)" }}
+       >
+          <div className="glass p-10 rounded-[28px] animate-pulse w-full max-w-md h-[400px] flex flex-col items-center justify-center gap-4">
+             <Loader2 className="w-8 h-8 animate-spin opacity-20" />
+             <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Securing Session...</p>
+          </div>
+       </div>
+    }>
       <ResetPasswordForm />
     </Suspense>
   );
 }
+

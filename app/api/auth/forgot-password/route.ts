@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     const host = req.headers.get('host') || 'localhost:3000';
     // const resetLink = `${protocol}://${host}/${user.institution.slug}/reset-password?token=${token}`;
-    const resetLink = `${protocol}://${host}/reset-password?token=${token}`;
+    const resetLink = `${protocol}://${host}/${subdomain}/reset-password?token=${token}`;
 
     // 4. Send Email
     await sendEmail({
