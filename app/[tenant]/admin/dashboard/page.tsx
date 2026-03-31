@@ -66,7 +66,7 @@ export default async function AdminDashboard({ params }: { params: Promise<{ ten
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 mt-8">
-        <InviteUser institutionId={tenant} />
+        {/* <InviteUser institutionId={tenant} /> */}
 
           <div className="glass rounded-3xl p-8 border border-white/5 flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden group bg-black/40">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent"></div>

@@ -51,6 +51,7 @@ export async function POST(req: Request) {
           username,
           passwordHash: hashedPassword,
           role: 'ADMIN',
+          name: admin_name,
           email: admin_email,
           accountStatus: 'ACTIVE'
         }
