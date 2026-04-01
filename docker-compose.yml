@@ -1,0 +1,9 @@
+services:
+  unicore:
+    build: .
+    container_name: unicore-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: always
