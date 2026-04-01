@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { signResetToken } from '@/lib/auth';
 import { sendEmail, getPasswordResetEmailTemplate } from '@/lib/mail';
+import { env } from '@/lib/env'
+
 
 export async function POST(req: Request) {
   try {
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
 
     // 3. Construct reset link
     // Note: In production, use the actual origin. For now, we assume standard pattern.
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const protocol = env.NODE_ENV === 'production' ? 'https' : 'http';
     const host = req.headers.get('host') || 'localhost:3000';
     // const resetLink = `${protocol}://${host}/${user.institution.slug}/reset-password?token=${token}`;
     const resetLink = `${protocol}://${host}/${subdomain}/reset-password?token=${token}`;

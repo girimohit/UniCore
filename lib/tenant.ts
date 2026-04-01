@@ -1,4 +1,5 @@
 import { prisma } from './db';
+import { env } from '@/lib/env'
 import type { NextRequest } from 'next/server';
 
 export interface TenantContext {
@@ -46,15 +47,15 @@ export function getTenantFromRequest(req: NextRequest): string | null {
 
   // Step 4: Legacy hostname/subdomain extraction
   const hostname = req.headers.get('host') || '';
-  const baseDomain = process.env.BASE_DOMAIN || 'localhost:3000';
+  const baseDomain = env.NEXT_PUBLIC_APP_URL || 'localhost:3000';
   const baseDomains = [baseDomain, 'localhost:3000', '127.0.0.1:3000'];
-  
+
   if (!baseDomains.includes(hostname)) {
     if (hostname.endsWith(baseDomain)) {
-       return hostname.replace(`.${baseDomain}`, '');
+      return hostname.replace(`.${baseDomain}`, '');
     } else {
-       const parts = hostname.split('.');
-       if (parts.length >= 2) return parts[0];
+      const parts = hostname.split('.');
+      if (parts.length >= 2) return parts[0];
     }
   }
 

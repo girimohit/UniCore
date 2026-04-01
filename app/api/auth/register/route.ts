@@ -1,20 +1,27 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
+import { RegisterSchema } from '@/lib/validations/auth';
 
 /**
  * Super Admin or Platform API route to register a new tenant.
  */
 export async function POST(req: Request) {
   try {
-    const { institutionName, subdomain, adminEmail, adminPassword } = await req.json();
+    const json = await req.json();
+    const result = RegisterSchema.safeParse(json);
 
-    if (!institutionName || !subdomain || !adminEmail || !adminPassword) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!result.success) {
+      return NextResponse.json({ 
+        error: 'Validation failed', 
+        details: result.error.flatten().fieldErrors 
+      }, { status: 400 });
     }
 
+    const { institutionName, subdomain, adminEmail, adminPassword } = result.data;
+
     // Wrap the tenant creation and admin user provisioning in a transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const dbResult = await prisma.$transaction(async (tx) => {
       // 1. Create the Institution (Tenant)
       const institution = await tx.institution.create({
         data: {
@@ -42,7 +49,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       message: 'Institution and Admin registered successfully',
-      institutionId: result.institution.id
+      institutionId: dbResult.institution.id
     }, { status: 201 });
 
   } catch (error: any) {

@@ -2,18 +2,23 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getTenantContext } from "@/lib/tenant";
 import { comparePassword, signToken } from "@/lib/auth";
+import { LoginSchema } from "@/lib/validations/auth";
+import { env } from '@/lib/env'
+
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { username, password, subdomain } = body;
+    const json = await req.json();
+    const result = LoginSchema.safeParse(json);
 
-    if (!username || !password || !subdomain) {
-      return NextResponse.json(
-        { error: "Username, password, and subdomain are required" },
-        { status: 400 },
-      );
+    if (!result.success) {
+      return NextResponse.json({
+        error: 'Validation failed',
+        details: result.error.flatten().fieldErrors
+      }, { status: 400 });
     }
+
+    const { username, password, subdomain } = result.data;
 
     // Fetch tenant securely (throws if inactive or not found)
     let institution;
@@ -79,7 +84,7 @@ export async function POST(req: Request) {
       name: "auth_token",
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24, // 24 hours

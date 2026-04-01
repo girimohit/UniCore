@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword, signToken } from '@/lib/auth';
+import { env } from '@/lib/env'
 import type { NextRequest } from 'next/server';
 
 // GET /api/auth/activate?token=xyz — validates a token and returns basic info
@@ -47,9 +48,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
     }
 
-    const invitation = await prisma.userInvitation.findUnique({ 
-        where: { token },
-        include: { institution: { select: { slug: true } } }
+    const invitation = await prisma.userInvitation.findUnique({
+      where: { token },
+      include: { institution: { select: { slug: true } } }
     });
 
     if (!invitation || invitation.isUsed) {
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest) {
       name: 'auth_token',
       value: jwtToken,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 24,

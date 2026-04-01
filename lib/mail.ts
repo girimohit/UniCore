@@ -1,38 +1,40 @@
 import nodemailer from 'nodemailer';
+import { env } from '@/lib/env'
+
 
 // const transporter = nodemailer.createTransport({
-//   host: process.env.SMTP_HOST,
-//   port: Number(process.env.SMTP_PORT),
-//   secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+//   host: env.SMTP_HOST,
+//   port: env.SMTP_PORT,
+//   secure: env.SMTP_PORT === 465, // true for 465, false for other ports
 //   auth: {
-//     user: process.env.SMTP_USER,
-//     pass: process.env.SMTP_PASS,
+//     user: env.SMTP_USER,
+//     pass: env.SMTP_PASS,
 //   },
 // });
 
 // The transporter will attempt OAuth2 if GOOGLE_REFRESH_TOKEN is present, 
 // otherwise it falls back to standard SMTP (App Password)
 const transporter = nodemailer.createTransport(
-  process.env.GOOGLE_REFRESH_TOKEN 
+  env.GOOGLE_REFRESH_TOKEN
     ? {
-        service: "gmail",
-        auth: {
-          type: "OAuth2",
-          user: process.env.GMAIL_USER,
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-          refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-        },
-      }
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: env.GMAIL_USER,
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+        refreshToken: env.GOOGLE_REFRESH_TOKEN,
+      },
+    }
     : {
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_PORT === '465',
+      host: env.SMTP_HOST || 'smtp.gmail.com',
+      port: env.SMTP_PORT || 587,
+      secure: env.SMTP_PORT === 465,
         auth: {
-          user: process.env.SMTP_USER || process.env.GMAIL_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      }
+        user: env.SMTP_USER || env.GMAIL_USER,
+        pass: env.SMTP_PASS,
+      },
+    }
 );
 
 interface SendEmailOptions {
@@ -44,7 +46,7 @@ interface SendEmailOptions {
 export async function sendEmail({ to, subject, html }: SendEmailOptions) {
   try {
     const info = await transporter.sendMail({
-      from: process.env.FROM_EMAIL,
+      from: env.FROM_EMAIL,
       to,
       subject,
       html,

@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { env } from '@/lib/env'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-super-secret-key-for-dev-only-2024';
+
+const JWT_SECRET = env.JWT_SECRET;
 
 export interface JwtPayload {
   userId: string;
