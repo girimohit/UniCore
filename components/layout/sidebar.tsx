@@ -87,10 +87,15 @@ const studentLinks = [
     moduleId: "notices",
   },
   {
-    name: "Fees",
-    href: "/student/fees",
+    name: "Exams",
+    href: "/student/exams",
+    icon: Icons.ClipboardCheck,
+  },
+  {
+    name: "Results",
+    href: "/student/results",
     icon: Wallet,
-    moduleId: "fees",
+    moduleId: "results",
   },
   {
     name: "Profile",
@@ -110,6 +115,11 @@ const adminLinks = [
     href: "/admin/students",
     icon: Users,
     moduleId: "students",
+  },
+  {
+    name: "Academic Terms",
+    href: "/admin/academic-periods",
+    icon: CalendarDays,
   },
   {
     name: "Faculty",
@@ -171,6 +181,11 @@ const facultyLinks = [
     href: "/faculty/attendance",
     icon: CalendarCheck,
     moduleId: "attendance",
+  },
+  {
+    name: "Exams",
+    href: "/faculty/exams",
+    icon: Icons.ClipboardCheck,
   },
   {
     name: "My Profile",

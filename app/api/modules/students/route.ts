@@ -19,8 +19,17 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async
        return NextResponse.json({ error: 'Student module disabled' }, { status: 403 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const courseId = searchParams.get('courseId');
+
     const students = await prisma.user.findMany({
-      where: { institutionId: user.institutionId, role: 'STUDENT' },
+      where: { 
+        institutionId: user.institutionId, 
+        role: 'STUDENT',
+        ...(courseId && {
+            student: { courseId: courseId }
+        })
+      },
       include: {
         student: { include: { course: true } }
       },

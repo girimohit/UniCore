@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   ClipboardCheck, Plus, Search, Trash2, Pencil, Calendar, BookOpen, Layers, 
-  Loader2, CheckCircle, XCircle, ChevronDown, BarChart3, ShieldCheck
+  Loader2, CheckCircle, XCircle, BarChart3, ShieldCheck, ArrowLeft, Save
 } from "lucide-react";
 
-interface ExamManagerProps {
+interface ExamManagerProps {  
   initialExams: {
     id: string;
     name: string;
@@ -14,6 +14,7 @@ interface ExamManagerProps {
     examType: string;
     maxMarks: number;
     passingMarks: number;
+    courseId: string;
     course?: { name: string };
     subject?: { name: string };
     term?: { name: string };
@@ -27,12 +28,17 @@ interface ExamManagerProps {
 const EXAM_TYPES = ["MID_TERM", "FINAL", "QUIZ", "INTERNAL", "PRACTICAL"];
 
 export default function ExamManager({ initialExams, courses, subjects, periods }: ExamManagerProps) {
-  const [activeTab, setActiveTab] = useState<"list" | "add">("list");
+  const [activeTab, setActiveTab] = useState<"list" | "add" | "results">("list");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
-  const [errors, setErrors] = useState<any[]>([]);
+  const [results, setResults] = useState<ExamManagerProps['initialExams']>([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [customExamType, setCustomExamType] = useState(false);
   
+  // Results Entry State
+  const [selectedExam, setSelectedExam] = useState<ExamManagerProps['initialExams'][0] | null>(null);
+  const [students, setStudents] = useState<{id: string; name: string; rollNumber: string}[]>([]);
+  const [marks, setMarks] = useState<Record<string, { obtainedMarks: number; teacherRemarks: string }>>({});
+
   // Form state
   const [form, setForm] = useState({
     name: "",
@@ -60,7 +66,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
       const data = await res.json();
       
       if (res.ok) {
-        setResults([data]);
+        setResults([data, ...(results.length > 0 ? results : initialExams)]);
         setForm({ 
             name: "", 
             examDate: "", 
@@ -82,27 +88,101 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
     }
   };
 
+  const openResultsEntry = async (exam: ExamManagerProps['initialExams'][0]) => {
+    setSelectedExam(exam);
+    setActiveTab("results");
+    setLoading(true);
+    setErrors([]);
+
+    try {
+      // 1. Fetch Students in the course
+      const studentRes = await fetch(`/api/modules/students?courseId=${exam.courseId}`);
+      const studentData = await studentRes.json();
+      
+      // 2. Fetch existing results
+      const resultsRes = await fetch(`/api/modules/exams/results?examId=${exam.id}`);
+      const resultsData = await resultsRes.json();
+
+      if (studentRes.ok && resultsRes.ok) {
+        setStudents(studentData.students);
+        
+        // Initialize marks state with existing data
+        const initialMarks: Record<string, { obtainedMarks: number; teacherRemarks: string }> = {};
+        studentData.students.forEach((s: any) => {
+            const existing = resultsData.results.find((r: any) => r.studentId === s.id);
+            initialMarks[s.id] = {
+                obtainedMarks: existing ? existing.obtainedMarks : 0,
+                teacherRemarks: existing ? existing.teacherRemarks || "" : ""
+            };
+        });
+        setMarks(initialMarks);
+      } else {
+        setErrors(["Failed to load students or existing results"]);
+      }
+    } catch (err) {
+      setErrors(["Network error while loading results entry"]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveResults = async () => {
+    if (!selectedExam) return;
+    setLoading(true);
+    setErrors([]);
+    try {
+      const payload = {
+        examId: selectedExam.id,
+        results: Object.entries(marks).map(([studentId, data]) => ({
+            studentId,
+            ...data
+        }))
+      };
+
+      const res = await fetch("/api/modules/exams/results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setResults([]); // Reset internal state to trigger refresh if needed
+        setActiveTab("list");
+        // Could show a success toast here
+      } else {
+        setErrors([data.error || "Failed to save results"]);
+      }
+    } catch (err) {
+        setErrors(["Network error while saving"]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex gap-2 p-1 bg-secondary/10 rounded-2xl w-fit border border-border/40">
-        {[
-          { id: "list", label: "Overview", icon: Search },
-          { id: "add", label: "Schedule Exam", icon: Plus },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
-              activeTab === tab.id 
-                ? "bg-primary text-white shadow-lg shadow-primary/20" 
-                : "text-muted-foreground hover:bg-secondary/20 hover:text-foreground"
-            }`}
-          >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {activeTab !== "results" && (
+        <div className="flex gap-2 p-1 bg-secondary/10 rounded-2xl w-fit border border-border/40">
+            {[
+            { id: "list", label: "Overview", icon: Search },
+            { id: "add", label: "Schedule Exam", icon: Plus },
+            ].map((tab) => (
+            <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                activeTab === tab.id 
+                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                    : "text-muted-foreground hover:bg-secondary/20 hover:text-foreground"
+                }`}
+            >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+            </button>
+            ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-8">
         {activeTab === "add" && (
@@ -258,20 +338,12 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
 
         {activeTab === "list" && (
           <div className="space-y-6 animate-in fade-in duration-300">
-             {(results.length > 0 || errors.length > 0) && (
+             {(errors.length > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {results.length > 0 && (
-                  <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-emerald-600" />
-                    <p className="text-sm font-bold text-emerald-700">Exam Scheduled Successfully</p>
-                  </div>
-                )}
-                {errors.length > 0 && (
-                  <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3">
+                <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3">
                     <XCircle className="w-5 h-5 text-destructive" />
                     <p className="text-sm font-bold text-destructive">{errors[0]}</p>
-                  </div>
-                )}
+                </div>
               </div>
             )}
 
@@ -342,7 +414,13 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                            </td>
                            <td className="px-6 py-4 text-right">
                               <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="p-2 hover:bg-primary/10 rounded-lg text-primary" title="Record Results"><BarChart3 className="w-4 h-4" /></button>
+                                <button 
+                                    onClick={() => openResultsEntry(e)}
+                                    className="p-2 hover:bg-primary/10 rounded-lg text-primary" 
+                                    title="Record Results"
+                                >
+                                    <BarChart3 className="w-4 h-4" />
+                                </button>
                                 <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
                                 <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>
                               </div>
@@ -365,6 +443,105 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
               )}
             </div>
           </div>
+        )}
+
+        {activeTab === "results" && selectedExam && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <button 
+                    onClick={() => setActiveTab("list")}
+                    className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors mb-4"
+                >
+                    <ArrowLeft className="w-4 h-4" /> Back to Schedule
+                </button>
+
+                <div className="glass rounded-3xl p-8 border border-border/50">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 rounded-2xl bg-amber-500/10 text-amber-500">
+                                <BarChart3 className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold">Recording Results</h3>
+                                <p className="text-sm text-muted-foreground">{selectedExam.name} • Max: {selectedExam.maxMarks} • Pass: {selectedExam.passingMarks}</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={saveResults}
+                            disabled={loading}
+                            className="bg-primary text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center gap-2 disabled:opacity-50"
+                        >
+                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Save All Results</>}
+                        </button>
+                    </div>
+
+                    {errors.length > 0 && (
+                        <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 mb-6">
+                            <XCircle className="w-5 h-5 text-destructive" />
+                            <p className="text-sm font-bold text-destructive">{errors[0]}</p>
+                        </div>
+                    )}
+
+                    <div className="overflow-x-auto rounded-2xl border border-border/40">
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-secondary/10 border-b border-border/40 text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+                                <tr>
+                                    <th className="px-6 py-4">Student</th>
+                                    <th className="px-6 py-4">Roll Number</th>
+                                    <th className="px-6 py-4 w-48">Obtained Marks</th>
+                                    <th className="px-6 py-4">Remarks</th>
+                                    <th className="px-6 py-4 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border/20">
+                                {students.map((student) => (
+                                    <tr key={student.id} className="hover:bg-secondary/5 transition-colors">
+                                        <td className="px-6 py-4 font-bold">{student.name}</td>
+                                        <td className="px-6 py-4 text-muted-foreground font-mono">{student.rollNumber}</td>
+                                        <td className="px-6 py-4">
+                                            <input 
+                                                type="number"
+                                                min="0"
+                                                max={selectedExam.maxMarks}
+                                                value={marks[student.id]?.obtainedMarks || 0}
+                                                onChange={(e) => setMarks(prev => ({
+                                                    ...prev,
+                                                    [student.id]: {
+                                                        ...prev[student.id],
+                                                        obtainedMarks: Number(e.target.value)
+                                                    }
+                                                }))}
+                                                className={`w-full bg-secondary/10 border ${marks[student.id]?.obtainedMarks > selectedExam.maxMarks ? 'border-destructive' : 'border-border/60'} rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary/40`}
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <input 
+                                                type="text"
+                                                placeholder="Remarks..."
+                                                value={marks[student.id]?.teacherRemarks || ""}
+                                                onChange={(e) => setMarks(prev => ({
+                                                    ...prev,
+                                                    [student.id]: {
+                                                        ...prev[student.id],
+                                                        teacherRemarks: e.target.value
+                                                    }
+                                                }))}
+                                                className="w-full bg-secondary/10 border border-border/60 rounded-lg py-2 px-3 focus:outline-none"
+                                            />
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
+                                            {marks[student.id]?.obtainedMarks >= selectedExam.passingMarks ? (
+                                                <span className="text-[10px] font-black text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-full">PASSED</span>
+                                            ) : (
+                                                <span className="text-[10px] font-black text-destructive bg-destructive/10 px-2 py-1 rounded-full">FAILED</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         )}
       </div>
     </div>
