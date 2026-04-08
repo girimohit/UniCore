@@ -115,6 +115,9 @@ model Exam {
   courseId      String
   subjectId     String
   termId        String
+  maxMarks      Float        @default(100)
+  passingMarks  Float        @default(40)
+  examType      String       @default("REGULAR")
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   

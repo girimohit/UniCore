@@ -2,23 +2,36 @@
 
 import { useState } from "react";
 import { 
-  ClipboardCheck, Plus, Upload, CheckCircle, XCircle, 
-  Loader2, Search, Trash2, Pencil, Calendar, BookOpen, Layers
+  ClipboardCheck, Plus, Search, Trash2, Pencil, Calendar, BookOpen, Layers, 
+  Loader2, CheckCircle, XCircle, ChevronDown, BarChart3, ShieldCheck
 } from "lucide-react";
 
 interface ExamManagerProps {
-  initialExams: any[];
+  initialExams: {
+    id: string;
+    name: string;
+    examDate: Date | string;
+    examType: string;
+    maxMarks: number;
+    passingMarks: number;
+    course?: { name: string };
+    subject?: { name: string };
+    term?: { name: string };
+  }[];
   courses: { id: string; name: string; code: string }[];
   subjects: { id: string; name: string; code: string }[];
   periods: { id: string; name: string }[];
   institutionId: string;
 }
 
+const EXAM_TYPES = ["MID_TERM", "FINAL", "QUIZ", "INTERNAL", "PRACTICAL"];
+
 export default function ExamManager({ initialExams, courses, subjects, periods }: ExamManagerProps) {
   const [activeTab, setActiveTab] = useState<"list" | "add">("list");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
+  const [customExamType, setCustomExamType] = useState(false);
   
   // Form state
   const [form, setForm] = useState({
@@ -27,6 +40,9 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
     courseId: "",
     subjectId: "",
     termId: "",
+    maxMarks: 100,
+    passingMarks: 40,
+    examType: "REGULAR",
   });
 
   const handleManualSubmit = async (e: React.FormEvent) => {
@@ -45,7 +61,16 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
       
       if (res.ok) {
         setResults([data]);
-        setForm({ name: "", examDate: "", courseId: "", subjectId: "", termId: "" });
+        setForm({ 
+            name: "", 
+            examDate: "", 
+            courseId: "", 
+            subjectId: "", 
+            termId: "",
+            maxMarks: 100,
+            passingMarks: 40,
+            examType: "REGULAR" 
+        });
         setActiveTab("list");
       } else {
         setErrors([data.error || "Failed to create exam"]);
@@ -89,7 +114,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
               Schedule New Exam
             </h3>
             <form onSubmit={handleManualSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Exam Name</label>
                   <input
@@ -110,6 +135,48 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
                   />
                 </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Exam Type</label>
+                  <div className="flex gap-2">
+                    {!customExamType ? (
+                        <select
+                            value={form.examType}
+                            onChange={e => {
+                                if (e.target.value === "CUSTOM") {
+                                    setCustomExamType(true);
+                                    setForm(f => ({ ...f, examType: "" }));
+                                } else {
+                                    setForm(f => ({ ...f, examType: e.target.value }));
+                                }
+                            }}
+                            className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
+                        >
+                            <option value="REGULAR">Regular</option>
+                            {EXAM_TYPES.map(t => <option key={t} value={t}>{t.replace('_', ' ')}</option>)}
+                            <option value="CUSTOM">+ Custom Type</option>
+                        </select>
+                    ) : (
+                        <div className="flex w-full gap-2">
+                            <input
+                                autoFocus
+                                value={form.examType}
+                                onChange={e => setForm(f => ({ ...f, examType: e.target.value.toUpperCase() }))}
+                                placeholder="ENTER TYPE"
+                                className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
+                            />
+                            <button 
+                                type="button"
+                                onClick={() => { setCustomExamType(false); setForm(f => ({ ...f, examType: "REGULAR" })); }}
+                                className="px-3 rounded-xl bg-secondary/20 hover:bg-secondary/40 text-xs font-bold"
+                            >
+                                Reset
+                            </button>
+                        </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Course</label>
                   <select
@@ -146,7 +213,38 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                     {periods.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
                 </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Max Marks</label>
+                  <div className="relative">
+                    <BarChart3 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input
+                        required
+                        type="number"
+                        min="0"
+                        value={form.maxMarks}
+                        onChange={e => setForm(f => ({ ...f, maxMarks: Number(e.target.value) }))}
+                        className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-muted-foreground ml-1">Passing Marks</label>
+                  <div className="relative">
+                    <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input
+                        required
+                        type="number"
+                        min="0"
+                        value={form.passingMarks}
+                        onChange={e => setForm(f => ({ ...f, passingMarks: Number(e.target.value) }))}
+                        className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all"
+                    />
+                  </div>
+                </div>
               </div>
+
               <button 
                 type="submit" 
                 disabled={loading}
@@ -177,36 +275,48 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
               </div>
             )}
 
-            <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
-              <div className="p-4 rounded-full bg-secondary/10">
-                <ClipboardCheck className="w-12 h-12 text-primary opacity-40" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Examination Schedule</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  View and manage upcoming examinations.
-                </p>
+            <div className="glass rounded-3xl p-6 border border-border/50">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 rounded-2xl bg-primary/10 text-primary">
+                    <ClipboardCheck className="w-6 h-6" />
+                </div>
+                <div>
+                    <h3 className="text-lg font-bold">Examination Schedule</h3>
+                    <p className="text-xs text-muted-foreground">Manage ongoing and upcoming institutional exams.</p>
+                </div>
               </div>
 
-              {(results.length > 0 ? results : initialExams).length > 0 && (
-                <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
+              {(results.length > 0 ? results : initialExams).length > 0 ? (
+                <div className="overflow-x-auto rounded-2xl border border-border/40">
                    <table className="w-full text-sm text-left">
                      <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                        <tr>
-                         <th className="px-6 py-4">Exam Name</th>
-                         <th className="px-6 py-4">Date</th>
+                         <th className="px-6 py-4">Exam Details</th>
+                         <th className="px-6 py-4">Date & Status</th>
                          <th className="px-6 py-4">Course/Subject</th>
-                         <th className="px-6 py-4">Period</th>
+                         <th className="px-6 py-4 text-center">Marks Policy</th>
                          <th className="px-6 py-4 text-right">Actions</th>
                        </tr>
                      </thead>
                      <tbody className="divide-y divide-border/20">
                        {(results.length > 0 ? results : initialExams).map((e, i) => (
-                         <tr key={i} className="hover:bg-secondary/5 transition-colors">
-                           <td className="px-6 py-4 font-bold text-primary">{e.name}</td>
-                           <td className="px-6 py-4 font-medium flex items-center gap-2">
-                             <Calendar className="w-3 h-3 text-muted-foreground" />
-                             {new Date(e.examDate).toLocaleDateString()}
+                         <tr key={i} className="hover:bg-secondary/5 transition-colors group">
+                           <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                                <span className="font-bold text-primary">{e.name}</span>
+                                <span className="text-[10px] text-muted-foreground font-mono mt-0.5">{e.examType}</span>
+                            </div>
+                           </td>
+                           <td className="px-6 py-4 font-medium">
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                  <Calendar className="w-3 h-3 text-muted-foreground" />
+                                  {new Date(e.examDate).toLocaleDateString()}
+                                </div>
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary w-fit">
+                                    {e.term?.name || '-'}
+                                </span>
+                              </div>
                            </td>
                            <td className="px-6 py-4">
                              <div className="flex flex-col gap-1">
@@ -219,12 +329,20 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                              </div>
                            </td>  
                            <td className="px-6 py-4">
-                             <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                               {e.term?.name || '-'}
-                             </span>
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-xs font-black">{e.maxMarks}</span>
+                                    <div className="h-1 w-12 bg-secondary/20 rounded-full overflow-hidden">
+                                        <div 
+                                            className="h-full bg-primary" 
+                                            style={{ width: `${(e.passingMarks/e.maxMarks)*100}%` }}
+                                        />
+                                    </div>
+                                    <span className="text-[10px] text-muted-foreground">Pass: {e.passingMarks}</span>
+                                </div>
                            </td>
                            <td className="px-6 py-4 text-right">
-                              <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
+                              <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button className="p-2 hover:bg-primary/10 rounded-lg text-primary" title="Record Results"><BarChart3 className="w-4 h-4" /></button>
                                 <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
                                 <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>
                               </div>
@@ -233,6 +351,16 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                        ))}
                      </tbody>
                    </table>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-20 text-center space-y-4">
+                    <div className="p-4 rounded-full bg-secondary/10">
+                        <ClipboardCheck className="w-12 h-12 text-primary opacity-40" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-bold">No Exams Scheduled</h3>
+                        <p className="text-sm text-muted-foreground mt-1">Start by scheduling your first examination.</p>
+                    </div>
                 </div>
               )}
             </div>
