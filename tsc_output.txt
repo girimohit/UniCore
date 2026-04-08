@@ -1,0 +1,1 @@
+app/[tenant]/admin/timetable/TimetableManager.tsx(19,8): error TS2307: Cannot find module '@/components/ui/dialog' or its corresponding type declarations.

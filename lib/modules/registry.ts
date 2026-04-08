@@ -111,13 +111,13 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     defaultEnabled: true,
     dependencies: ['courses']
   },
-  library: {
-    id: 'library',
-    name: 'Library Management',
-    description: 'Catalogue and book issuing system',
-    type: 'OPTIONAL',
-    icon: 'Library',
-    routePath: '/library',
-    defaultEnabled: false,
-  },
+  // library: {
+  //   id: 'library',
+  //   name: 'Library Management',
+  //   description: 'Catalogue and book issuing system',
+  //   type: 'OPTIONAL',
+  //   icon: 'Library',
+  //   routePath: '/library',
+  //   defaultEnabled: false,
+  // },
 };

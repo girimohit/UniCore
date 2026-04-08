@@ -10,10 +10,32 @@ import {
   ArrowRight, 
   TrendingUp, 
   Bell,
-  GraduationCap
+  GraduationCap,
+  Clock
 } from "lucide-react";
 import { getAcademicLabel, formatCycleLabel } from '@/lib/utils/academic';
 import Link from 'next/link';
+
+const SUBJECT_COLORS = [
+  { bg: 'bg-violet-100/80 dark:bg-violet-500/[.13]', text: 'text-violet-900 dark:text-violet-200', border: 'border-violet-300/70 dark:border-violet-400/[.2]' },
+  { bg: 'bg-emerald-100/80 dark:bg-emerald-500/[.12]', text: 'text-emerald-900 dark:text-emerald-200', border: 'border-emerald-300/70 dark:border-emerald-400/[.2]' },
+  { bg: 'bg-sky-100/80 dark:bg-sky-500/[.13]', text: 'text-sky-900 dark:text-sky-200', border: 'border-sky-300/70 dark:border-sky-400/[.2]' },
+  { bg: 'bg-orange-100/80 dark:bg-orange-500/[.12]', text: 'text-orange-900 dark:text-orange-200', border: 'border-orange-300/70 dark:border-orange-400/[.2]' },
+  { bg: 'bg-rose-100/80 dark:bg-rose-500/[.12]', text: 'text-rose-900 dark:text-rose-200', border: 'border-rose-300/70 dark:border-rose-400/[.2]' },
+  { bg: 'bg-teal-100/80 dark:bg-teal-500/[.12]', text: 'text-teal-900 dark:text-teal-200', border: 'border-teal-300/70 dark:border-teal-400/[.2]' },
+  { bg: 'bg-purple-100/80 dark:bg-purple-500/[.12]', text: 'text-purple-900 dark:text-purple-200', border: 'border-purple-300/70 dark:border-purple-400/[.2]' },
+  { bg: 'bg-amber-100/80 dark:bg-amber-500/[.11]', text: 'text-amber-900 dark:text-amber-200', border: 'border-amber-300/70 dark:border-amber-400/[.2]' },
+  { bg: 'bg-fuchsia-100/80 dark:bg-fuchsia-500/[.12]', text: 'text-fuchsia-900 dark:text-fuchsia-200', border: 'border-fuchsia-300/70 dark:border-fuchsia-400/[.2]' },
+  { bg: 'bg-slate-200/70 dark:bg-slate-500/[.13]', text: 'text-slate-900 dark:text-slate-200', border: 'border-slate-300/70 dark:border-slate-400/[.2]' },
+];
+
+function getColorForSubject(subjectId: string) {
+  let hash = 0;
+  for (let i = 0; i < subjectId.length; i++) {
+    hash = subjectId.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return SUBJECT_COLORS[Math.abs(hash) % SUBJECT_COLORS.length];
+}
 
 export default async function StudentDashboard({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -82,8 +104,27 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
   // Recent subjects for the student's course
   const recentSubjects = student.courseId ? await prisma.subject.findMany({
     where: { courseId: student.courseId },
-    take: 4,
+    take: 6,
     orderBy: { name: 'asc' }
+  }) : [];
+
+  // Today's schedule
+  const today = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'][new Date().getDay()] as any;
+  const todaySchedule = student.courseId && student.semester ? await prisma.timetableEntry.findMany({
+      where: {
+          timetable: {
+              institutionId: institution.id,
+              courseId: student.courseId,
+              semester: student.semester,
+          },
+          day: today,
+      },
+      include: {
+          subject: true,
+          faculty: { include: { user: { select: { name: true } } } }
+      },
+      orderBy: { startTime: 'asc' },
+      take: 3
   }) : [];
 
   return (
@@ -171,51 +212,52 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
           </CardContent>
         </Card>
 
-        {/* Grades */}
-        <Card className="group border-border/40 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden relative">
-          <div className="absolute top-0 left-0 h-1 w-full bg-violet-500/50"></div>
+        {/* Today's Schedule - REPLACES GRADES and NOTICES */}
+        <Card className="md:col-span-2 group border-border/40 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden relative">
+          <div className="absolute top-0 left-0 h-1 w-full bg-primary/50"></div>
           <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-violet-500/10 rounded-2xl text-violet-500 shadow-inner">
-                <GraduationCap className="h-5 w-5" />
-              </div>
-              <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-violet-500/10 text-violet-500 border border-violet-500/20 tracking-widest uppercase">
-                Academic
-              </span>
+            <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-3">
+                    <div className="p-3 bg-primary/10 rounded-2xl text-primary shadow-inner">
+                        <Clock className="h-5 w-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-display font-black text-foreground">Today's Schedule</h3>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Your classes for {today}</p>
+                    </div>
+                </div>
+                <Link href={`/${tenant}/student/timetable`}>
+                    <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase tracking-widest hover:gap-2">
+                        Full View <ArrowRight className="h-3 w-3 ml-1" />
+                    </Button>
+                </Link>
             </div>
-            <div className="space-y-1">
-              <h3 className="text-3xl font-display font-black text-foreground">{avgGpa ?? '—'}</h3>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-60">Target GPA</p>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-1">
-                {[1,2,3,4].map(i => (
-                    <div key={i} className={`h-1 w-6 rounded-full ${avgGpa && Number(avgGpa) >= i ? 'bg-violet-500' : 'bg-muted'}`} />
-                ))}
+            
+            <div className="grid gap-3">
+                {todaySchedule.length === 0 ? (
+                    <div className="py-8 text-center bg-muted/20 rounded-2xl border border-dashed border-border/40">
+                        <p className="text-xs font-bold text-muted-foreground/40 uppercase tracking-[0.2em]">No classes today</p>
+                    </div>
+                ) : (
+                    todaySchedule.map((entry, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/20 group/item hover:bg-muted/50 transition-colors">
+                            <div className="flex items-center gap-4">
+                                <div className="text-[10px] font-black text-muted-foreground/60 w-16 uppercase">
+                                    {entry.startTime}
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm text-foreground">{entry.subject.name}</h4>
+                                    <p className="text-[10px] font-medium text-muted-foreground">{entry.faculty?.user?.name || 'TBD'} · {entry.room || 'Room TBD'}</p>
+                                </div>
+                            </div>
+                            <div className="h-2 w-2 rounded-full bg-primary/40 group-hover/item:scale-150 transition-transform" />
+                        </div>
+                    ))
+                )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Notices */}
-        <Card className="group border-border/40 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden relative">
-          <div className="absolute top-0 left-0 h-1 w-full bg-amber-500/50"></div>
-          <CardContent className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-amber-500/10 rounded-2xl text-amber-500 shadow-inner">
-                <Bell className="h-5 w-5" />
-              </div>
-              <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 tracking-widest uppercase">
-                Updates
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-3xl font-display font-black text-foreground">—</h3>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest opacity-60">Board Notices</p>
-            </div>
-            <Link href={`/${tenant}/student/notices`} className="mt-6 flex items-center text-[10px] font-black text-amber-500 uppercase tracking-widest hover:gap-2 transition-all">
-              View All <ArrowRight className="h-3 w-3 ml-1" />
-            </Link>
-          </CardContent>
-        </Card>
       </div>
 
       {/* Bottom section: Subjects list + Attendance overview */}
@@ -241,19 +283,17 @@ export default async function StudentDashboard({ params }: { params: Promise<{ t
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
               {recentSubjects.map((sub, i) => {
-                const borderColors = ['border-emerald-500/30', 'border-blue-500/30', 'border-violet-500/30', 'border-amber-500/30'];
-                const bgColors = ['bg-emerald-500/5', 'bg-blue-500/5', 'bg-violet-500/5', 'bg-amber-500/5'];
-                const textColors = ['text-emerald-500', 'text-blue-500', 'text-violet-500', 'text-amber-500'];
+                const color = getColorForSubject(sub.id);
                 
                 return (
-                  <div key={sub.id} className={`group ${bgColors[i % 4]} border ${borderColors[i % 4]} rounded-3xl p-6 transition-all hover:scale-[1.02] hover:shadow-lg cursor-pointer relative overflow-hidden active:scale-95`}>
+                  <div key={sub.id} className={`group ${color.bg} border ${color.border} rounded-3xl p-6 transition-all hover:scale-[1.02] hover:shadow-lg cursor-pointer relative overflow-hidden active:scale-95`}>
                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
-                         <BookOpen className={`w-12 h-12 ${textColors[i % 4]}`} />
+                         <BookOpen className={`w-12 h-12 ${color.text}`} />
                     </div>
                     <div className="relative z-10 space-y-3">
-                      <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${textColors[i % 4]}`}>{sub.code}</div>
+                      <div className={`text-[10px] font-black uppercase tracking-[0.2em] ${color.text}`}>{sub.code}</div>
                       <h4 className="font-bold text-lg text-foreground leading-tight">{sub.name}</h4>
-                      <Link href={`/${tenant}/student/attendance`} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest pt-2 ${textColors[i % 4]} opacity-70 group-hover:opacity-100`}>
+                      <Link href={`/${tenant}/student/attendance`} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest pt-2 ${color.text} opacity-70 group-hover:opacity-100`}>
                         Attendance <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>

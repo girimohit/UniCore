@@ -71,6 +71,7 @@ model Course {
   students          Student[]
   subjects          Subject[]
   attendanceRecords AttendanceRecord[]
+  timetables        Timetable[]
 
   @@unique([institutionId, code])
   @@index([departmentId])
@@ -153,6 +154,7 @@ model Faculty {
   department        Department?         @relation(fields: [departmentId], references: [id])
   user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   facultyAssignments FacultyAssignment[]
+  timetableEntries   TimetableEntry[]
 
   @@index([departmentId])
 }
@@ -199,6 +201,7 @@ model Institution {
   subjects            Subject[]
   users               User[]
   notices             Notice[]
+  timetables          Timetable[]
 
   @@index([slug])
 }
@@ -279,6 +282,7 @@ model Subject {
   course             Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
   institution        Institution         @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   facultyAssignments FacultyAssignment[]
+  timetableEntries   TimetableEntry[]
 
   @@unique([institutionId, code])
   @@index([courseId])
@@ -365,4 +369,52 @@ model Notice {
 
   @@index([institutionId])
   @@index([createdAt])
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model Timetable {
+  id            String           @id @default(cuid())
+  institutionId String
+  courseId      String
+  semester      Int
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  entries       TimetableEntry[]
+  course        Course           @relation(fields: [courseId], references: [id])
+  institution   Institution      @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@unique([institutionId, courseId, semester])
+  @@index([courseId])
+  @@index([institutionId])
+}
+
+model TimetableEntry {
+  id          String      @id @default(cuid())
+  timetableId String
+  subjectId   String
+  facultyId   String?     
+  day         DayOfWeek
+  startTime   String      // Format: "HH:mm" (e.g., "09:00")
+  endTime     String      // Format: "HH:mm" (e.g., "10:00")
+  room        String?     
+  type        String      @default("THEORY") // THEORY, LAB, TUTORIAL
+  
+  timetable   Timetable   @relation(fields: [timetableId], references: [id], onDelete: Cascade)
+  subject     Subject     @relation(fields: [subjectId], references: [id])
+  faculty     Faculty?    @relation(fields: [facultyId], references: [id])
+
+  @@index([timetableId])
+  @@index([subjectId])
+  @@index([facultyId])
 }
