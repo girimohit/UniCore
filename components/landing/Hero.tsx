@@ -43,9 +43,9 @@ export default function Hero() {
         className="fade-up delay-2 max-w-xl text-lg sm:text-xl font-light mb-10 leading-relaxed"
         style={{ color: "var(--text-secondary)" }}
       >
-        UNICORE is a multi-tenant ERP for education — isolated environments,
-        modular features, and role-based access for students, faculty, and
-        admins.
+        UniCore is a modular, multi-tenant academic management system — dynamic timetabling,
+        real-time attendance, exam management, and role-based dashboards for students,
+        faculty, and administrators.
       </p>
 
       {/* CTA buttons */}
@@ -62,9 +62,9 @@ export default function Hero() {
       {/* Trust strip */}
       <div className="fade-up delay-4 flex flex-wrap justify-center gap-x-8 gap-y-2 mb-16">
         {[
-          "No credit card required",
-          "Free up to 200 students",
-          "Deploy in minutes",
+          "Multi-tenant isolation",
+          "Modular architecture",
+          "Role-based access control",
         ].map((t) => (
           <span
             key={t}
@@ -126,7 +126,7 @@ export default function Hero() {
               { icon: "👥", label: "Students", active: false },
               { icon: "📚", label: "Courses", active: false },
               { icon: "✓", label: "Attendance", active: false },
-              { icon: "📊", label: "Analytics", active: false },
+              { icon: "🗓", label: "Timetable", active: false },
             ].map((item) => (
               <div
                 key={item.label}
@@ -148,20 +148,20 @@ export default function Hero() {
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 content-start">
             {[
               {
-                label: "Total Students",
-                value: "12,489",
+                label: "Enrolled Students",
+                value: "2,480",
                 pct: 72,
                 grad: "from-[#7c5cbf] to-[#d4608a]",
               },
               {
-                label: "Active Courses",
-                value: "342",
+                label: "Scheduled Slots",
+                value: "186",
                 pct: 55,
                 grad: "from-[#0ea5c9] to-[#7c5cbf]",
               },
               {
                 label: "Attendance Rate",
-                value: "94.2%",
+                value: "91.7%",
                 pct: 88,
                 grad: "from-[#2a9e75] to-[#0ea5c9]",
               },

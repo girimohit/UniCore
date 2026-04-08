@@ -2,24 +2,24 @@
 
 const TESTIMONIALS = [
   {
-    quote: "UNICORE transformed how we manage 8,000 students. The tenant isolation means every department feels like it has its own platform, yet everything stays unified.",
-    name: "Rajesh Kumar",
-    role: "CTO, Delhi University",
-    initials: "RK",
+    quote: "The multi-tenant architecture means each of our three campuses has its own isolated environment, yet we manage everything from a single admin panel. The timetable module alone saved us hours of manual scheduling.",
+    name: "Dr. Ankit Sharma",
+    role: "Dean of Academics, NIT Patna",
+    initials: "AS",
     grad: "from-[#7c5cbf] to-[#d4608a]",
   },
   {
-    quote: "The attendance pipeline handles our 12,000 daily check-ins without breaking a sweat. The analytics surface insights we simply didn't have before.",
-    name: "Sarah Park",
-    role: "Director of IT, Seoul Institute",
-    initials: "SP",
+    quote: "The modular system is amazing — we started with just Attendance and Courses, then flipped on Exams and Results when we were ready. Zero downtime, zero migration headaches.",
+    name: "Prof. Meera Joshi",
+    role: "HOD Computer Science, IIT Indore",
+    initials: "MJ",
     grad: "from-[#0ea5c9] to-[#7c5cbf]",
   },
   {
-    quote: "We deployed across 14 campuses in a single week. The modular setup meant we only configured what we actually needed — no bloat, no wasted budget.",
-    name: "Amara Chen",
-    role: "VP Technology, PanAfrica EDU",
-    initials: "AC",
+    quote: "As a student, seeing my entire week on the dynamic timetable with color-coded subjects, faculty names, and room numbers — it felt like Google Calendar for college. Finally a system that respects our time.",
+    name: "Riya Patel",
+    role: "B.Tech Student, IIIT Hyderabad",
+    initials: "RP",
     grad: "from-[#2a9e75] to-[#0ea5c9]",
   },
 ];

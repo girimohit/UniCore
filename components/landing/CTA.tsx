@@ -30,8 +30,8 @@ export default function CTA() {
 
           <p className="text-lg font-light mb-10 max-w-xl mx-auto"
             style={{ color: "var(--text-secondary)" }}>
-            Deploy UNICORE on our managed cloud or your own private infrastructure.
-            No credit card required to start.
+            Register your institution, configure your modules, and launch
+            a fully operational academic management system today.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
