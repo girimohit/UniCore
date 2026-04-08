@@ -90,6 +90,7 @@ const studentLinks = [
     name: "Exams",
     href: "/student/exams",
     icon: Icons.ClipboardCheck,
+    moduleId: "exams",
   },
   {
     name: "Results",
@@ -186,6 +187,7 @@ const facultyLinks = [
     name: "Exams",
     href: "/faculty/exams",
     icon: Icons.ClipboardCheck,
+    moduleId: "exams",
   },
   {
     name: "My Profile",

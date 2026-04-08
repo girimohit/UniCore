@@ -107,6 +107,12 @@ model CourseEnrollment {
   @@index([studentId])
 }
 
+enum ResultStatus {
+  DRAFT
+  SUBMITTED
+  PUBLISHED
+}
+
 model Exam {
   id            String       @id @default(cuid())
   institutionId String
@@ -118,6 +124,7 @@ model Exam {
   maxMarks      Float        @default(100)
   passingMarks  Float        @default(40)
   examType      String       @default("REGULAR")
+  resultStatus  ResultStatus @default(DRAFT)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   

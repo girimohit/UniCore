@@ -84,12 +84,22 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
   exams: {
     id: 'exams',
     name: 'Exam Management',
-    description: 'Schedule exams and manage grades',
-    type: 'CORE',
+    description: 'Schedule exams and take attendance for examination',
+    type: 'OPTIONAL',
     icon: 'ClipboardCheck',
     routePath: '/exams',
-    defaultEnabled: true,
+    defaultEnabled: false,
     dependencies: ['subjects']
+  },
+  results: {
+    id: 'results',
+    name: 'Result Management',
+    description: 'Manage student scores, grades and publish results',
+    type: 'OPTIONAL',
+    icon: 'Wallet',
+    routePath: '/results',
+    defaultEnabled: false,
+    dependencies: ['exams']
   },
   timetable: {
     id: 'timetable',

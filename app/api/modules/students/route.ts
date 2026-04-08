@@ -12,7 +12,7 @@ import { isModuleEnabled } from '@/lib/modules/loader';
  * GET /api/modules/students
  * - Lists all students for the institution
  */
-export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN', 'FACULTY'], async (req, context, user) => {
   try {
     const active = await isModuleEnabled(user.institutionId, 'students');
     if (!active) {
@@ -39,6 +39,7 @@ export const GET = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async
     return NextResponse.json({
       students: students.map((s) => ({
         id: s.id,
+        studentId: s.student?.id,
         username: s.username,
         name: s.name,
         email: s.email,

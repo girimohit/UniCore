@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth-server";
 import { 
   BarChart3, Award, TrendingUp, BookOpen, 
-  Calendar, Info, CheckCircle2, XCircle
+  Calendar, Info, CheckCircle2, XCircle, ShieldAlert
 } from "lucide-react";
+import { isModuleEnabled } from "@/lib/modules/loader";
 
 export default async function StudentResultsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -20,6 +21,17 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
 
   if (!institution) return notFound();
 
+  const resultsActive = await isModuleEnabled(institution.id, 'results');
+  if (!resultsActive) {
+      return (
+          <div className="flex flex-col items-center justify-center p-20 text-center space-y-4">
+              <ShieldAlert className="w-16 h-16 text-amber-500 opacity-50" />
+              <h2 className="text-2xl font-bold">Results Module Disabled</h2>
+              <p className="text-muted-foreground">The results module is currently disabled by the institution administrator.</p>
+          </div>
+      );
+  }
+
   // 1. Get student profile
   const student = await prisma.student.findUnique({
     where: { userId: user.userId },
@@ -32,7 +44,10 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
   const results = await prisma.examResult.findMany({
     where: { 
         institutionId: institution.id,
-        studentId: student.id
+        studentId: student.id,
+        exam: {
+            resultStatus: 'PUBLISHED'
+        }
     },
     include: {
       exam: {

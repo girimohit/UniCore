@@ -1,7 +1,0 @@
-FOR DB: 
-- permanent fields : common fields,
-- toggle-able fields : That can be turned of by admin 
-- JSON fields : for customizable field 
-- json fields, can be read easily, and we can write into them for a specific tenant by accenssing the fields config, 
-    only we can't perform DB operations (indexing, queries) on it, read and write is easy using some other field as PK
-    

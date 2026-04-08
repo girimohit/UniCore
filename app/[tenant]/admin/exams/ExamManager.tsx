@@ -6,7 +6,7 @@ import {
   Loader2, CheckCircle, XCircle, BarChart3, ShieldCheck, ArrowLeft, Save
 } from "lucide-react";
 
-interface ExamManagerProps {  
+interface ExamManagerProps {
   initialExams: {
     id: string;
     name: string;
@@ -18,6 +18,7 @@ interface ExamManagerProps {
     course?: { name: string };
     subject?: { name: string };
     term?: { name: string };
+    resultStatus?: string;
   }[];
   courses: { id: string; name: string; code: string }[];
   subjects: { id: string; name: string; code: string }[];
@@ -36,7 +37,7 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
   
   // Results Entry State
   const [selectedExam, setSelectedExam] = useState<ExamManagerProps['initialExams'][0] | null>(null);
-  const [students, setStudents] = useState<{id: string; name: string; rollNumber: string}[]>([]);
+  const [students, setStudents] = useState<{id: string; studentId: string; name: string; rollNumber: string}[]>([]);
   const [marks, setMarks] = useState<Record<string, { obtainedMarks: number; teacherRemarks: string }>>({});
 
   // Form state
@@ -108,9 +109,10 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
         
         // Initialize marks state with existing data
         const initialMarks: Record<string, { obtainedMarks: number; teacherRemarks: string }> = {};
-        studentData.students.forEach((s: any) => {
-            const existing = resultsData.results.find((r: any) => r.studentId === s.id);
-            initialMarks[s.id] = {
+        studentData.students.forEach((s: { studentId: string }) => {
+            if (!s.studentId) return; // Skip if user doesn't have a student profile
+            const existing = resultsData.results.find((r: any) => r.studentId === s.studentId);
+            initialMarks[s.studentId] = {
                 obtainedMarks: existing ? existing.obtainedMarks : 0,
                 teacherRemarks: existing ? existing.teacherRemarks || "" : ""
             };
@@ -157,6 +159,38 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
         setErrors(["Network error while saving"]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const publishResults = async () => {
+    if (!selectedExam) return;
+    const confirmed = confirm("Are you sure you want to PUBLISH these results? Once published, students will be able to see them in their portal.");
+    if (!confirmed) return;
+
+    setLoading(true);
+    setErrors([]);
+    try {
+        const res = await fetch(`/api/modules/exams/status`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                examId: selectedExam.id, 
+                status: "PUBLISHED" 
+            }),
+        });
+
+        if (res.ok) {
+            alert("Results published successfully!");
+            setActiveTab("list");
+            window.location.reload();
+        } else {
+            const data = await res.json();
+            setErrors([data.error || "Failed to publish"]);
+        }
+    } catch (err) {
+        setErrors(["Network error"]);
+    } finally {
+        setLoading(false);
     }
   };
 
@@ -376,7 +410,15 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                            <td className="px-6 py-4">
                             <div className="flex flex-col">
                                 <span className="font-bold text-primary">{e.name}</span>
-                                <span className="text-[10px] text-muted-foreground font-mono mt-0.5">{e.examType}</span>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                    <span className="text-[10px] text-muted-foreground font-mono">{e.examType}</span>
+                                    {e.resultStatus === 'SUBMITTED' && (
+                                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 font-bold tracking-wider">REVIEW PENDING</span>
+                                    )}
+                                    {e.resultStatus === 'PUBLISHED' && (
+                                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-bold tracking-wider">PUBLISHED</span>
+                                    )}
+                                </div>
                             </div>
                            </td>
                            <td className="px-6 py-4 font-medium">
@@ -465,13 +507,22 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                                 <p className="text-sm text-muted-foreground">{selectedExam.name} • Max: {selectedExam.maxMarks} • Pass: {selectedExam.passingMarks}</p>
                             </div>
                         </div>
-                        <button 
-                            onClick={saveResults}
-                            disabled={loading}
-                            className="bg-primary text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all flex items-center gap-2 disabled:opacity-50"
-                        >
-                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Save All Results</>}
-                        </button>
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={saveResults}
+                                disabled={loading}
+                                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-xl font-bold text-sm shadow-sm transition-all flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> Save Draft</>}
+                            </button>
+                            <button 
+                                onClick={publishResults}
+                                disabled={loading || selectedExam.resultStatus === 'PUBLISHED'}
+                                className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 transition-all flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle className="w-4 h-4" /> Approve & Publish</>}
+                            </button>
+                        </div>
                     </div>
 
                     {errors.length > 0 && (
@@ -502,34 +553,36 @@ export default function ExamManager({ initialExams, courses, subjects, periods }
                                                 type="number"
                                                 min="0"
                                                 max={selectedExam.maxMarks}
-                                                value={marks[student.id]?.obtainedMarks || 0}
+                                                value={marks[student.studentId]?.obtainedMarks || 0}
                                                 onChange={(e) => setMarks(prev => ({
                                                     ...prev,
-                                                    [student.id]: {
-                                                        ...prev[student.id],
+                                                    [student.studentId]: {
+                                                        ...prev[student.studentId],
                                                         obtainedMarks: Number(e.target.value)
                                                     }
                                                 }))}
-                                                className={`w-full bg-secondary/10 border ${marks[student.id]?.obtainedMarks > selectedExam.maxMarks ? 'border-destructive' : 'border-border/60'} rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary/40`}
+                                                disabled={selectedExam.resultStatus === 'PUBLISHED'}
+                                                className={`w-full bg-secondary/10 border ${marks[student.studentId]?.obtainedMarks > selectedExam.maxMarks ? 'border-destructive' : 'border-border/60'} rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:disabled:ring-0 disabled:opacity-50`}
                                             />
                                         </td>
                                         <td className="px-6 py-4">
                                             <input 
                                                 type="text"
                                                 placeholder="Remarks..."
-                                                value={marks[student.id]?.teacherRemarks || ""}
+                                                value={marks[student.studentId]?.teacherRemarks || ""}
                                                 onChange={(e) => setMarks(prev => ({
                                                     ...prev,
-                                                    [student.id]: {
-                                                        ...prev[student.id],
+                                                    [student.studentId]: {
+                                                        ...prev[student.studentId],
                                                         teacherRemarks: e.target.value
                                                     }
                                                 }))}
-                                                className="w-full bg-secondary/10 border border-border/60 rounded-lg py-2 px-3 focus:outline-none"
+                                                disabled={selectedExam.resultStatus === 'PUBLISHED'}
+                                                className="w-full bg-secondary/10 border border-border/60 rounded-lg py-2 px-3 focus:outline-none disabled:opacity-50"
                                             />
                                         </td>
                                         <td className="px-6 py-4 text-center">
-                                            {marks[student.id]?.obtainedMarks >= selectedExam.passingMarks ? (
+                                            {marks[student.studentId]?.obtainedMarks >= selectedExam.passingMarks ? (
                                                 <span className="text-[10px] font-black text-emerald-600 bg-emerald-500/10 px-2 py-1 rounded-full">PASSED</span>
                                             ) : (
                                                 <span className="text-[10px] font-black text-destructive bg-destructive/10 px-2 py-1 rounded-full">FAILED</span>

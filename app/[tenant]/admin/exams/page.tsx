@@ -2,6 +2,9 @@ import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import ExamManager from "./ExamManager";
 
+import { isModuleEnabled } from "@/lib/modules/loader";
+import { ShieldAlert } from "lucide-react";
+
 export default async function ExamsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
 
@@ -22,6 +25,17 @@ export default async function ExamsPage({ params }: { params: Promise<{ tenant: 
   });
 
   if (!institution) return notFound();
+
+  const active = await isModuleEnabled(institution.id, 'exams');
+  if (!active) {
+    return (
+        <div className="flex flex-col items-center justify-center p-20 text-center space-y-4">
+            <ShieldAlert className="w-16 h-16 text-amber-500 opacity-50" />
+            <h2 className="text-2xl font-bold">Exams Module Disabled</h2>
+            <p className="text-muted-foreground">This module is currently disabled. Enable it in settings to manage examinations.</p>
+        </div>
+    );
+  }
 
   const exams = await prisma.exam.findMany({
     where: { institutionId: institution.id },
