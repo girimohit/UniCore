@@ -6,7 +6,8 @@ const envSchema = z.object({
   SMTP_PORT: z.coerce.number().default(587),
   SMTP_USER: z.email("SMTP_USER must be a valid email"),
   SMTP_PASS: z.string().min(1, "SMTP_PASS is required"),
-  FROM_EMAIL: z.email("FROM_EMAIL must be a valid email"),
+  // FROM_EMAIL: z.email("FROM_EMAIL must be a valid email"),
+  FROM_EMAIL: z.string().email().optional().default("noreply@unicore.com"),
 
   // Google OAuth / GMail Configuration
   GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID is required"),
