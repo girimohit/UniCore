@@ -107,7 +107,7 @@ export default async function StudentSubjectsPage({
     <div className="space-y-10 pb-10">
       <div className="px-2">
         <h1 className="text-3xl font-display font-black text-foreground tracking-tight">
-          My Subjects 📚
+          My Subjects
         </h1>
         <p className="text-muted-foreground font-medium mt-1">
           {student.course ? (

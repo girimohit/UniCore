@@ -35,7 +35,7 @@ export default async function StudentNoticesPage({ params }: { params: Promise<{
   return (
     <div className="space-y-10 pb-10">
       <div className="px-2 text-foreground">
-        <h1 className="text-3xl font-display font-black tracking-tight">Notices Board 📢</h1>
+        <h1 className="text-3xl font-display font-black tracking-tight">Notices Board</h1>
         <p className="text-muted-foreground font-medium mt-1">Stay updated with the latest announcements at {institution.name}.</p>
       </div>
 

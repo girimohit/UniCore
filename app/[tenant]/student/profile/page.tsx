@@ -37,7 +37,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   return (
     <div className="max-w-5xl mx-auto space-y-10 pb-10">
       <div className="px-2 text-foreground">
-        <h1 className="text-3xl font-display font-black tracking-tight">My Profile 👤</h1>
+        <h1 className="text-3xl font-display font-black tracking-tight">My Profile</h1>
         <p className="text-muted-foreground font-medium mt-1">Your academic identity at {institution.name}.</p>
       </div>
 

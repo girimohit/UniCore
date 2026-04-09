@@ -90,7 +90,7 @@ export default async function StudentAttendancePage({ params }: { params: Promis
     <div className="space-y-10 pb-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div className="text-foreground">
-            <h1 className="text-3xl font-display font-black tracking-tight">My Attendance 👋</h1>
+            <h1 className="text-3xl font-display font-black tracking-tight">My Attendance</h1>
             <p className="text-muted-foreground font-medium mt-1">Track your class attendance for this {academic.label.toLowerCase()} at {institution.name}.</p>
         </div>
         <div className="w-56">

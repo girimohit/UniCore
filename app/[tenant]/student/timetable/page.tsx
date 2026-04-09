@@ -171,7 +171,7 @@ export default async function StudentTimetablePage({ params }: { params: Promise
   return (
     <div className="space-y-6 pb-12 text-foreground animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
       <div className="px-2">
-        <h1 className="text-2xl font-display font-black tracking-tight">Weekly Timetable 🗓️</h1>
+        <h1 className="text-2xl font-display font-black tracking-tight">Weekly Timetable</h1>
         <p className="text-muted-foreground font-medium text-sm mt-0.5">Your schedule at {institution.name}.</p>
       </div>
 
