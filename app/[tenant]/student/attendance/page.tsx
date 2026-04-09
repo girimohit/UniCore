@@ -7,6 +7,7 @@ import { AttendanceChart } from "@/components/student/attendance-chart"
 import { CardContent } from "@/components/ui/card"
 import { CalendarCheck } from "lucide-react"
 import { getAcademicLabel, formatCycleLabel } from "@/lib/utils/academic";
+import { isModuleEnabled } from '@/lib/modules/loader';
 
 export default async function StudentAttendancePage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -18,6 +19,16 @@ export default async function StudentAttendancePage({ params }: { params: Promis
 
   const institution = await resolveTenant(tenant);
   if (!institution) notFound();
+
+  const active = await isModuleEnabled(institution.id, 'attendance');
+  if (!active) {
+    return (
+      <div className="p-12 text-center border rounded-3xl bg-card">
+        <h3 className="text-xl font-bold">Module Not Enabled</h3>
+        <p className="text-muted-foreground">The Attendance module has not been enabled for your institution.</p>
+      </div>
+    );
+  }
 
   const academic = getAcademicLabel((institution as any).academicStructure || (institution as any).academicSystem);
 

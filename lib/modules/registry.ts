@@ -75,10 +75,10 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     id: 'attendance',
     name: 'Attendance',
     description: 'Track student and faculty attendance',
-    type: 'CORE',
+    type: 'OPTIONAL',
     icon: 'CheckSquare',
     routePath: '/attendance',
-    defaultEnabled: true,
+    defaultEnabled: false,
     dependencies: ['courses']
   },
   exams: {
@@ -105,10 +105,10 @@ export const SYSTEM_MODULES: Record<string, ModuleMetadata> = {
     id: 'timetable',
     name: 'Timetable',
     description: 'Manage timetable and schedules',
-    type: 'CORE',
+    type: 'OPTIONAL',
     icon: 'CalendarDays',
     routePath: '/timetable',
-    defaultEnabled: true,
+    defaultEnabled: false,
     dependencies: ['courses']
   },
   // library: {

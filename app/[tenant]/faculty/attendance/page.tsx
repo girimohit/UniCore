@@ -7,6 +7,7 @@ import { getCurrentUser } from "@/lib/auth-server";
 import { CheckSquare } from "lucide-react";
 import AttendanceManager from "./AttendanceManager";
 import { Suspense } from "react";
+import { isModuleEnabled } from '@/lib/modules/loader';
 
 export default async function FacultyAttendancePage({
   params,
@@ -22,6 +23,16 @@ export default async function FacultyAttendancePage({
 
   const institution = await resolveTenant(tenant);
   if (!institution) notFound();
+
+  const active = await isModuleEnabled(institution.id, 'attendance');
+  if (!active) {
+    return (
+      <div className="p-12 text-center border rounded-3xl bg-card">
+        <h3 className="text-xl font-bold">Module Not Enabled</h3>
+        <p className="text-muted-foreground">The Attendance module has not been enabled for your institution.</p>
+      </div>
+    );
+  }
 
   // 1. Get this faculty member's profile
   const facultyProfile = await prisma.faculty.findFirst({
