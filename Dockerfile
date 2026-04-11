@@ -13,6 +13,7 @@ COPY . .
 
 # Dummy URL for build-time generation
 ENV DATABASE_URL="postgresql://placeholder:5432"
+ENV SKIP_ENV_VALIDATION="1"
 RUN npx prisma generate
 RUN npm run build
 

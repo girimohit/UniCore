@@ -28,10 +28,8 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
-/**
- * Validated environment variables.
- * Throws a descriptive error if any required variable is missing or malformed.
- */
-export const env = envSchema.parse(process.env);
+export const env = process.env.SKIP_ENV_VALIDATION === '1' || process.env.SKIP_ENV_VALIDATION === 'true'
+  ? (process.env as unknown as z.infer<typeof envSchema>)
+  : envSchema.parse(process.env);
 
 export type Env = z.infer<typeof envSchema>;
