@@ -18,6 +18,7 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   
   // Form state
   const [form, setForm] = useState({
@@ -25,6 +26,15 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
     code: "",
     department: "", // Uses name or code for the API as per route implementation
   });
+
+  const courseList = results.length > 0 ? results : initialCourses;
+
+  const filteredCourses = courseList.filter(c => 
+    c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.department?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.department?.code?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -191,22 +201,31 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
               </div>
             )}
 
-            <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
-              <div className="p-4 rounded-full bg-secondary/10">
-                <BookOpen className="w-12 h-12 text-primary opacity-40" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Academic Courses</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  Programs and courses offered by the institution.
-                </p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 bg-secondary/5 border border-border/40 p-2 rounded-2xl">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input 
+                    type="text"
+                    placeholder="Search by name, code, or department..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-transparent border-none py-2.5 pl-11 pr-4 text-sm focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-2 px-4 border-l border-border/40">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {courseList.length} Total Courses
+                  </span>
+                </div>
               </div>
 
-              {(results.length > 0 ? results : initialCourses).length > 0 && (
-                <div className="w-full max-w-5xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
-                       <tr>
+              {filteredCourses.length > 0 ? (
+                <div className="glass rounded-3xl border border-border/50 overflow-hidden">
+                   <table className="w-full text-sm text-left border-collapse">
+                     <thead>
+                       <tr className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
                          <th className="px-6 py-4">Code</th>
                          <th className="px-6 py-4">Course Name</th>
                          <th className="px-6 py-4">Department</th>
@@ -214,8 +233,8 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
                        </tr>
                      </thead>
                      <tbody className="divide-y divide-border/20">
-                       {(results.length > 0 ? results : initialCourses).map((c, i) => (
-                         <tr key={i} className="hover:bg-secondary/5 transition-colors">
+                       {filteredCourses.map((c, i) => (
+                         <tr key={i} className="hover:bg-secondary/5 transition-colors group">
                            <td className="px-6 py-4 font-mono font-bold text-primary">{c.code}</td>
                            <td className="px-6 py-4 font-medium">{c.name}</td>
                            <td className="px-6 py-4">
@@ -235,6 +254,18 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
                        ))}
                      </tbody>
                    </table>
+                </div>
+              ) : (
+                <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="p-4 rounded-full bg-secondary/10">
+                    <BookOpen className="w-12 h-12 text-primary opacity-40" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">No Courses Found</h3>
+                    <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                      {searchTerm ? "No courses match your search." : "No courses registered yet."}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>

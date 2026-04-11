@@ -48,13 +48,15 @@ export async function POST(req: Request) {
     });
 
     // Trigger Email Sending
+    console.log("Email triggered...")
     const inviteLink = `${getTenantUrl(subdomain, 'accept-invite')}?token=${token}`;
-
+    
     const emailResult = await sendEmail({
       to: email,
       subject: `Invitation to join ${institution.name}`,
       html: getInviteEmailTemplate(institution.name, inviteLink, role)
     });
+    console.log("Email sent...")
 
     return NextResponse.json({
       message: 'Invitation generated and sent successfully',

@@ -48,6 +48,16 @@ export default function SubjectManager({
   const [assigningResponsibility, setAssigningResponsibility] = useState('THEORY');
   const [subjects, setSubjects] = useState<any[]>(initialSubjects);
   const [mounted, setMounted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const subjectList = results.length > 0 ? results : subjects;
+
+  const filteredSubjects = subjectList.filter((s: any) => 
+    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.course?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.course?.code?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -428,104 +438,132 @@ export default function SubjectManager({
               </div>
             )}
 
-            <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
-              <div className="p-4 rounded-full bg-secondary/10">
-                <Bookmark className="w-12 h-12 text-primary opacity-40" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold">Academic Subjects</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  Course subjects and curriculum items.
-                </p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 bg-secondary/5 border border-border/40 p-2 rounded-2xl">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input 
+                    type="text"
+                    placeholder="Search by name, code, or course..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-transparent border-none py-2.5 pl-11 pr-4 text-sm focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-2 px-4 border-l border-border/40">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {subjectList.length} Total Subjects
+                  </span>
+                </div>
               </div>
 
-              {(results.length > 0 ? results : subjects).length > 0 && (
-                <div className="w-full max-w-6xl mt-8 overflow-x-auto rounded-2xl border border-border/40">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
-                      <tr>
-                        <th className="px-6 py-4">Code</th>
-                        <th className="px-6 py-4">Subject Name</th>
-                        <th className="px-6 py-4">Course</th>
-                        <th className="px-6 py-4">{academic.label}</th>
-                        <th className="px-6 py-4">Faculty Assigned</th>
-                        <th className="px-6 py-4 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/20">
-                      {(results.length > 0 ? results : subjects).map(
-                        (s, i) => (
-                          <tr
-                            key={i}
-                            className="hover:bg-secondary/5 transition-colors"
-                          >
-                            <td className="px-6 py-4 font-mono font-bold text-primary">
-                              {s.code}
-                            </td>
-                            <td className="px-6 py-4 font-medium">{s.name}</td>
-                            <td className="px-6 py-4">
-                              <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600">
-                                {s.course?.code || "-"}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                              {s.academicCycle ? formatCycleLabel(academic.type, s.academicCycle) : "-"}
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex flex-wrap gap-2">
-                                {s.facultyAssignments?.length > 0 ? (
-                                  s.facultyAssignments.map((t: any) => (
-                                    <div
-                                      key={t.faculty.user.id}
-                                      className="flex items-center gap-2 group/tag px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
-                                    >
-                                      <span className="text-[10px] font-bold text-primary">
-                                        {t.faculty.user.name}
-                                      </span>
-                                      <button
-                                        onClick={() => handleRemoveAssignment(s.id, t.faculty.user.id)}
-                                        className="opacity-0 group-hover/tag:opacity-100 transition-opacity text-destructive"
+              {filteredSubjects.length > 0 ? (
+                <div className="glass rounded-3xl border border-border/50 overflow-hidden">
+                  <div className="overflow-x-auto w-full">
+                    <table className="w-full text-sm text-left">
+                      <thead className="bg-secondary/10 border-b border-border/40 text-muted-foreground text-[10px] uppercase font-bold tracking-widest">
+                        <tr>
+                          <th className="px-6 py-4">Code</th>
+                          <th className="px-6 py-4">Subject Name</th>
+                          <th className="px-6 py-4">Course</th>
+                          <th className="px-6 py-4">{academic.label}</th>
+                          <th className="px-6 py-4">Faculty Assigned</th>
+                          <th className="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/20">
+                        {filteredSubjects.map(
+                          (s: any, i: number) => (
+                            <tr
+                              key={i}
+                              className="hover:bg-secondary/5 transition-colors group"
+                            >
+                              <td className="px-6 py-4 font-mono font-bold text-primary">
+                                {s.code}
+                              </td>
+                              <td className="px-6 py-4 font-medium">{s.name}</td>
+                              <td className="px-6 py-4">
+                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600">
+                                  {s.course?.code || "-"}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                {s.academicCycle ? formatCycleLabel(academic.type, s.academicCycle) : "-"}
+                              </td>
+                              <td className="px-6 py-4">
+                                <div className="flex flex-wrap gap-2">
+                                  {s.facultyAssignments?.length > 0 ? (
+                                    s.facultyAssignments.map((t: any) => (
+                                      <div
+                                        key={t.faculty.user.id}
+                                        className="flex items-center gap-2 group/tag px-2 py-1 rounded-lg bg-primary/5 border border-primary/10"
                                       >
-                                        <XCircle className="w-3 h-3" />
-                                      </button>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <span className="text-[10px] text-muted-foreground italic">
-                                    Not assigned
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 text-right">
-                              <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
-                                <button
-                                  onClick={() => setAssigningSubject(s)}
-                                  title="Assign Faculty"
-                                  className="p-2 hover:bg-emerald-500/10 rounded-lg text-emerald-600 transition-colors"
-                                >
-                                  <UserPlus className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleEdit(s)}
-                                  className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDelete(s.id)}
-                                  className="p-2 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ),
-                      )}
-                    </tbody>
-                  </table>
+                                        <span className="text-[10px] font-bold text-primary">
+                                          {t.faculty.user.name}
+                                        </span>
+                                        {t.responsibility && (
+                                          <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-secondary/20 text-muted-foreground border border-border/30">
+                                            {t.responsibility}
+                                          </span>
+                                        )}
+                                        <button
+                                          onClick={() => handleRemoveAssignment(s.id, t.faculty.user.id)}
+                                          className="opacity-0 group-hover/tag:opacity-100 transition-opacity text-destructive"
+                                        >
+                                          <XCircle className="w-3 h-3" />
+                                        </button>
+                                      </div>
+                                    ))
+                                  ) : (
+                                    <span className="text-[10px] text-muted-foreground italic">
+                                      Not assigned
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 text-right">
+                                <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
+                                  <button
+                                    onClick={() => setAssigningSubject(s)}
+                                    title="Assign Faculty"
+                                    className="p-2 hover:bg-emerald-500/10 rounded-lg text-emerald-600 transition-colors"
+                                  >
+                                    <UserPlus className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleEdit(s)}
+                                    className="p-2 hover:bg-primary/10 rounded-lg text-primary transition-colors"
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDelete(s.id)}
+                                    className="p-2 hover:bg-destructive/10 rounded-lg text-destructive transition-colors"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ),
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+              ) : (
+                 <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                   <div className="p-4 rounded-full bg-secondary/10">
+                     <Bookmark className="w-12 h-12 text-primary opacity-40" />
+                   </div>
+                   <div>
+                     <h3 className="text-xl font-bold">No Subjects Found</h3>
+                     <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                       {searchTerm ? "No subjects match your search." : "Course subjects and curriculum items."}
+                     </p>
+                   </div>
+                 </div>
               )}
             </div>
           </div>
@@ -602,9 +640,10 @@ export default function SubjectManager({
                 }
 
                 return filteredFaculty.map((f) => {
-                  const isAssigned = assigningSubject.facultyAssignments?.some(
+                  const assignment = assigningSubject.facultyAssignments?.find(
                     (t: any) => t.faculty.user.id === f.id
                   );
+                  const isAssigned = !!assignment;
                   return (
                     <button
                       key={f.id}
@@ -618,9 +657,16 @@ export default function SubjectManager({
                     >
                       <div className="flex flex-col items-start text-left">
                         <span className="text-sm font-bold">{f.name}</span>
-                        <span className="text-[10px] font-mono text-muted-foreground">
-                          {f.username}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-muted-foreground">
+                            {f.username}
+                          </span>
+                          {isAssigned && assignment?.responsibility && (
+                            <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                              {assignment.responsibility}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       {isAssigned ? (
                         <CheckCircle className="w-4 h-4 text-emerald-500" />

@@ -33,10 +33,19 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [errors, setErrors] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Student list
   const [students, setStudents] = useState<Student[]>([]);
   const [studentsLoading, setStudentsLoading] = useState(false);
+
+  const filteredStudents = students.filter(s => 
+    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.rollNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.course?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.username?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Enroll modal
   const [enrollTarget, setEnrollTarget] = useState<Student | null>(null);
@@ -298,80 +307,101 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
               </div>
             )}
 
-            <div className="glass rounded-3xl border border-border/50 overflow-hidden">
-              <div className="p-6 border-b border-border/40 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <GraduationCap className="w-5 h-5 text-primary" />
-                  <h3 className="font-bold text-foreground">All Students</h3>
-                  <span className="text-xs font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full">{students.length}</span>
+            <div className="space-y-4">
+               <div className="flex items-center gap-4 bg-secondary/5 border border-border/40 p-2 rounded-2xl">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input 
+                    type="text"
+                    placeholder="Search by name, roll number, or course..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-transparent border-none py-2.5 pl-11 pr-4 text-sm focus:outline-none"
+                  />
+                </div>
+                <div className="flex items-center gap-2 px-4 border-l border-border/40">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {students.length} Total Students
+                  </span>
                 </div>
               </div>
 
               {studentsLoading ? (
-                <div className="flex items-center justify-center py-16 text-muted-foreground">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading students...
-                </div>
-              ) : students.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center gap-3">
-                  <GraduationCap className="w-10 h-10 text-primary opacity-30" />
-                  <p className="text-sm text-muted-foreground font-medium">No students yet. Add one above.</p>
+                <div className="glass rounded-3xl p-20 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                   <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                   <p className="text-sm text-muted-foreground font-medium">Fetching students database...</p>
+                 </div>
+              ) : filteredStudents.length > 0 ? (
+                <div className="glass rounded-3xl border border-border/50 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                      <thead className="bg-secondary/10 text-muted-foreground text-[10px] uppercase font-bold tracking-widest border-b border-border/40">
+                        <tr>
+                          <th className="px-6 py-4">Name / ID</th>
+                          <th className="px-6 py-4">Roll Number</th>
+                          <th className="px-6 py-4">Course</th>
+                          <th className="px-6 py-4">{academic.label}</th>
+                          <th className="px-6 py-4 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/20">
+                        {filteredStudents.map(s => (
+                          <tr key={s.id} className="hover:bg-secondary/5 transition-colors group">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                                  {s.name?.[0] || "?"}
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="font-bold text-foreground">{s.name}</span>
+                                  <span className="text-xs text-muted-foreground">{s.email ?? '—'}</span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 font-mono font-bold text-primary">{s.rollNumber ?? '—'}</td>
+                            <td className="px-6 py-4">
+                              {s.course ? (
+                                <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-amber-500/10 text-amber-700">
+                                  <BookOpen className="w-3 h-3" /> {s.course}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground italic">Not assigned</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              {s.semester != null ? (
+                                <span className="text-sm font-bold">{formatCycleLabel(academic.type, s.semester)}</span>
+                              ) : (
+                                <span className="text-xs text-muted-foreground italic">—</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button
+                                onClick={() => openEnroll(s)}
+                                className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                              >
+                                <Pencil className="w-3 h-3" /> Enroll
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-secondary/10 text-muted-foreground text-[10px] uppercase font-bold tracking-widest border-b border-border/40">
-                      <tr>
-                        <th className="px-6 py-4">Name / ID</th>
-                        <th className="px-6 py-4">Roll Number</th>
-                        <th className="px-6 py-4">Course</th>
-                        <th className="px-6 py-4">{academic.label}</th>
-                        <th className="px-6 py-4 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border/20">
-                      {students.map(s => (
-                        <tr key={s.id} className="hover:bg-secondary/5 transition-colors group">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                                {s.name?.[0] || "?"}
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="font-bold text-foreground">{s.name}</span>
-                                <span className="text-xs text-muted-foreground">{s.email ?? '—'}</span>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 font-mono font-bold text-primary">{s.rollNumber ?? '—'}</td>
-                          <td className="px-6 py-4">
-                            {s.course ? (
-                              <span className="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-amber-500/10 text-amber-700">
-                                <BookOpen className="w-3 h-3" /> {s.course}
-                              </span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground italic">Not assigned</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            {s.semester != null ? (
-                              <span className="text-sm font-bold">{formatCycleLabel(academic.type, s.semester)}</span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground italic">—</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <button
-                              onClick={() => openEnroll(s)}
-                              className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                            >
-                              <Pencil className="w-3 h-3" /> Enroll
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                 <div className="glass rounded-3xl p-12 border border-border/50 flex flex-col items-center justify-center text-center space-y-4">
+                   <div className="p-4 rounded-full bg-secondary/10">
+                     <GraduationCap className="w-12 h-12 text-primary opacity-40" />
+                   </div>
+                   <div>
+                     <h3 className="text-xl font-bold">No Students Found</h3>
+                     <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                       {searchTerm ? "No students match your search criteria." : "There are no students registered in your institution yet."}
+                     </p>
+                   </div>
+                 </div>
               )}
             </div>
           </div>
