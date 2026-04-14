@@ -72,6 +72,7 @@ model Course {
   subjects          Subject[]
   attendanceRecords AttendanceRecord[]
   timetables        Timetable[]
+  certificates      Certificate[]
 
   @@unique([institutionId, code])
   @@index([departmentId])
@@ -202,6 +203,7 @@ model Institution {
   users               User[]
   notices             Notice[]
   timetables          Timetable[]
+  certificates        Certificate[]
 
   @@index([slug])
 }
