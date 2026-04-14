@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { 
   UserPlus, Upload, CheckCircle, XCircle, 
-  Loader2, Search, GraduationCap, Pencil, X, BookOpen
+  Loader2, Search, GraduationCap, Pencil, X, BookOpen,
+  Award, ShieldCheck
 } from "lucide-react";
 import CSVUpload from "@/components/admin/CSVUpload";
 import { getAcademicLabel, formatCycleLabel, AcademicSystem } from "@/lib/utils/academic";
@@ -172,6 +173,40 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
       setEnrollError("Network error.");
     } finally {
       setEnrollLoading(false);
+    }
+  };
+
+  const [issuingId, setIssuingId] = useState<string | null>(null);
+
+  const handleIssueCertificate = async (student: Student) => {
+    if (!student.course) {
+        alert("Student must be enrolled in a course to issue a certificate.");
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to issue a blockchain-anchored certificate to ${student.name}?`)) return;
+
+    setIssuingId(student.id);
+    try {
+        const matchedCourse = courses.find(c => c.name === student.course);
+        const res = await fetch("/api/modules/certificates/issue", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                studentId: student.id,
+                courseId: matchedCourse?.id
+            }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert("Certificate issued and anchored to blockchain successfully!");
+        } else {
+            alert(data.error || "Failed to issue certificate.");
+        }
+    } catch {
+        alert("Network error.");
+    } finally {
+        setIssuingId(null);
     }
   };
 
@@ -377,12 +412,27 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
                               )}
                             </td>
                             <td className="px-6 py-4 text-right">
-                              <button
-                                onClick={() => openEnroll(s)}
-                                className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                              >
-                                <Pencil className="w-3 h-3" /> Enroll
-                              </button>
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                    onClick={() => handleIssueCertificate(s)}
+                                    disabled={issuingId === s.id}
+                                    className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-colors disabled:opacity-50"
+                                    title="Issue Blockchain Certificate"
+                                >
+                                    {issuingId === s.id ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                        <Award className="w-3 h-3" />
+                                    )}
+                                    Certificate
+                                </button>
+                                <button
+                                    onClick={() => openEnroll(s)}
+                                    className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                                >
+                                    <Pencil className="w-3 h-3" /> Enroll
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
