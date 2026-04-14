@@ -35,7 +35,15 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
   // 1. Get student profile
   const student = await prisma.student.findUnique({
     where: { userId: user.userId },
-    select: { id: true, rollNumber: true, course: true }
+    select: { 
+        id: true, 
+        rollNumber: true, 
+        course: true,
+        certificates: {
+            orderBy: { issueDate: 'desc' },
+            take: 1
+        }
+    }
   });
 
   if (!student) return notFound();
@@ -88,7 +96,7 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-card border border-border/50 rounded-3xl p-6 flex items-center gap-4 shadow-sm">
             <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-600">
                 <CheckCircle2 className="w-6 h-6" />
@@ -115,6 +123,41 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
                 <p className="text-2xl font-black">{student.course?.name || "N/A"}</p>
                 <p className="text-xs font-bold text-muted-foreground uppercase">Current Program</p>
             </div>
+        </div>
+        <div className="bg-card border border-border/50 rounded-3xl p-6 flex items-center gap-4 shadow-sm">
+            {student.certificates.length > 0 ? (
+                <>
+                    <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-600">
+                        <ShieldCheck className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-black text-blue-600 flex items-center gap-1">
+                            Verified Degree
+                            {student.certificates[0].transactionHash && (
+                                <a 
+                                    href={`https://polygonscan.com/tx/${student.certificates[0].transactionHash}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="hover:scale-110 transition-transform"
+                                >
+                                    <ExternalLink className="w-3 h-3" />
+                                </a>
+                            )}
+                        </p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase">Blockchain Anchored</p>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="p-4 rounded-2xl bg-secondary/10 text-muted-foreground">
+                        <Award className="w-6 h-6 opacity-30" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-black text-muted-foreground">No Degree Issued</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase">Pending Completion</p>
+                    </div>
+                </>
+            )}
         </div>
       </div>
 
