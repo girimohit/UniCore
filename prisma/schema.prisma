@@ -262,9 +262,33 @@ model Student {
   examResults       ExamResult[]
   course            Course?            @relation(fields: [courseId], references: [id])
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificates      Certificate[]
 
   @@unique([userId, rollNumber])
   @@index([courseId])
+}
+
+model Certificate {
+  id              String      @id @default(cuid())
+  institutionId   String
+  studentId       String
+  courseId        String
+  issueDate       DateTime    @default(now())
+  
+  // Data for hashing
+  certificateData Json        // Stores details like student name, course, GPA, etc.
+  documentHash    String      @unique // SHA-256 hash of the certificateData
+  
+  // Blockchain info
+  transactionHash String?     // Transaction hash of the anchor
+  status          String      @default("PENDING") // PENDING, ANCHORED, FAILED
+  
+  student         Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course          Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  institution     Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([documentHash])
 }
 
 model Subject {
