@@ -45,7 +45,7 @@ build_error.log
 
 # local / temporary scripts
 refactor.js
-verify-db.js
+verify-db.js    
 verify-db.ts
 
 # miscellaneous

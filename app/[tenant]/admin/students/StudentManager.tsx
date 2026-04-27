@@ -17,6 +17,7 @@ interface StudentManagerProps {
 
 interface Student {
   id: string;
+  studentId: string;
   username: string;
   name: string;
   email: string | null;
@@ -193,7 +194,7 @@ export default function StudentManager({ courses, academicSystem }: StudentManag
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                studentId: student.id,
+                studentId: student.studentId,
                 courseId: matchedCourse?.id
             }),
         });
