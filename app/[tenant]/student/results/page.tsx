@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth-server";
 import { 
   BarChart3, Award, TrendingUp, BookOpen, 
-  Calendar, Info, CheckCircle2, XCircle, ShieldAlert
+  Calendar, Info, CheckCircle2, XCircle, ShieldAlert,
+  ShieldCheck,
+  ExternalLink
 } from "lucide-react";
 import { isModuleEnabled } from "@/lib/modules/loader";
 
@@ -73,7 +75,10 @@ export default async function StudentResultsPage({ params }: { params: Promise<{
   const passedExams = results.filter(r => r.obtainedMarks >= r.exam.passingMarks).length;
   const passRate = totalExams > 0 ? Math.round((passedExams / totalExams) * 100) : 0;
   const averagePercentage = totalExams > 0 
-    ? Math.round(results.reduce((acc, r) => acc + (r.obtainedMarks / r.exam.maxMarks), 0) / totalExams * 100) 
+    ? Math.round(results.reduce((acc, r) => {
+        const max = r.exam.maxMarks || 1;
+        return acc + (r.obtainedMarks / max);
+      }, 0) / totalExams * 100) 
     : 0;
 
   return (

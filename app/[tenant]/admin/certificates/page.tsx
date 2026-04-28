@@ -98,6 +98,7 @@ export default function CertificatesPage() {
                   <tr>
                     <th className="px-6 py-4">Student</th>
                     <th className="px-6 py-4">Course</th>
+                    <th className="px-6 py-4">GPA</th>
                     <th className="px-6 py-4">Issue Date</th>
                     <th className="px-6 py-4">Status</th>
                     <th className="px-6 py-4">Certificate Hash</th>
@@ -121,7 +122,12 @@ export default function CertificatesPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5 text-muted-foreground font-medium">
+                        <span className="text-sm font-black text-foreground">
+                          {c.certificateData?.academicPerformance?.gpa || "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5 text-muted-foreground font-medium" suppressHydrationWarning>
                           <Calendar className="w-3.5 h-3.5" />
                           {new Date(c.issueDate).toLocaleDateString()}
                         </div>

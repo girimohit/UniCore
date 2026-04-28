@@ -25,6 +25,19 @@ export class CertificateService {
       throw new Error("Student, Course, or Institution not found");
     }
 
+    // Fetch academic performance
+    const results = await prisma.examResult.findMany({
+      where: { 
+        studentId: student.id, 
+        institutionId: institution.id 
+      },
+      include: { exam: true },
+    });
+
+    const totalObtained = results.reduce((acc, r) => acc + r.obtainedMarks, 0);
+    const totalMax = results.reduce((acc, r) => acc + r.exam.maxMarks, 0);
+    const gpa = totalMax > 0 ? ((totalObtained / totalMax) * 10).toFixed(2) : "0.00";
+
     // 2. Prepare certificate details
     const certificateData = {
       studentName: student.user.name,
@@ -32,6 +45,12 @@ export class CertificateService {
       courseName: course.name,
       courseCode: course.code,
       institutionName: institution.name,
+      academicPerformance: {
+        gpa,
+        totalMarks: totalObtained,
+        maxMarks: totalMax,
+        subjectsCount: results.length
+      },
       issueDate: new Date().toISOString(),
       platform: "UniCore Blockchain Registry",
     };

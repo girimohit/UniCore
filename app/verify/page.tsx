@@ -153,6 +153,26 @@ export default function VerifyPage() {
                           <p className="font-black text-lg">{result.dbRecord.certificateData.institutionName}</p>
                         </div>
                       </div>
+
+                      {result.dbRecord.certificateData.academicPerformance && (
+                        <div className="pt-4 mt-4 border-t border-white/5 space-y-4">
+                          <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                            <div>
+                              <p className="text-[10px] font-black uppercase tracking-tighter text-primary">Final GPA</p>
+                              <p className="text-2xl font-black text-white">{result.dbRecord.certificateData.academicPerformance.gpa}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">Total Marks</p>
+                              <p className="text-sm font-bold text-white">
+                                {result.dbRecord.certificateData.academicPerformance.totalMarks} / {result.dbRecord.certificateData.academicPerformance.maxMarks}
+                              </p>
+                            </div>
+                          </div>
+                          <p className="text-[10px] text-center font-bold text-muted-foreground uppercase tracking-widest">
+                            Verified for {result.dbRecord.certificateData.academicPerformance.subjectsCount} Subjects
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -168,7 +188,11 @@ export default function VerifyPage() {
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">On-Chain Timestamp</p>
-                          <p className="font-black text-lg">{new Date(result.onChainRecord.timestamp * 1000).toLocaleString()}</p>
+                          <p className="font-black text-lg" suppressHydrationWarning>
+                            {result.onChainRecord?.timestamp 
+                              ? new Date(result.onChainRecord.timestamp * 1000).toLocaleString() 
+                              : "Pending Synchronization"}
+                          </p>
                         </div>
                       </div>
 
