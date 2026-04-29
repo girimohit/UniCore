@@ -39,11 +39,11 @@ export default function VerifyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-primary/30">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 transition-colors duration-500">
       {/* Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] opacity-50" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px] opacity-50" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-6 py-20">
@@ -53,9 +53,9 @@ export default function VerifyPage() {
             <ShieldCheck className="w-4 h-4" />
             Blockchain Verification
           </div>
-          <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight">
+          <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight text-foreground">
             Verify Academic <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-primary animate-gradient">Credentials.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-500 to-primary animate-gradient">Credentials.</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
             Paste the certificate hash to instantly verify its authenticity and blockchain integrity.
@@ -63,11 +63,11 @@ export default function VerifyPage() {
         </div>
 
         {/* Search Section */}
-        <div className="glass rounded-[2rem] p-8 md:p-12 border border-white/5 shadow-2xl mb-12">
+        <div className="bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-border shadow-2xl mb-12">
           <form onSubmit={handleVerify} className="space-y-6">
             <div className="relative group">
               <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl group-focus-within:bg-primary/10 transition-all" />
-              <div className="relative flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-2 focus-within:border-primary/50 transition-all">
+              <div className="relative flex items-center gap-4 bg-secondary/20 border border-border/50 rounded-2xl p-2 focus-within:border-primary/50 focus-within:ring-4 focus-within:ring-primary/5 transition-all">
                 <div className="pl-4 text-muted-foreground">
                   <Hash className="w-5 h-5" />
                 </div>
@@ -75,11 +75,11 @@ export default function VerifyPage() {
                   value={hash}
                   onChange={(e) => setHash(e.target.value)}
                   placeholder="Paste Certificate Hash (SHA-256)"
-                  className="flex-1 bg-transparent border-none py-4 text-sm md:text-base focus:outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent border-none py-4 text-sm md:text-base focus:outline-none placeholder:text-muted-foreground/50 text-foreground font-medium"
                 />
                 <button 
                   disabled={loading || !hash}
-                  className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:translate-y-0"
+                  className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 disabled:translate-y-0"
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verify Now"}
                 </button>
@@ -101,7 +101,7 @@ export default function VerifyPage() {
             {result.exists ? (
               <div className="space-y-8">
                 {/* Status Header */}
-                <div className={`flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2rem] border ${
+                <div className={`flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2.5rem] border ${
                   result.isDataTampered 
                     ? "bg-destructive/10 border-destructive/40" 
                     : "bg-emerald-500/5 border-emerald-500/20"
@@ -115,66 +115,60 @@ export default function VerifyPage() {
                     <h2 className={`text-2xl font-black ${result.isDataTampered ? "text-destructive" : "text-emerald-500"}`}>
                       {result.isDataTampered ? "Data Tampering Detected" : "Authenticity Verified"}
                     </h2>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground font-medium">
                       {result.isDataTampered 
                         ? "Warning: The current database records do NOT match the blockchain-anchored fingerprint." 
                         : "This certificate is genuine and anchored to the UniCore blockchain registry."}
                     </p>
                   </div>
                   {result.isIntegrityValid && (
-                    <div className="md:ml-auto px-4 py-2 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 border border-primary/30">
+                    <div className="md:ml-auto px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 border border-primary/20">
                       <ShieldCheck className="w-3 h-3" />
                       Integrity Valid
-                    </div>
-                  )}
-                  {result.isDataTampered && (
-                    <div className="md:ml-auto px-4 py-2 rounded-full bg-destructive/20 text-destructive text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 border border-destructive/30 animate-pulse">
-                      <ShieldAlert className="w-3 h-3" />
-                      Invalid Proof
                     </div>
                   )}
                 </div>
 
                 {/* Details Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="glass rounded-[2rem] p-8 border border-white/5 space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <div className="bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-8 border border-border space-y-6 shadow-xl">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
                       <Info className="w-4 h-4" /> Certificate Info
                     </h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-primary">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                           <GraduationCap className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Student Name</p>
-                          <p className="font-black text-lg">{result.dbRecord.student.user.name}</p>
+                          <p className="font-black text-lg text-foreground">{result.dbRecord.student.user.name}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-blue-400">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
                           <BookOpen className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Course Awarded</p>
-                          <p className="font-black text-lg">{result.dbRecord.course.name}</p>
+                          <p className="font-black text-lg text-foreground">{result.dbRecord.course.name}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-amber-400">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600">
                           <Building2 className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Institution</p>
-                          <p className="font-black text-lg">{result.dbRecord.certificateData.institutionName}</p>
+                          <p className="font-black text-lg text-foreground">{result.dbRecord.certificateData.institutionName}</p>
                         </div>
                       </div>
 
                       {result.dbRecord.certificateData.academicPerformance && (
-                        <div className="pt-4 mt-4 border-t border-white/5 space-y-4">
+                        <div className="pt-4 mt-4 border-t border-border/50 space-y-4">
                           <div className={`flex items-center justify-between p-4 rounded-2xl border ${
                             result.isDataTampered ? "bg-destructive/5 border-destructive/20" : "bg-primary/5 border-primary/10"
                           }`}>
@@ -182,7 +176,7 @@ export default function VerifyPage() {
                               <p className={`text-[10px] font-black uppercase tracking-tighter ${result.isDataTampered ? "text-destructive" : "text-primary"}`}>
                                 {result.isDataTampered ? "Live GPA (Tampered)" : "Final GPA"}
                               </p>
-                              <p className={`text-2xl font-black ${result.isDataTampered ? "text-destructive" : "text-white"}`}>
+                              <p className={`text-2xl font-black ${result.isDataTampered ? "text-destructive" : "text-foreground"}`}>
                                 {result.isDataTampered ? result.currentDataPreview.academicPerformance.gpa : result.dbRecord.certificateData.academicPerformance.gpa}
                               </p>
                             </div>
@@ -190,41 +184,31 @@ export default function VerifyPage() {
                               <p className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">
                                 {result.isDataTampered ? "Original Anchored GPA" : "Total Marks"}
                               </p>
-                              <p className={`text-sm font-bold ${result.isDataTampered ? "text-primary" : "text-white"}`}>
+                              <p className={`text-sm font-bold ${result.isDataTampered ? "text-primary" : "text-foreground"}`}>
                                 {result.isDataTampered 
                                   ? result.dbRecord.certificateData.academicPerformance.gpa 
                                   : `${result.dbRecord.certificateData.academicPerformance.totalMarks} / ${result.dbRecord.certificateData.academicPerformance.maxMarks}`}
                               </p>
                             </div>
                           </div>
-                          {result.isDataTampered && (
-                            <p className="text-[10px] text-center font-bold text-destructive uppercase tracking-widest animate-pulse">
-                              Integrity Failure: Source Data has been modified
-                            </p>
-                          )}
-                          {!result.isDataTampered && (
-                            <p className="text-[10px] text-center font-bold text-muted-foreground uppercase tracking-widest">
-                                Verified for {result.dbRecord.certificateData.academicPerformance.subjectsCount} Subjects
-                            </p>
-                          )}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="glass rounded-[2rem] p-8 border border-white/5 space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <div className="bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-8 border border-border space-y-6 shadow-xl">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4" /> Blockchain Proof
                     </h3>
 
                     <div className="space-y-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-emerald-400">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                           <Calendar className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide">On-Chain Timestamp</p>
-                          <p className="font-black text-lg" suppressHydrationWarning>
+                          <p className="font-black text-lg text-foreground" suppressHydrationWarning>
                             {result.onChainRecord?.timestamp 
                               ? new Date(result.onChainRecord.timestamp * 1000).toLocaleString() 
                               : "Pending Synchronization"}
@@ -234,7 +218,7 @@ export default function VerifyPage() {
 
                       <div className="space-y-2">
                         <p className="text-xs text-muted-foreground font-bold uppercase tracking-wide ml-1">Transaction Hash</p>
-                        <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all">
+                        <div className="bg-secondary/30 p-4 rounded-2xl border border-border/50 flex items-center justify-between group cursor-pointer hover:border-primary/50 transition-all">
                           <p className="text-xs font-mono text-muted-foreground truncate max-w-[200px]">{result.dbRecord.transactionHash}</p>
                           <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
                         </div>
@@ -266,8 +250,10 @@ export default function VerifyPage() {
         )}
 
         <div className="mt-20 text-center">
-          <Link href="/" className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors flex items-center justify-center gap-2">
+          <Link href="/" className="text-sm font-bold text-muted-foreground/60 hover:text-primary transition-all flex items-center justify-center gap-2 group">
+             <div className="w-8 h-[1px] bg-border group-hover:w-12 group-hover:bg-primary transition-all" />
              Back to UniCore Home
+             <div className="w-8 h-[1px] bg-border group-hover:w-12 group-hover:bg-primary transition-all" />
           </Link>
         </div>
       </div>

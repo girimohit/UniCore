@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import StudentManager from "./StudentManager";
-import { Users } from "lucide-react";
+import { Users, Award } from "lucide-react";
+import Link from "next/link";
 
 export default async function AdminStudentsPage({ params }: { params: Promise<{ tenant: string }> }) {
   const { tenant } = await params;
@@ -23,13 +24,22 @@ export default async function AdminStudentsPage({ params }: { params: Promise<{ 
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-forwards relative">
-      <div>
-        <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
-          Student Management
-        </h1>
-        <p className="text-lg text-muted-foreground mt-2 font-medium">
-          Manage student enrollment, bulk import, and status for <span className="text-primary">{institution.name}</span>
-        </p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+            Student Management
+          </h1>
+          <p className="text-lg text-muted-foreground mt-2 font-medium">
+            Manage student enrollment, bulk import, and status for <span className="text-primary">{institution.name}</span>
+          </p>
+        </div>
+        <Link 
+          href={`/${tenant}/admin/certificates`}
+          className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-amber-500/10 text-amber-600 border border-amber-500/20 hover:bg-amber-500/20 transition-all font-bold text-sm shadow-sm"
+        >
+          <Award className="w-5 h-5" />
+          Certificate Registry
+        </Link>
       </div>
       
 

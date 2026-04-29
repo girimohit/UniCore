@@ -65,7 +65,8 @@ export default function CertificatesPage() {
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Network Status</p>
           <div className="flex items-center gap-2 text-emerald-600 font-black">
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            HARDHAT LOCAL
+            {/* HARDHAT LOCAL */}
+            AMOY TESTNET
           </div>
         </div>
       </div>
