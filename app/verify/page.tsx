@@ -5,7 +5,8 @@ import {
   ShieldCheck, Search, Loader2, CheckCircle2, 
   XCircle, Calendar, GraduationCap, Building2,
   ExternalLink, Hash, Info,
-  BookOpen
+  BookOpen,
+  ShieldAlert
 } from "lucide-react";
 import Link from "next/link";
 
@@ -100,18 +101,36 @@ export default function VerifyPage() {
             {result.exists ? (
               <div className="space-y-8">
                 {/* Status Header */}
-                <div className="flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/20">
-                  <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                    <CheckCircle2 className="w-10 h-10" />
+                <div className={`flex flex-col md:flex-row items-center gap-6 p-8 rounded-[2rem] border ${
+                  result.isDataTampered 
+                    ? "bg-destructive/10 border-destructive/40" 
+                    : "bg-emerald-500/5 border-emerald-500/20"
+                }`}>
+                  <div className={`w-20 h-20 rounded-3xl flex items-center justify-center ${
+                    result.isDataTampered ? "bg-destructive/20 text-destructive" : "bg-emerald-500/10 text-emerald-500"
+                  }`}>
+                    {result.isDataTampered ? <ShieldAlert className="w-10 h-10" /> : <CheckCircle2 className="w-10 h-10" />}
                   </div>
                   <div className="text-center md:text-left space-y-1">
-                    <h2 className="text-2xl font-black text-emerald-500">Authenticity Verified</h2>
-                    <p className="text-muted-foreground">This certificate is genuine and anchored to the UniCore blockchain registry.</p>
+                    <h2 className={`text-2xl font-black ${result.isDataTampered ? "text-destructive" : "text-emerald-500"}`}>
+                      {result.isDataTampered ? "Data Tampering Detected" : "Authenticity Verified"}
+                    </h2>
+                    <p className="text-muted-foreground">
+                      {result.isDataTampered 
+                        ? "Warning: The current database records do NOT match the blockchain-anchored fingerprint." 
+                        : "This certificate is genuine and anchored to the UniCore blockchain registry."}
+                    </p>
                   </div>
                   {result.isIntegrityValid && (
                     <div className="md:ml-auto px-4 py-2 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 border border-primary/30">
                       <ShieldCheck className="w-3 h-3" />
                       Integrity Valid
+                    </div>
+                  )}
+                  {result.isDataTampered && (
+                    <div className="md:ml-auto px-4 py-2 rounded-full bg-destructive/20 text-destructive text-[10px] font-black uppercase tracking-tighter flex items-center gap-2 border border-destructive/30 animate-pulse">
+                      <ShieldAlert className="w-3 h-3" />
+                      Invalid Proof
                     </div>
                   )}
                 </div>
@@ -156,21 +175,38 @@ export default function VerifyPage() {
 
                       {result.dbRecord.certificateData.academicPerformance && (
                         <div className="pt-4 mt-4 border-t border-white/5 space-y-4">
-                          <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                          <div className={`flex items-center justify-between p-4 rounded-2xl border ${
+                            result.isDataTampered ? "bg-destructive/5 border-destructive/20" : "bg-primary/5 border-primary/10"
+                          }`}>
                             <div>
-                              <p className="text-[10px] font-black uppercase tracking-tighter text-primary">Final GPA</p>
-                              <p className="text-2xl font-black text-white">{result.dbRecord.certificateData.academicPerformance.gpa}</p>
+                              <p className={`text-[10px] font-black uppercase tracking-tighter ${result.isDataTampered ? "text-destructive" : "text-primary"}`}>
+                                {result.isDataTampered ? "Live GPA (Tampered)" : "Final GPA"}
+                              </p>
+                              <p className={`text-2xl font-black ${result.isDataTampered ? "text-destructive" : "text-white"}`}>
+                                {result.isDataTampered ? result.currentDataPreview.academicPerformance.gpa : result.dbRecord.certificateData.academicPerformance.gpa}
+                              </p>
                             </div>
                             <div className="text-right">
-                              <p className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">Total Marks</p>
-                              <p className="text-sm font-bold text-white">
-                                {result.dbRecord.certificateData.academicPerformance.totalMarks} / {result.dbRecord.certificateData.academicPerformance.maxMarks}
+                              <p className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">
+                                {result.isDataTampered ? "Original Anchored GPA" : "Total Marks"}
+                              </p>
+                              <p className={`text-sm font-bold ${result.isDataTampered ? "text-primary" : "text-white"}`}>
+                                {result.isDataTampered 
+                                  ? result.dbRecord.certificateData.academicPerformance.gpa 
+                                  : `${result.dbRecord.certificateData.academicPerformance.totalMarks} / ${result.dbRecord.certificateData.academicPerformance.maxMarks}`}
                               </p>
                             </div>
                           </div>
-                          <p className="text-[10px] text-center font-bold text-muted-foreground uppercase tracking-widest">
-                            Verified for {result.dbRecord.certificateData.academicPerformance.subjectsCount} Subjects
-                          </p>
+                          {result.isDataTampered && (
+                            <p className="text-[10px] text-center font-bold text-destructive uppercase tracking-widest animate-pulse">
+                              Integrity Failure: Source Data has been modified
+                            </p>
+                          )}
+                          {!result.isDataTampered && (
+                            <p className="text-[10px] text-center font-bold text-muted-foreground uppercase tracking-widest">
+                                Verified for {result.dbRecord.certificateData.academicPerformance.subjectsCount} Subjects
+                            </p>
+                          )}
                         </div>
                       )}
                     </div>

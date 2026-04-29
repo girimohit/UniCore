@@ -38,6 +38,8 @@ export class CertificateService {
     const totalMax = results.reduce((acc, r) => acc + r.exam.maxMarks, 0);
     const gpa = totalMax > 0 ? ((totalObtained / totalMax) * 10).toFixed(2) : "0.00";
 
+    const issueDateStr = new Date().toISOString().split('.')[0] + "Z";
+
     // 2. Prepare certificate details
     const certificateData = {
       studentName: student.user.name,
@@ -51,7 +53,7 @@ export class CertificateService {
         maxMarks: totalMax,
         subjectsCount: results.length
       },
-      issueDate: new Date().toISOString(),
+      issueDate: issueDateStr,
       platform: "UniCore Blockchain Registry",
     };
 
@@ -110,11 +112,58 @@ export class CertificateService {
   static async verifyCertificate(documentHash: string) {
     const dbRecord = await prisma.certificate.findUnique({
       where: { documentHash },
-      include: { student: { include: { user: true } }, course: true },
+      include: { student: { include: { user: true } }, course: true, institution: true },
     });
 
     if (!dbRecord) {
       return { exists: false, message: "Certificate not found in local database" };
+    }
+
+    // --- DYNAMIC INTEGRITY AUDIT ---
+    // Fetch current data from the source (Exam Results) to see if it matches the anchored hash
+    const currentResults = await prisma.examResult.findMany({
+      where: { 
+        studentId: dbRecord.studentId, 
+        institutionId: dbRecord.institutionId 
+      },
+      include: { exam: true },
+    });
+
+    const totalObtained = currentResults.reduce((acc, r) => acc + r.obtainedMarks, 0);
+    const totalMax = currentResults.reduce((acc, r) => acc + r.exam.maxMarks, 0);
+    const currentGpa = totalMax > 0 ? ((totalObtained / totalMax) * 10).toFixed(2) : "0.00";
+
+    // Re-construct the certificate data using a stable date format (no milliseconds)
+    const issueDateStr = new Date(dbRecord.issueDate).toISOString().split('.')[0] + "Z";
+
+    const currentData = {
+      studentName: dbRecord.student.user.name,
+      rollNumber: dbRecord.student.rollNumber,
+      courseName: dbRecord.course.name,
+      courseCode: dbRecord.course.code,
+      institutionName: dbRecord.institution.name,
+      academicPerformance: {
+        gpa: currentGpa,
+        totalMarks: totalObtained,
+        maxMarks: totalMax,
+        subjectsCount: currentResults.length
+      },
+      issueDate: issueDateStr,
+      platform: "UniCore Blockchain Registry",
+    };
+
+    const currentDataStr = JSON.stringify(currentData);
+    const liveHash = crypto.createHash("sha256").update(currentDataStr).digest("hex");
+    const isDataTampered = liveHash !== documentHash;
+
+    if (isDataTampered) {
+      console.log("--- INTEGRITY FAILURE DEBUG ---");
+      console.log("Original Hash:", documentHash);
+      console.log("Live Hash:    ", liveHash);
+      console.log("Live Data String:", currentDataStr);
+      // We can also log the original data stored in dbRecord.certificateData for comparison
+      console.log("Stored Data String:", JSON.stringify(dbRecord.certificateData));
+      console.log("--------------------------------");
     }
 
     const onChainRecord = await BlockchainService.verifyHash(documentHash);
@@ -123,7 +172,9 @@ export class CertificateService {
       exists: true,
       dbRecord,
       onChainRecord,
-      isIntegrityValid: onChainRecord.exists,
+      isIntegrityValid: onChainRecord.exists && !isDataTampered,
+      isDataTampered,
+      currentDataPreview: isDataTampered ? currentData : null
     };
   }
 }
