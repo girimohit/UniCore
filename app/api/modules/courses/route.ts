@@ -96,3 +96,43 @@ export const POST = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], asyn
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 });
+
+export const PATCH = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+  try {
+    const { id, name, code, departmentId } = await req.json();
+
+    if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+
+    const course = await prisma.course.update({
+      where: { id, institutionId: user.institutionId },
+      data: {
+        name,
+        code: code?.toUpperCase(),
+        departmentId
+      }
+    });
+
+    return NextResponse.json({ course });
+  } catch (error: any) {
+    console.error('Error updating course:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+  }
+});
+
+export const DELETE = withAuth(['SUPER_ADMIN', 'ADMIN', 'INSTITUTION_ADMIN'], async (req, context, user) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+
+    await prisma.course.delete({
+      where: { id, institutionId: user.institutionId }
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error('Error deleting course:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+  }
+});

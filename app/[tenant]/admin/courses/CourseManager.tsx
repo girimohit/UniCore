@@ -24,8 +24,10 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
   const [form, setForm] = useState({
     name: "",
     code: "",
-    department: "", // Uses name or code for the API as per route implementation
+    departmentId: "", // Updated to use departmentId for consistency
   });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const courseList = results.length > 0 ? results : initialCourses;
 
@@ -43,26 +45,63 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
     setErrors([]);
 
     try {
+      const method = editingId ? "PATCH" : "POST";
+      const body = editingId ? { ...form, id: editingId } : form;
+
       const res = await fetch("/api/modules/courses", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       
-      if (data.errors && data.errors.length > 0) {
+      if (data.error) {
+        setErrors([{ code: form.code, error: data.error }]);
+      } else if (data.errors && data.errors.length > 0) {
         setErrors(data.errors);
-      }
-      if (data.created && data.created.length > 0) {
-        setResults(data.created);
-        setForm({ name: "", code: "", department: "" });
-        setActiveTab("list");
+      } else {
+        if (editingId) {
+          setEditingId(null);
+          setForm({ name: "", code: "", departmentId: "" });
+          window.location.reload(); 
+        } else if (data.created && data.created.length > 0) {
+          setResults(data.created);
+          setForm({ name: "", code: "", departmentId: "" });
+          setActiveTab("list");
+        }
       }
     } catch (err) {
       setErrors([{ code: form.code, error: "Network error" }]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/modules/courses?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Delete failed", err);
+    } finally {
+      setLoading(false);
+      setDeleteConfirm(null);
+    }
+  };
+
+  const startEdit = (course: any) => {
+    setEditingId(course.id);
+    setForm({ 
+      name: course.name, 
+      code: course.code, 
+      departmentId: course.departmentId 
+    });
+    setActiveTab("add");
   };
 
   const handleCSVImport = async (entries: any[]) => {
@@ -118,7 +157,7 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
                 <BookOpen className="w-5 h-5" />
               </div>
-              Create Course
+              {editingId ? "Edit Course" : "Create Course"}
             </h3>
             <form onSubmit={handleManualSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -146,22 +185,39 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
                   <label className="text-sm font-semibold text-muted-foreground ml-1">Parent Department</label>
                   <select
                     required
-                    value={form.department}
-                    onChange={e => setForm(f => ({ ...f, department: e.target.value }))}
+                    value={form.departmentId}
+                    onChange={e => setForm(f => ({ ...f, departmentId: e.target.value }))}
                     className="w-full bg-secondary/5 border border-border/60 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/60 transition-all appearance-none cursor-pointer"
                   >
                     <option value="">Select Department</option>
-                    {departments.map(d => <option key={d.id} value={d.code}>{d.name} ({d.code})</option>)}
+                    {departments.map(d => <option key={d.id} value={d.id}>{d.name} ({d.code})</option>)}
                   </select>
                 </div>
               </div>
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4" /> Create Course</>}
-              </button>
+              <div className="flex gap-4">
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                    editingId ? <><CheckCircle className="w-4 h-4" /> Save Changes</> : <><Plus className="w-4 h-4" /> Create Course</>
+                  )}
+                </button>
+                {editingId && (
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setEditingId(null);
+                      setForm({ name: "", code: "", departmentId: "" });
+                      setActiveTab("list");
+                    }}
+                    className="w-fit px-8 bg-secondary/20 text-foreground font-bold text-sm py-3 rounded-xl hover:bg-secondary/30 transition-all"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </form>
           </div>
         )}
@@ -246,8 +302,20 @@ export default function CourseManager({ initialCourses, departments }: CourseMan
                            </td>
                            <td className="px-6 py-4 text-right">
                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
-                                <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
-                                <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>
+                                <button 
+                                  onClick={() => startEdit(c)}
+                                  className="p-2 hover:bg-primary/10 rounded-lg text-primary"
+                                  title="Edit Course"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </button>
+                                <button 
+                                  onClick={() => setDeleteConfirm(c.id)}
+                                  className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"
+                                  title="Delete Course"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                               </div>
                            </td>
                          </tr>

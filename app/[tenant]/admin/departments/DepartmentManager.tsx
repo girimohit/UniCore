@@ -24,6 +24,8 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
     name: "",
     code: "",
   });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const departmentList = results.length > 0 ? results : initialDepartments;
 
@@ -39,25 +41,62 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
     setErrors([]);
 
     try {
+      const method = editingId ? "PATCH" : "POST";
+      const body = editingId ? { ...form, id: editingId } : form;
+
       const res = await fetch("/api/modules/departments", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
-      if (data.errors && data.errors.length > 0) {
+      
+      if (data.error) {
+        setErrors([{ code: form.code, error: data.error }]);
+      } else if (data.errors && data.errors.length > 0) {
         setErrors(data.errors);
-      }
-      if (data.created && data.created.length > 0) {
-        setResults(data.created);
-        setForm({ name: "", code: "" });
-        setActiveTab("list");
+      } else {
+        // Refresh or update local state
+        if (editingId) {
+          // Success edit
+          setEditingId(null);
+          setForm({ name: "", code: "" });
+          // In a real app we'd refresh from server or update initialDepartments
+          window.location.reload(); 
+        } else if (data.created && data.created.length > 0) {
+          setResults(data.created);
+          setForm({ name: "", code: "" });
+          setActiveTab("list");
+        }
       }
     } catch (err) {
       setErrors([{ code: form.code, error: "Network error" }]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/modules/departments?id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Delete failed", err);
+    } finally {
+      setLoading(false);
+      setDeleteConfirm(null);
+    }
+  };
+
+  const startEdit = (dept: any) => {
+    setEditingId(dept.id);
+    setForm({ name: dept.name, code: dept.code });
+    setActiveTab("add");
   };
 
   const handleCSVImport = async (entries: any[]) => {
@@ -113,7 +152,7 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
                 <Building2 className="w-5 h-5" />
               </div>
-              Create Department
+              {editingId ? "Edit Department" : "Create Department"}
             </h3>
             <form onSubmit={handleManualSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,13 +177,30 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
                   />
                 </div>
               </div>
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
-              >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Plus className="w-4 h-4" /> Create Department</>}
-              </button>
+              <div className="flex gap-4">
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="w-fit px-8 bg-primary text-primary-foreground font-bold text-sm py-3 rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                    editingId ? <><CheckCircle className="w-4 h-4" /> Save Changes</> : <><Plus className="w-4 h-4" /> Create Department</>
+                  )}
+                </button>
+                {editingId && (
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setEditingId(null);
+                      setForm({ name: "", code: "" });
+                      setActiveTab("list");
+                    }}
+                    className="w-fit px-8 bg-secondary/20 text-foreground font-bold text-sm py-3 rounded-xl hover:bg-secondary/30 transition-all"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </form>
           </div>
         )}
@@ -232,8 +288,20 @@ export default function DepartmentManager({ initialDepartments }: DepartmentMana
                            <td className="px-6 py-4 font-medium">{d.name}</td>
                            <td className="px-6 py-4 text-right">
                               <div className="flex justify-end gap-2 opacity-40 hover:opacity-100 transition-opacity">
-                                <button className="p-2 hover:bg-primary/10 rounded-lg text-primary"><Pencil className="w-4 h-4" /></button>
-                                <button className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"><Trash2 className="w-4 h-4" /></button>
+                                <button 
+                                  onClick={() => startEdit(d)}
+                                  className="p-2 hover:bg-primary/10 rounded-lg text-primary"
+                                  title="Edit Department"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </button>
+                                <button 
+                                  onClick={() => setDeleteConfirm(d.id)}
+                                  className="p-2 hover:bg-destructive/10 rounded-lg text-destructive"
+                                  title="Delete Department"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
                               </div>
                            </td>
                          </tr>
