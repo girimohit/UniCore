@@ -7,7 +7,13 @@ const adapter = new PrismaNeon({
   connectionString: env.DATABASE_URL,
 })
 
-export const prisma = new PrismaClient({ adapter })
+export const prisma = new PrismaClient({
+  adapter,
+  transactionOptions: {
+    maxWait: 15000, // 15 seconds to acquire a connection
+    timeout: 30000,  // 30 seconds total transaction execution time
+  },
+})
 
 
 

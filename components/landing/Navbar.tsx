@@ -58,8 +58,8 @@ export default function Navbar() {
             transition-all duration-500 backdrop-blur-md bg-white/5 dark:bg-black/40
             ${
               scrolled
-                ? "w-full max-w-3xl shadow-2xl border-white/10"
-                : "w-full max-w-2xl shadow-lg border-white/5"
+                ? "w-full max-w-4xl shadow-2xl border-white/10"
+                : "w-full max-w-3xl shadow-lg border-white/5"
             }
           `}
         >
@@ -139,14 +139,30 @@ export default function Navbar() {
             )}
 
             {/* CTA */}
-            <Link
-              href={isLoggedIn ? `/${institution}/${role}/dashboard` : `/login`}
-              className="btn-primary !py-2 !px-4 !text-sm hidden sm:inline-flex"
-            >
-              {/* Get Started <ChevronRight className="w-3.5 h-3.5" /> */}
-              Login <ChevronRight className="w-3.5 h-3.5" />
-              {/* {isLoggedIn ? "Dashboard" : "Login"} <ChevronRight className="w-3.5 h-3.5" /> */}
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href={`/${institution}/${role}/dashboard`}
+                className="btn-primary !py-2 !px-4 !text-sm hidden sm:inline-flex"
+              >
+                Dashboard <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 hover:bg-[var(--uc-purple)]/10 hidden sm:inline-flex"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="btn-primary !py-2 !px-4 !text-sm hidden sm:inline-flex"
+                >
+                  Get Started <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            )}
 
             {/* Mobile hamburger */}
             <button
